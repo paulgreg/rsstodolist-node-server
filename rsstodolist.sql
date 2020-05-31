@@ -36,7 +36,7 @@ ALTER TABLE feeds_feedentry
 CHANGE COLUMN `creation_date` createdAt DATETIME;
 
 ALTER TABLE feeds_feedentry
-ADD COLUMN updatedAt DATETIME();
+ADD COLUMN updatedAt DATETIME;
 
 ALTER TABLE feeds_feedentry
 MODIFY url varchar(512) NOT NULL;
