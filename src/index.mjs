@@ -105,7 +105,7 @@ sequelize
             if (!name || !url) {
                 return res.status(404).end('404 : Missing name or url')
             }
-            return (title && description
+            return (title
                 ? Promise.resolve({ title, description })
                 : Promise.resolve().then(() =>
                       axios
