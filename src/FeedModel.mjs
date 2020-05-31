@@ -32,7 +32,7 @@ const FeedModelBuilder = (sequelize) => {
             },
             [title]: {
                 type: Sequelize.STRING(lengths[title]),
-                allowNull: true,
+                allowNull: false,
             },
             [description]: {
                 type: Sequelize.TEXT,
