@@ -29,3 +29,14 @@ CREATE TABLE `feeds_feedentry` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11333 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+
+/* Migration from rsstodoliset-server */
+ALTER TABLE feeds_feedentry
+CHANGE COLUMN `creation_date` createdAt DATETIME;
+
+ALTER TABLE feeds_feedentry
+ADD COLUMN updatedAt DATETIME();
+
+ALTER TABLE feeds_feedentry
+MODIFY url varchar(512) NOT NULL;

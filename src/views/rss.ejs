@@ -7,16 +7,16 @@
     <description>RSS 2.0 feed containing your todolist items</description>
     <language>en-us</language>
     <webMaster>me@paulgreg.me</webMaster>
-	 <% feeds.forEach(feed => { %>
+	 <% entries.forEach(entry => { %>
 	 	<item>
-			<title><%= feed.title %></title>
-	 		<link><%= feed.url %></link>
-	 		<description><%= feed.description || "" %></description>
-			<pubDate><%= feed.creation_date %></pubDate>
-			<guid isPermaLink="false"><%= feed.id %></guid>
+			<title><%= entry.title %></title>
+	 		<link><%= entry.url %></link>
+	 		<description><%= entry.description || "" %></description>
+			<pubDate><%= entry.creation_date %></pubDate>
+			<guid isPermaLink="false"><%= entry.id %></guid>
 	 	</item>
 	 <% }) %>
-	 <% if (feeds.length === 0) { %>
+	 <% if (entries.length === 0) { %>
 	 	<item>
 			<title>Default item in your feed</title>
 	 		<link>http://rsstodolist.appspot.com/</link>

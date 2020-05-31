@@ -5,9 +5,13 @@ export const name = 'name'
 export const url = 'url'
 export const title = 'title'
 export const description = 'description'
-export const creation_date = 'creation_date'
 
-const attributes = [id, name, url, title, description, creation_date]
+export const lengths = {
+    [name]: 20,
+    [url]: 512,
+    [title]: 255,
+    [description]: 1024,
+}
 
 const FeedModelBuilder = (sequelize) => {
     const FeedModel = sequelize.define(
@@ -19,25 +23,20 @@ const FeedModelBuilder = (sequelize) => {
                 primaryKey: true,
             },
             [name]: {
-                type: Sequelize.STRING(20),
+                type: Sequelize.STRING(lengths[name]),
                 allowNull: false,
             },
             [url]: {
-                type: Sequelize.STRING(512),
+                type: Sequelize.STRING(lengths[url]),
                 allowNull: false,
             },
             [title]: {
-                type: Sequelize.STRING(255),
+                type: Sequelize.STRING(lengths[title]),
                 allowNull: true,
             },
             [description]: {
                 type: Sequelize.TEXT,
                 allowNull: true,
-            },
-            [creation_date]: {
-                type: Sequelize.DATE,
-                allowNull: false,
-                defaultValue: Sequelize.NOW,
             },
         },
         {
@@ -51,11 +50,38 @@ const FeedModelBuilder = (sequelize) => {
             where: {
                 name,
             },
-            attributes,
-            order: [[creation_date, 'DESC']],
+            order: [
+                ['updatedAt', 'DESC'],
+                ['createdAt', 'DESC'],
+            ],
         })
 
-    return { FeedModel, findByName }
+    const insert = ({ name, url, title, description }) =>
+        FeedModel.findOne({
+            where: { name, url },
+        }).then((result) =>
+            FeedModel.upsert({
+                id: (result && result.id) || undefined,
+                name,
+                url,
+                title,
+                description,
+                creation_date: new Date(),
+            })
+        )
+
+    const remove = ({ name, url }) =>
+        FeedModel.destroy({
+            where: { name, url },
+        })
+
+    const list = () =>
+        FeedModel.findAll({
+            group: ['name'],
+            attributes: ['name', [sequelize.fn('COUNT', 'name'), 'count']],
+        })
+
+    return { FeedModel, findByName, insert, remove, list }
 }
 
 export default FeedModelBuilder
