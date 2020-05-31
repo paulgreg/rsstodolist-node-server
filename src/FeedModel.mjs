@@ -70,9 +70,9 @@ const FeedModelBuilder = (sequelize) => {
         )
 
     const remove = ({ name, url }) =>
-        FeedModel.destroy({
+        FeedModel.findOne({
             where: { name, url },
-        })
+        }).then((m) => m.destroy())
 
     const list = () =>
         FeedModel.findAll({
