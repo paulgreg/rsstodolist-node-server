@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>rsstodolist: an RSS based todo-list</title>
+        <meta name="robots" content="index, follow"/>
+        <meta name="keywords" content="rss todolist, todolist"/>
+        <meta name="author" content="Gr&eacute;gory Paul"/>
+        <meta name="description" content="An RSS based todo-list"/>
+        <style type="text/css">
+            body { background-color: #3B7CC0; margin: 0 5%; font-family: sans-serif; }
+            #content { background-color: white; padding: 2%; border-right: 3px solid #159EFE; border-left: 3px solid #159EFE; }
+            h1 { color: #159EFE; }
+            h2 { color: #63ADF5; margin: 1em 0.5em 1em 0.5em; }
+            h3 { color: #3B7CC0; margin-left: 2.5em; }
+            p { margin-left: 4em; }
+            ul { margin-left: 3em; list-style-type: square; }
+            label { float: left; width: 7em; text-align: right; }
+            input[name=username] { width: 10em; }
+            input[name=url] { width: 40em; }
+            input[type=submit] { margin-left: 9.5em; }
+            code { display: block; margin: 0.5em 0; font: serif; }
+            .right { float: right; }
+            .warning { font-style: italic; }
+        </style>
+        <link rel="icon" type="image/png" href="./static/favicon.png" />
+    </head>
+    <body>
+        <div id="content">
+            <h1>RSS TodoList</h1>
+
+            <h2>Add an URL to your feed</h2>
+
+            <h3>1. By using that form :</h3>
+            <form method="get" action="add">
+                <p>
+                <label for="url">URL</label>&nbsp;:&nbsp;<input type="text" id="url" name="url" value="https://fr.wikipedia.org/"/><br/>
+                <label for="name">Feed name</label>&nbsp;:&nbsp;<input type="text" id="name" name="name" value="somename"/>
+                replace by whatever name you want<br/>
+                <input type="submit" />
+                </p>
+            </form>
+            <h3>2. By calling an URL :</h3>
+            <p><a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow" class="addhost">add?name=somename&amp;url=https://fr.wikipedia.org/</a></p>
+            <ul>
+                <li>By default, the feed title will be fetched from the web page title. You may force it by using the &quot;&amp;title&quot; parameter.</li>
+                <li>Also, by default, your feed will contain 25 items. You can change that by setting &quot;&amp;limit&quot; parameter from 1 to 500.</li>
+                <li>A description for the link may be added by using the &quot;description&quot; parameter</li>
+                <li>You may also use short parameters like &quot;n&quot; for &quot;name&quot;, &quot;u&quot; for &quot;url&quot;, &quot;t&quot; for &quot;title&quot;, &quot;l&quot; for &quot;limit&quot; or &quot;d&quot; for &quot;description&quot; like that : <a href="add?n=somename&amp;u=https://fr.wikipedia.org/" rel="nofollow" class="addhost">add?n=somename&amp;u=https://fr.wikipedia.org/</a></li>
+            </ul>
+
+            <h3>3. By using that <a href="http://en.wikipedia.org/wiki/Bookmarklet" title="Learn more about bookmarklet on Wikipedia">bookmarklet</a> :</h3>
+            <p>Create a new bookmarklet and paste the following code in the URL field :
+            <code>javascript:var rss=prompt('RSS feed name ?');var r=new XMLHttpRequest();r.open('GET','BASEadd?n='+rss+'&amp;url='+encodeURIComponent(window.location),true);r.setRequestHeader('Content-Type','text/plain;charset=UTF-8');r.onreadystatechange=function(){if(r.readyState==4){alert("Request sent : "+(r.status===200)+" ("+r.status+")");}};r.send(null);</code>
+            Then, clicking on that bookmark will add current page to the RSS feed.
+            </p>
+
+            <h3>4. By using an extension :</h3>
+            <p>A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and <a href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd">Chrome extension</a> are available.</p>
+
+            <h2>Get your feed :</h2>
+            <p><a href="?name=somename" rel="nofollow" class="addhost">?name=somename</a> or <a href="?n=somename" rel="nofollow" class="addhost">?n=somename</a></p>
+
+            <h2>Remove an URL from your feed</h2>
+            <h3>By calling an URL :</h3>
+            <p><a href="del?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow" class="addhost">del?name=somename&amp;url=https://fr.wikipedia.org/</a></p>
+
+            <h2>Feedback</h2>
+            <p>Contact me on twitter (<a href="https://twitter.com/paulgreg">@paulgreg</a>).</p>
+
+            <h2>Source code</h2>
+            <p>Source code can be found : 
+            <ul>
+                <li>at <a href="https://github.com/paulgreg/rsstodolist-node-server">github.com/paulgreg/rsstodolist-node-server/</a> : source for that node version,</li>
+                <li>at <a href="https://github.com/paulgreg/rsstodolist-addon">github.com/paulgreg/rsstodolist-addon/</a> : Firefox Add-on and Chrome extension.</li>
+            </ul>
+            </p>
+        </div>
+        <script>
+            var base = document.location.href;
+            var links = document.querySelectorAll('.addhost');
+            for(var e in links) {
+                if (links.hasOwnProperty(e)) {
+                    links[e].innerHTML = base + links[e].innerHTML;
+                }
+            }
+            var code = document.querySelector('code');
+            code.innerHTML = code.innerHTML.replace('BASE', base);
+        </script>
+    </body>
+</html>
+

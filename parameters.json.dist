@@ -1,0 +1,8 @@
+{
+    "port": 6070,
+    "database": "rsstodolist",
+    "username": "rsstodolist_user",
+    "password": "rsstodolist_password",
+    "host": "localhost",
+    "dialect": "mariadb"
+}

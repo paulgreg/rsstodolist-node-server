@@ -1,0 +1,5 @@
+body { font-family: sans-serif;  }
+h1 { width: 100%; padding: .3em; background: darkblue; color: white; }
+h2 { margin: 0; color: darkblue; }
+article { margin: 1em 0 0 0; }
+p { margin: .2em 0 0 0; }
