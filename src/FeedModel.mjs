@@ -66,7 +66,6 @@ const FeedModelBuilder = (sequelize) => {
                 url,
                 title,
                 description,
-                creation_date: new Date(),
             })
         )
 

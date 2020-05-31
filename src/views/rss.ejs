@@ -12,7 +12,7 @@
 			<title><%= entry.title %></title>
 	 		<link><%= entry.url %></link>
 	 		<description><%= entry.description || "" %></description>
-			<pubDate><%= entry.creation_date %></pubDate>
+			<pubDate><%= entry.updatedAt || entry.createdAt %></pubDate>
 			<guid isPermaLink="false"><%= entry.id %></guid>
 	 	</item>
 	 <% }) %>
