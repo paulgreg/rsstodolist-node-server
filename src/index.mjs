@@ -9,6 +9,9 @@ import { truncate, slugify } from './strings.mjs'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import cors from 'cors'
+import jschardet from 'jschardet'
+import charset from 'charset'
+import iconv from 'iconv-lite'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -17,6 +20,19 @@ const { port, database, username, password, host, dialect } = parameters
 const sequelize = new Sequelize(database, username, password, {
     host,
     dialect,
+})
+
+axios.interceptors.response.use((response) => {
+    const chardetResult = jschardet.detect(response.data)
+    const htmlEncoding =
+        (chardetResult && chardetResult.encoding) ||
+        charset(response.headers, response.data)
+
+    if (htmlEncoding !== 'utf8') {
+        response.data = iconv.decode(response.data, htmlEncoding)
+    }
+
+    return response
 })
 
 sequelize
@@ -93,7 +109,9 @@ sequelize
                 ? Promise.resolve({ title, description })
                 : Promise.resolve().then(() =>
                       axios
-                          .get(url)
+                          .get(url, {
+                              responseType: 'arraybuffer',
+                          })
                           .then(function (response = {}) {
                               const { status, data } = response
                               if (status === 200) {
