@@ -24,13 +24,13 @@ const sequelize = new Sequelize(database, username, password, {
 
 axios.interceptors.response.use((response) => {
     const chardetResult = jschardet.detect(response.data)
-    const htmlEncoding =
+    const encoding =
         (chardetResult && chardetResult.encoding) ||
         charset(response.headers, response.data)
 
-    if (htmlEncoding !== 'utf8') {
-        response.data = iconv.decode(response.data, htmlEncoding)
-    }
+    console.log(`encoding:${encoding}`)
+
+    response.data = iconv.decode(response.data, encoding)
 
     return response
 })
