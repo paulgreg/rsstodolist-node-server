@@ -8,6 +8,7 @@ import morgan from 'morgan'
 import { truncate, slugify } from './strings.mjs'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
+import cors from 'cors'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -44,6 +45,7 @@ sequelize
                 ':method :url :status :res[content-length] - :response-time ms'
             )
         )
+        app.use(cors())
 
         app.use(
             '/static',
