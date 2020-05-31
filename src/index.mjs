@@ -58,7 +58,7 @@ sequelize
             const limit =
                 Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
             if (name) {
-                if (n !== name) return res.redirect(302, `/?n=${name}`)
+                if (n !== name) return res.redirect(302, `./?n=${name}`)
 
                 return findByName({ name, limit }).then((entries) => {
                     res.type('text/xml')
@@ -125,7 +125,7 @@ sequelize
                     const { title, description } = metas
                     return insert({ name, url, title, description })
                 })
-                .then(() => res.redirect(302, `/?n=${name}`))
+                .then(() => res.redirect(302, `./?n=${name}`))
                 .catch((err) => {
                     const msg = `Error while inserting '${url}' in '${name}'`
                     console.error(msg, err)
@@ -142,7 +142,7 @@ sequelize
                 return res.status(404).end('404 : Missing name or url')
             }
             return remove({ name, url })
-                .then(() => res.redirect(302, `/?n=${name}`))
+                .then(() => res.redirect(302, `./?n=${name}`))
                 .catch((err) => {
                     const msg = `Error while removing '${url}' in '${name}'`
                     console.error(msg, err)
