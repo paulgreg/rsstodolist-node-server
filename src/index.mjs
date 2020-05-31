@@ -67,12 +67,10 @@ sequelize
             }
             return res.render('index')
         })
-        app.get('/list', (req, res) => {
-            return list().then((feeds) => {
-                console.log(feeds[0].name, feeds[0].dataValues)
-                return res.render('list', { feeds })
-            })
-        })
+
+        app.get('/list', (req, res) =>
+            list().then((feeds) => res.render('list', { feeds }))
+        )
 
         app.get('/add', (req, res) => {
             const name = slugify(
