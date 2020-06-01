@@ -15,11 +15,20 @@ import iconv from 'iconv-lite'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const { port, database, username, password, host, dialect } = parameters
+const {
+    port,
+    database,
+    username,
+    password,
+    host,
+    dialect,
+    logging,
+} = parameters
 
 const sequelize = new Sequelize(database, username, password, {
     host,
     dialect,
+    logging,
 })
 
 axios.interceptors.response.use((response) => {

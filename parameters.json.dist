@@ -4,5 +4,6 @@
     "username": "rsstodolist_user",
     "password": "rsstodolist_password",
     "host": "localhost",
-    "dialect": "mariadb"
+    "dialect": "mariadb",
+    "logging": false
 }
