@@ -118,7 +118,7 @@ sequelize
                 ? Promise.resolve({ title, description })
                 : Promise.resolve().then(() =>
                       axios
-                          .get(url, {
+                          .get(encodeURI(url), {
                               responseType: 'arraybuffer',
                               headers: {
                                   'User-Agent':
