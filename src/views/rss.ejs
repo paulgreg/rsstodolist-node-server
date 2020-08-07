@@ -12,7 +12,7 @@
 			<title><%= entry.title %></title>
 	 		<link><%= entry.url %></link>
 	 		<description><%= entry.description || "" %></description>
-			<pubDate><%= entry.updatedAt || entry.createdAt %></pubDate>
+			<pubDate><%= (entry.updatedAt || entry.createdAt).toUTCString() %></pubDate>
 			<guid isPermaLink="false"><%= entry.id %></guid>
 	 	</item>
 	 <% }) %>
