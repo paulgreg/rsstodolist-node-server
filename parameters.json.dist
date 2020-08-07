@@ -1,5 +1,6 @@
 {
     "port": 6070,
+    "rootUrl": "https://domain.com/rsstodolist",
     "database": "rsstodolist",
     "username": "rsstodolist_user",
     "password": "rsstodolist_password",

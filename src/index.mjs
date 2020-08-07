@@ -17,6 +17,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const {
     port,
+    rootUrl,
     database,
     username,
     password,
@@ -87,7 +88,7 @@ sequelize
 
                 return findByName({ name, limit }).then((entries) => {
                     res.type('text/xml')
-                    return res.render('rss', { name, entries })
+                    return res.render('rss', { rootUrl, name, entries })
                 })
             }
             return res.render('index')
