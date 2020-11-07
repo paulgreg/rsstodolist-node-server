@@ -18,7 +18,7 @@
         <article>
             <h2><xsl:value-of select="title" /></h2>
             <xsl:apply-templates select="link" />
-            <xsl:value-of select="description" />
+            <xsl:apply-templates select="description" />
         </article>
     </xsl:template>
 
