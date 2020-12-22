@@ -15,10 +15,9 @@
             h3 { color: #3B7CC0; margin-left: 2.5em; }
             p { margin-left: 4em; }
             ul { margin-left: 3em; list-style-type: square; }
-            label { float: left; width: 7em; text-align: right; }
-            input[name=username] { width: 10em; }
-            input[name=url] { width: 40em; }
-            input[type=submit] { margin-left: 9.5em; }
+            input { margin: .25em; }
+            input[name=url] { width: 90%; }
+            input[type=submit] { margin: .5em  0; }
             code { display: block; margin: 0.5em 0; font: serif; }
             .right { float: right; }
             .warning { font-style: italic; }
@@ -29,6 +28,8 @@
         <div id="content">
             <h1>RSS TodoList</h1>
 
+            <p>rsstodolist is an URL oriented to-read-list based on an RSS XML feed. Typical use case is to save web pages to read later on a RSS feed.</p>
+
             <h2>Feeds list</h2>
             <p>You can see all feed in that <a href="./list">feed list</a>.</p>
 
@@ -37,10 +38,9 @@
             <h3>1. By using that form :</h3>
             <form method="get" action="add">
                 <p>
-                <label for="url">URL</label>&nbsp;:&nbsp;<input type="text" id="url" name="url" value="https://fr.wikipedia.org/"/><br/>
-                <label for="name">Feed name</label>&nbsp;:&nbsp;<input type="text" id="name" name="name" value="somename"/>
-                replace by whatever name you want<br/>
-                <input type="submit" />
+                    <label for="url">URL</label>&nbsp;:&nbsp;<input type="url" id="url" name="url" placeholder="https://fr.wikipedia.org/"/><br/>
+                    <label for="name">Feed name</label>&nbsp;:&nbsp;<input type="text" id="name" name="name" placeholder="somename"/><br/>
+                    <input type="submit" />
                 </p>
             </form>
             <h3>2. By calling an URL :</h3>

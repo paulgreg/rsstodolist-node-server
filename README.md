@@ -1,6 +1,6 @@
 # rsstodolist-node-server
 
-rsstodolist-node-server is a node port of the Google App Engine rsstodolist application (http://rsstodolist.appspot.com).
+rsstodolist-node-server is a node port of the Google App Engine rsstodolist application (https://rsstodolist.appspot.com).
 Same functionality are expected but It can be host on your server.
 
 ## Pre-requisites
