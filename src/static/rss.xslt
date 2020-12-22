@@ -19,6 +19,7 @@
             <h2><xsl:value-of select="title" /></h2>
             <xsl:apply-templates select="link" />
             <xsl:apply-templates select="description" />
+            <xsl:apply-templates select="pubDate" />
         </article>
     </xsl:template>
 
@@ -28,6 +29,10 @@
 
     <xsl:template match="description">
         <p><xsl:value-of select="." /></p>
+    </xsl:template>
+
+    <xsl:template match="pubDate">
+        <em><xsl:value-of select="." /></em>
     </xsl:template>
 
 </xsl:stylesheet>
