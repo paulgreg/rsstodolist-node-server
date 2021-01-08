@@ -5,7 +5,7 @@ import FeedModelBuilder, { lengths } from './FeedModel'
 import axios from 'axios'
 import cheerio from 'cheerio'
 import morgan from 'morgan'
-import { truncate, slugify } from './strings.mjs'
+import { truncate, slugify, cleanify } from './strings.mjs'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import cors from 'cors'
@@ -80,7 +80,7 @@ sequelize
 
         app.get('/', (req, res) => {
             const n = req.query.name || req.query.n
-            const name = slugify(truncate(n, lengths.name))
+            const name = slugify(truncate(cleanify(n), lengths.name))
             const limit =
                 Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
             if (name) {
@@ -99,16 +99,15 @@ sequelize
         )
 
         app.get('/add', (req, res) => {
-            const name = slugify(
-                truncate(req.query.name || req.query.n, lengths.name)
-            )
+            const n = req.query.name || req.query.n
+            const name = slugify(truncate(cleanify(n), lengths.name))
             const url = truncate(req.query.url || req.query.u, lengths.url)
             const title = truncate(
-                req.query.title || req.query.t,
+                cleanify(req.query.title || req.query.t),
                 lengths.title
             )
             const description = truncate(
-                req.query.description || req.query.d,
+                cleanify(req.query.description || req.query.d),
                 lengths.description
             )
 
@@ -136,12 +135,14 @@ sequelize
                                   })
                                   return {
                                       title: truncate(
-                                          $('head title').text(),
+                                          cleanify($('head title').text()),
                                           lengths.title
                                       ),
                                       description: truncate(
-                                          $('head meta[name=description]').attr(
-                                              'content'
+                                          cleanify(
+                                              $(
+                                                  'head meta[name=description]'
+                                              ).attr('content')
                                           ),
                                           lengths.description
                                       ),
@@ -166,9 +167,8 @@ sequelize
         })
 
         app.get('/del', (req, res) => {
-            const name = slugify(
-                truncate(req.query.name || req.query.n, lengths.name)
-            )
+            const n = req.query.name || req.query.n
+            const name = slugify(truncate(cleanify(n), lengths.name))
             const url = truncate(req.query.url || req.query.u, lengths.url)
             if (!name || !url) {
                 return res.status(404).end('404 : Missing name or url')
