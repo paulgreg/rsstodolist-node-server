@@ -5,8 +5,8 @@
     "main": "src/index.js",
     "type": "module",
     "scripts": {
-        "start": "NODE_ENV=production node --experimental-modules src/index.mjs",
-        "dev": "nodemon --experimental-modules src/index.mjs",
+        "start": "NODE_ENV=production node --experimental-json-modules src/index.mjs",
+        "dev": "nodemon --experimental-json-modules src/index.mjs",
         "tdd": "jest --watch",
         "test": "jest"
     },

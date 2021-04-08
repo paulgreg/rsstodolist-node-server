@@ -1,7 +1,7 @@
 import express from 'express'
 import parameters from '../parameters.json'
 import Sequelize from 'sequelize'
-import FeedModelBuilder, { lengths } from './FeedModel'
+import FeedModelBuilder, { lengths } from './FeedModel.mjs'
 import axios from 'axios'
 import cheerio from 'cheerio'
 import morgan from 'morgan'
