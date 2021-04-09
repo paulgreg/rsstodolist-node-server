@@ -133,9 +133,13 @@ sequelize
                                       xmlMode: false,
                                       decodeEntities: true,
                                   })
+
+                                  const titleFromPage =
+                                      $('head title').text() ||
+                                      $('body title').text()
                                   return {
                                       title: truncate(
-                                          cleanify($('head title').text()),
+                                          cleanify(titleFromPage),
                                           lengths.title
                                       ),
                                       description: truncate(
