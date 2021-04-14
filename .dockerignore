@@ -3,4 +3,5 @@ parameters.json
 
 .env
 .env.*
-!.env.sample.*
+
+Dockerfile
