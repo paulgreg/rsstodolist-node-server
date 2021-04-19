@@ -4,15 +4,16 @@ FROM node:lts-alpine
 RUN apk add --no-cache bash coreutils
 
 # The application will be mounted into this directory.
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
 # Install dependencies.
-COPY package.json package-lock.json /usr/src/app/
+COPY ../package.json ../package-lock.json /usr/app/
 RUN npm ci && \
     npm cache clean --force
 
 # Bundle app source.
-COPY . /usr/src/app
+COPY ../src/ /usr/app/src/
+COPY ../docker/wait-for-it.sh /usr/app/
 
 EXPOSE 6070
 

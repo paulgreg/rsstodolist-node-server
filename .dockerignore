@@ -1,7 +1,0 @@
-node_modules
-parameters.json
-
-.env
-.env.*
-
-Dockerfile

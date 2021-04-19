@@ -7,9 +7,9 @@ services:
 
   rsstodolist:
     build:
-      context: .
-      dockerfile: Dockerfile
-    env_file: .env.docker_compose
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    env_file: ../.env.docker_compose
     ports:
       - "${CONTAINER_EXT_PORT:-8080}:${PORT:-6070}"
 
@@ -17,10 +17,10 @@ services:
       - db
   db:
     image: 'mariadb:10.5.9'
-    env_file: .env.docker_compose
+    env_file: ../.env.docker_compose
     volumes:
       # Mount a persistent Docker volume into the container so that PostgreSQL
       # data survives container restart.
       - "db_data:/var/lib/mysql"
       # Copy the sql script to init db
-      - ./rsstodolist.sql:/docker-entrypoint-initdb.d/rsstodolist.sql
+      - ../rsstodolist.sql:/docker-entrypoint-initdb.d/rsstodolist.sql
