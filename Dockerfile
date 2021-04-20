@@ -7,13 +7,13 @@ RUN apk add --no-cache bash coreutils
 WORKDIR /usr/app
 
 # Install dependencies.
-COPY ../package.json ../package-lock.json /usr/app/
+COPY ./package.json ./package-lock.json /usr/app/
 RUN npm ci && \
     npm cache clean --force
 
 # Bundle app source.
-COPY ../src/ /usr/app/src/
-COPY ../docker/wait-for-it.sh /usr/app/
+COPY ./src/ /usr/app/src/
+COPY ./docker/wait-for-it.sh /usr/app/
 
 EXPOSE 6070
 

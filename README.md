@@ -42,7 +42,7 @@ Currently, you need to apply `rsstodolist.sql` manually on your database server.
 As there is no currently public image, build the image for example like this:
 
 ```shell
-docker build -t rsstodolist -f ./docker/Dockerfile .
+docker build -t rsstodolist -f ./Dockerfile .
 ```
 
 ### Run the container
