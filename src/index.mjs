@@ -1,5 +1,4 @@
 import express from 'express'
-import parameters from '../parameters.json'
 import Sequelize from 'sequelize'
 import FeedModelBuilder, { lengths } from './FeedModel.mjs'
 import axios from 'axios'
@@ -12,24 +11,19 @@ import cors from 'cors'
 import jschardet from 'jschardet'
 import charset from 'charset'
 import iconv from 'iconv-lite'
+import * as env from './env.mjs'
 
+const publicPort = env.CONTAINER_EXT_PORT || env.PORT;
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const {
-    port,
-    rootUrl,
-    database,
-    username,
-    password,
-    host,
-    dialect,
-    logging,
-} = parameters
-
-const sequelize = new Sequelize(database, username, password, {
-    host,
-    dialect,
-    logging,
+const sequelize = new Sequelize(env.DATABASE_NAME, env.DATABASE_USER, env.DATABASE_PASS, {
+    host:env.DATABASE_HOST,
+    port: env.DATABASE_PORT,
+    dialect:env.DATABASE_DIALECT,
+    timezone: env.TZ,
+    dialectOptions: {
+        timezone: env.TZ, // Duplicate because of a bug: https://github.com/sequelize/sequelize/issues/10921
+    }
 })
 
 axios.interceptors.response.use((response) => {
@@ -49,12 +43,12 @@ sequelize
     .authenticate()
     .then(() => {
         console.log(
-            `Connection to '${database}' on '${host}' by '${username}' has been established successfully`
+            `Connection to '${env.DATABASE_NAME}' on '${env.DATABASE_HOST}' by '${env.DATABASE_USER}' has been established successfully`
         )
     })
     .catch((err) => {
         console.error(
-            `Unable to connect to '${database}' on '${host}' by '${username}'`,
+            `Unable to connect to '${env.DATABASE_NAME}' on '${env.DATABASE_HOST}' by '${env.DATABASE_USER}'`,
             err
         )
         throw err
@@ -79,6 +73,7 @@ sequelize
         )
 
         app.get('/', (req, res) => {
+            const rootUrl = req.protocol + "://" + req.get('host');
             const n = req.query.name || req.query.n
             const name = slugify(truncate(cleanify(n), lengths.name))
             const limit =
@@ -186,9 +181,9 @@ sequelize
                 })
         })
 
-        app.listen(port, () =>
+        app.listen(env.PORT, () => {
             console.log(
-                `rsstodolist-node-server listening at http://localhost:${port}`
+                `rsstodolist-node-server listening at http://localhost:${publicPort}`
             )
-        )
+        })
     })
