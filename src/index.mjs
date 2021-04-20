@@ -79,9 +79,12 @@ sequelize
             return res.render('index')
         })
 
-        app.get('/list', (req, res) =>
-            list().then((feeds) => res.render('list', { feeds }))
-        )
+        if (env.ENABLE_LIST) {
+            console.log('enable /list')
+            app.get('/list', (req, res) =>
+                list().then((feeds) => res.render('list', { feeds }))
+            )
+        }
 
         app.get('/add', (req, res) => {
             const n = req.query.name || req.query.n
