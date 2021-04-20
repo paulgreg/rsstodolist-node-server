@@ -32,8 +32,6 @@ axios.interceptors.response.use((response) => {
         (chardetResult && chardetResult.encoding) ||
         charset(response.headers, response.data)
 
-    console.log(`encoding:${encoding}`)
-
     response.data = iconv.decode(response.data, encoding)
 
     return response
