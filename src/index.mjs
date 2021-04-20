@@ -13,17 +13,14 @@ import charset from 'charset'
 import iconv from 'iconv-lite'
 import * as env from './env.mjs'
 
-const publicPort = env.CONTAINER_EXT_PORT || env.PORT;
+const publicPort = env.CONTAINER_EXT_PORT || env.PORT
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const sequelize = new Sequelize(env.DATABASE_NAME, env.DATABASE_USER, env.DATABASE_PASS, {
-    host:env.DATABASE_HOST,
-    port: env.DATABASE_PORT,
-    dialect:env.DATABASE_DIALECT,
+const sequelize = new Sequelize(env.DB_URL, {
     timezone: env.TZ,
     dialectOptions: {
         timezone: env.TZ, // Duplicate because of a bug: https://github.com/sequelize/sequelize/issues/10921
-    }
+    },
 })
 
 axios.interceptors.response.use((response) => {
@@ -40,15 +37,10 @@ axios.interceptors.response.use((response) => {
 sequelize
     .authenticate()
     .then(() => {
-        console.log(
-            `Connection to '${env.DATABASE_NAME}' on '${env.DATABASE_HOST}' by '${env.DATABASE_USER}' has been established successfully`
-        )
+        console.log(`Connection to database has been established successfully`)
     })
     .catch((err) => {
-        console.error(
-            `Unable to connect to '${env.DATABASE_NAME}' on '${env.DATABASE_HOST}' by '${env.DATABASE_USER}'`,
-            err
-        )
+        console.error(`Unable to connect to database`, err)
         throw err
     })
     .then(() => {
@@ -71,7 +63,7 @@ sequelize
         )
 
         app.get('/', (req, res) => {
-            const rootUrl = req.protocol + "://" + req.get('host');
+            const rootUrl = req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
             const name = slugify(truncate(cleanify(n), lengths.name))
             const limit =
