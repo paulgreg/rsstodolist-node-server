@@ -16,6 +16,10 @@ import * as env from './env.mjs'
 const publicPort = env.CONTAINER_EXT_PORT || env.PORT
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+const MINUTE = 60
+const HOUR = MINUTE * 60
+const HALF_DAY = HOUR * 12
+
 const sequelize = new Sequelize(env.DB_URL, {
     timezone: env.TZ,
     dialectOptions: {
@@ -59,7 +63,10 @@ sequelize
 
         app.use(
             '/static',
-            express.static(__dirname + '/static', { index: false })
+            express.static(__dirname + '/static', {
+                index: false,
+                maxAge: HALF_DAY * 1000,
+            })
         )
 
         app.get('/', (req, res) => {
@@ -74,16 +81,21 @@ sequelize
 
                 return findByName({ name, limit }).then((entries) => {
                     res.type('text/xml')
+                    res.set('Cache-control', `public, max-age=${5 * MINUTE}`)
                     return res.render('rss', { rootUrl, name, entries })
                 })
             }
+            res.set('Cache-control', `public, max-age=${HALF_DAY}`)
             return res.render('index')
         })
 
         if (env.ENABLE_LIST) {
             console.log('enable /list')
             app.get('/list', (req, res) =>
-                list().then((feeds) => res.render('list', { feeds }))
+                list().then((feeds) => {
+                    res.set('Cache-control', `public, max-age=${HOUR}`)
+                    res.render('list', { feeds })
+                })
             )
         }
 
