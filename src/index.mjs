@@ -63,7 +63,8 @@ sequelize
         )
 
         app.get('/', (req, res) => {
-            const rootUrl = req.protocol + '://' + req.get('host')
+            const rootUrl =
+                env.ROOT_URL || req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
             const name = slugify(truncate(cleanify(n), lengths.name))
             const limit =

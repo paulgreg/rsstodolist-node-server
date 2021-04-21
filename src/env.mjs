@@ -11,6 +11,7 @@ export const DATABASE_PASS = process.env.DATABASE_PASS
 export const PORT = process.env.PORT || 6070
 export const CONTAINER_EXT_PORT = process.env.CONTAINER_EXT_PORT
 export const ENABLE_LIST = process.env.ENABLE_LIST
+export const ROOT_URL = process.env.ROOT_URL
 
 export const DB_URL =
     process.env.DB_URL ||
