@@ -73,12 +73,12 @@ sequelize
                 env.ROOT_URL || req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
             const name = slugify(truncate(cleanify(n), lengths.name))
-            const limit =
-                Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
+            const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
+            const max = 500
             if (name) {
                 if (n !== name) return res.redirect(302, `./?n=${name}`)
 
-                return findByName({ name, limit }).then((entries) => {
+                return findByName({ name, limit: limit > max ? max : limit }).then((entries) => {
                     res.type('text/xml')
                     return res.render('rss', { rootUrl, name, entries })
                 })
