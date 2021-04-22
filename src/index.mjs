@@ -81,7 +81,6 @@ sequelize
 
                 return findByName({ name, limit }).then((entries) => {
                     res.type('text/xml')
-                    res.set('Cache-control', `public, max-age=${5 * MINUTE}`)
                     return res.render('rss', { rootUrl, name, entries })
                 })
             }
@@ -93,7 +92,6 @@ sequelize
             console.log('enable /list')
             app.get('/list', (req, res) =>
                 list().then((feeds) => {
-                    res.set('Cache-control', `public, max-age=${HOUR}`)
                     res.render('list', { feeds })
                 })
             )
