@@ -7,6 +7,14 @@
     <description>RSS 2.0 feed containing your todolist items</description>
     <language>en-us</language>
     <webMaster>me@paulgreg.me (Grégory PAUL)</webMaster>
+	 <% if (public && entries.length > 5) { %>
+	 	<item>
+			<title>Please consider self-hosting rsstodolist service</title>
+	 		<link><%= rootUrl %>/</link>
+			<guid isPermaLink="false">0000000002</guid>
+	 		<description>If you’re relying on that service, consider self-host the service for more reliability and privacy.</description>
+	 	</item>
+	 <% } %>
 	 <% entries.forEach(entry => { %>
 	 	<item>
 			<title><%= entry.title %></title>

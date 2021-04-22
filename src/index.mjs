@@ -13,8 +13,6 @@ import charset from 'charset'
 import iconv from 'iconv-lite'
 import * as env from './env.mjs'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const HALF_DAY = HOUR * 12
@@ -28,9 +26,7 @@ const sequelize = new Sequelize(env.DB_URL, {
 
 axios.interceptors.response.use((response) => {
     const chardetResult = jschardet.detect(response.data)
-    const encoding =
-        (chardetResult && chardetResult.encoding) ||
-        charset(response.headers, response.data)
+    const encoding = (chardetResult && chardetResult.encoding) || charset(response.headers, response.data)
 
     response.data = iconv.decode(response.data, encoding)
 
@@ -53,13 +49,10 @@ sequelize
         app.set('view engine', 'ejs')
         app.set('views', 'src/views')
 
-        app.use(
-            morgan(
-                ':method :url :status :res[content-length] - :response-time ms'
-            )
-        )
+        app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
         app.use(cors())
 
+        const __dirname = dirname(fileURLToPath(import.meta.url))
         app.use(
             '/static',
             express.static(__dirname + '/static', {
@@ -69,8 +62,7 @@ sequelize
         )
 
         app.get('/', (req, res) => {
-            const rootUrl =
-                env.ROOT_URL || req.protocol + '://' + req.get('host')
+            const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
             const name = slugify(truncate(cleanify(n), lengths.name))
             const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
@@ -80,14 +72,19 @@ sequelize
 
                 return findByName({ name, limit: limit > max ? max : limit }).then((entries) => {
                     res.type('text/xml')
-                    return res.render('rss', { rootUrl, name, entries })
+                    return res.render('rss', {
+                        rootUrl,
+                        public: env.PUBLIC,
+                        name,
+                        entries,
+                    })
                 })
             }
             res.set('Cache-control', `public, max-age=${HALF_DAY}`)
-            return res.render('index')
+            return res.render('index', { rootUrl, public: env.PUBLIC })
         })
 
-        if (env.ENABLE_LIST) {
+        if (!env.PUBLIC) {
             console.log('enable /list')
             app.get('/list', (req, res) =>
                 list().then((feeds) => {
@@ -100,14 +97,8 @@ sequelize
             const n = req.query.name || req.query.n
             const name = slugify(truncate(cleanify(n), lengths.name))
             const url = truncate(req.query.url || req.query.u, lengths.url)
-            const title = truncate(
-                cleanify(req.query.title || req.query.t),
-                lengths.title
-            )
-            const description = truncate(
-                cleanify(req.query.description || req.query.d),
-                lengths.description
-            )
+            const title = truncate(cleanify(req.query.title || req.query.t), lengths.title)
+            const description = truncate(cleanify(req.query.description || req.query.d), lengths.description)
 
             if (!name || !url) {
                 return res.status(404).end('404 : Missing name or url')
@@ -119,8 +110,7 @@ sequelize
                           .get(encodeURI(url), {
                               responseType: 'arraybuffer',
                               headers: {
-                                  'User-Agent':
-                                      'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
+                                  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
                               },
                           })
                           .then(function (response = {}) {
@@ -132,20 +122,11 @@ sequelize
                                       decodeEntities: true,
                                   })
 
-                                  const titleFromPage =
-                                      $('head title').text() ||
-                                      $('body title').text()
+                                  const titleFromPage = $('head title').text() || $('body title').text()
                                   return {
-                                      title: truncate(
-                                          cleanify(titleFromPage),
-                                          lengths.title
-                                      ),
+                                      title: truncate(cleanify(titleFromPage), lengths.title),
                                       description: truncate(
-                                          cleanify(
-                                              $(
-                                                  'head meta[name=description]'
-                                              ).attr('content')
-                                          ),
+                                          cleanify($('head meta[name=description]').attr('content')),
                                           lengths.description
                                       ),
                                   }
@@ -158,7 +139,7 @@ sequelize
             )
                 .then((metas = {}) => {
                     const { title, description } = metas
-                    return insert({ name, url, title, description })
+                    return insert({ name, url, title: title || url, description })
                 })
                 .then(() => res.redirect(302, `./?n=${name}`))
                 .catch((err) => {

@@ -1,37 +1,41 @@
 # rsstodolist-node-server
 
-rsstodolist-node-server is a node port of the Google App Engine rsstodolist application (https://rsstodolist.appspot.com).
-Same functionality are expected but It can be host on your server.
+That application is hosted on https://rsstodolist.herokuapp.com/.
+
+That project is a node port of the initial Google App Engine rsstodolist application (https://rsstodolist.appspot.com).
+
+For more reliability and privacy, I *strongly* suggest you to self-host that application.
+
+Thanks to [Loïc Fürhoff](https://github.com/imagoiq), it can be hosted in a convenient way via docker.
+
 
 ## Requirements
 
 - Node >= 10
 - MariaDB
 
+or
+
+- docker
+
+
 ## Pre-requisites
 
-- Copy `.env.sample` into `.env` (or .env.docker_compose if you are using docker-compose setup) and set the variables.
+Copy `.env.sample` into `.env` (or `.env.docker_compose` if you are using docker-compose setup) and set the variables according your need.
 
-## Setup
+The app will try to determine it’s root url. If it isn’t correct, you can specify it via `ROOT_URL` env variable.
 
-### Run the migration file
+The `PUBLIC` env variable should only be used for public instance (it disable /list and add some messages about self-hosting).
 
-Run the migration file `./rssdolist.sql` to create the rsstodolist database.
 
-### Install packages and start the application
-
-``` shell
-npm install
-npm start
-```
-
-## Setup with docker-compose
+## 1. Setup with docker-compose
 
 ```shell
+docker-compose -f ./docker/docker-compose.yml build
 docker-compose -f ./docker/docker-compose.yml up
 ```
 
-## Setup with the DockerFile
+## 2. Setup with the DockerFile
 
 ### Run the migration file
 
@@ -62,3 +66,15 @@ docker run -p 8080:6070 \
 rsstodolist
 ```
 
+## 3. Setup via node & MariaDB
+
+### Run the migration file
+
+Run the migration file `./rssdolist.sql` to create the rsstodolist database.
+
+### Install packages and start the application
+
+``` shell
+npm install
+npm start
+```
