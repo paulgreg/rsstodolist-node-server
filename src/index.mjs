@@ -13,7 +13,6 @@ import charset from 'charset'
 import iconv from 'iconv-lite'
 import * as env from './env.mjs'
 
-const publicPort = env.CONTAINER_EXT_PORT || env.PORT
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const MINUTE = 60
@@ -186,8 +185,6 @@ sequelize
         })
 
         app.listen(env.PORT, () => {
-            console.log(
-                `rsstodolist-node-server listening at http://localhost:${publicPort}`
-            )
+            console.log(`rsstodolist-node-server listening at http://localhost:${env.CONTAINER_EXT_PORT || env.PORT}`)
         })
     })
