@@ -8,21 +8,25 @@
         <meta name="author" content="Gr&eacute;gory Paul"/>
         <meta name="description" content="An RSS based todo-list"/>
         <style type="text/css">
-            body { background-color: #3B7CC0; margin: 0 5%; font-family: sans-serif; }
-            #content { background-color: white; padding: 2%; border-right: 3px solid #159EFE; border-left: 3px solid #159EFE; }
+            body { margin: 0; background-color: #3B7CC0; font-family: sans-serif; }
+            #content { padding: 2%; background-color: white; border-right: 3px solid #159EFE; border-left: 3px solid #159EFE; }
             h1 { color: #159EFE; }
             h2 { color: #63ADF5; margin: 1em 0.5em 1em 0.5em; }
-            h3 { color: #3B7CC0; margin-left: 2.5em; }
-            p { margin-left: 4em; }
-            ul { margin-left: 3em; list-style-type: square; }
+            h3 { color: #3B7CC0; margin-left: 0.5em; }
+            ul { list-style-type: square; }
             input { margin: .25em; }
-            input[name=url] { width: 90%; }
             input[type=submit] { margin: .5em  0; }
-            code { display: block; margin: 0.5em 0; font: serif; }
-            .right { float: right; }
-            .warning { font-style: italic; }
+            code { display: block; margin: 0.5em 0; word-break: break-all; }
+            @media (min-width:1024px) {
+                p { margin-left: 4em; }
+                body { margin: 0 5%;  }
+                input[name=url] { width: 90%; }
+                ul { margin-left: 3em; }
+                h3 { margin-left: 2.5em; }
+            }
         </style>
         <link rel="icon" type="image/png" href="./static/favicon.png" />
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no" />
     </head>
     <body>
         <div id="content">
