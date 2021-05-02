@@ -1,10 +1,10 @@
 # rsstodolist-node-server
 
-That application is hosted on https://rsstodolist.herokuapp.com/.
+That application is hosted on Heroku at https://rsstodolist.eu/.
 
-That project is a node port of the initial Google App Engine rsstodolist application (https://rsstodolist.appspot.com).
+That project is a node port of the initial Google App Engine rsstodolist application.
 
-For more reliability and privacy, I *strongly* suggest you to self-host that application.
+For more reliability and privacy, I _strongly_ suggest you to self-host that application.
 
 Thanks to [Loïc Fürhoff](https://github.com/imagoiq), it can be hosted in a convenient way via docker.
 
