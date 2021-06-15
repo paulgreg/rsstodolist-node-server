@@ -22,6 +22,7 @@ const sequelize = new Sequelize(env.DB_URL, {
     dialectOptions: {
         timezone: env.TZ, // Duplicate because of a bug: https://github.com/sequelize/sequelize/issues/10921
     },
+    logging: false,
 })
 
 axios.interceptors.response.use((response) => {
