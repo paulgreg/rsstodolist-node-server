@@ -103,39 +103,41 @@ sequelize
             if (!name || !url) {
                 return res.status(404).end('404 : Missing name or url')
             }
-            return (title
-                ? Promise.resolve({ title, description })
-                : Promise.resolve().then(() =>
-                      axios
-                          .get(encodeURI(url), {
-                              responseType: 'arraybuffer',
-                              headers: {
-                                  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
-                              },
-                          })
-                          .then(function (response = {}) {
-                              const { status, data } = response
-                              if (status === 200) {
-                                  const $ = cheerio.load(data, {
-                                      normalizeWhitespace: true,
-                                      xmlMode: false,
-                                      decodeEntities: true,
-                                  })
+            return (
+                title
+                    ? Promise.resolve({ title, description })
+                    : Promise.resolve().then(() =>
+                          axios
+                              .get(encodeURI(url), {
+                                  responseType: 'arraybuffer',
+                                  headers: {
+                                      'User-Agent':
+                                          'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
+                                  },
+                              })
+                              .then(function (response = {}) {
+                                  const { status, data } = response
+                                  if (status === 200) {
+                                      const $ = cheerio.load(data, {
+                                          normalizeWhitespace: true,
+                                          xmlMode: false,
+                                          decodeEntities: true,
+                                      })
 
-                                  const titleFromPage = $('head title').text() || $('body title').text()
-                                  return {
-                                      title: truncate(cleanify(titleFromPage), lengths.title),
-                                      description: truncate(
-                                          cleanify($('head meta[name=description]').attr('content')),
-                                          lengths.description
-                                      ),
+                                      const titleFromPage = $('head title').text() || $('body title').text()
+                                      return {
+                                          title: truncate(cleanify(titleFromPage), lengths.title),
+                                          description: truncate(
+                                              cleanify($('head meta[name=description]').attr('content')),
+                                              lengths.description
+                                          ),
+                                      }
                                   }
-                              }
-                          })
-                          .catch(function (error) {
-                              console.log(error)
-                          })
-                  )
+                              })
+                              .catch(function (error) {
+                                  console.log(error)
+                              })
+                      )
             )
                 .then((metas = {}) => {
                     const { title, description } = metas
