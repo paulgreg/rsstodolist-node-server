@@ -100,8 +100,7 @@ sequelize
         }
 
         app.get('/add', (req, res) => {
-            const n = req.query.name || req.query.n
-            const name = cleanNameStr(n)
+            const name = cleanNameStr(req.query.name || req.query.n)
             const url = cleanUrlStr(req.query.url || req.query.u)
             const title = cleanTitleStr(req.query.title || req.query.t)
             const description = cleanDescriptionStr(req.query.description || req.query.d)
