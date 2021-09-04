@@ -4,7 +4,7 @@ import FeedModelBuilder, { lengths } from './FeedModel.mjs'
 import axios from 'axios'
 import cheerio from 'cheerio'
 import morgan from 'morgan'
-import { truncate, slugify, cleanify } from './strings.mjs'
+import { trim, truncate, slugify, cleanify } from './strings.mjs'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import cors from 'cors'
@@ -17,10 +17,10 @@ const MINUTE = 60
 const HOUR = MINUTE * 60
 const HALF_DAY = HOUR * 12
 
-const cleanNameStr = (n) => slugify(truncate(cleanify(n), lengths.name))
-const cleanUrlStr = (u) => truncate(u, lengths.url)
-const cleanTitleStr = (t) => truncate(cleanify(t), lengths.title)
-const cleanDescriptionStr = (d) => truncate(cleanify(d), lengths.description)
+const cleanNameStr = (n) => slugify(truncate(cleanify(trim(n)), lengths.name))
+const cleanUrlStr = (u) => truncate(trim(u), lengths.url)
+const cleanTitleStr = (t) => truncate(cleanify(trim(t)), lengths.title)
+const cleanDescriptionStr = (d) => truncate(cleanify(trim(d)), lengths.description)
 
 const sequelize = new Sequelize(env.DB_URL, {
     timezone: env.TZ,

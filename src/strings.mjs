@@ -1,4 +1,6 @@
-export const truncate = (s = '', length) => String(s).trim().substring(0, length)
+export const trim = (s = '') => String(s).trim()
+
+export const truncate = (s = '', length) => String(s).substring(0, length)
 
 export const slugify = (s = '') =>
     String(s)
