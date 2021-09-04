@@ -46,6 +46,8 @@ Currently, you need to apply `rsstodolist.sql` manually on your database server.
 As there is no currently public image, build the image for example like this:
 
 ```shell
+npm run docker-build
+# or 
 docker build -t rsstodolist -f ./Dockerfile .
 ```
 

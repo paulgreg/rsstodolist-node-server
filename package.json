@@ -8,7 +8,8 @@
         "start": "NODE_ENV=production node --experimental-json-modules src/index.mjs",
         "dev": "nodemon --experimental-json-modules src/index.mjs",
         "tdd": "jest --watch",
-        "test": "jest"
+        "test": "jest",
+        "docker-build": "docker build -t rsstodolist -f ./Dockerfile ."
     },
     "engines": {
         "node": ">=10.0.0"
