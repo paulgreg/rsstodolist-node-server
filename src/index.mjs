@@ -69,7 +69,8 @@ sequelize
 
         app.get('/', (req, res) => {
             const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
-            const name = cleanNameStr(req.query.name || req.query.n)
+            const n = req.query.name || req.query.n
+            const name = cleanNameStr(n)
             const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
             const max = 500
             if (name) {
