@@ -17,6 +17,11 @@ const MINUTE = 60
 const HOUR = MINUTE * 60
 const HALF_DAY = HOUR * 12
 
+const cleanNameStr = (n) => slugify(truncate(cleanify(n), lengths.name))
+const cleanUrlStr = (u) => truncate(u, lengths.url)
+const cleanTitleStr = (t) => truncate(cleanify(t), lengths.title)
+const cleanDescriptionStr = (d) => truncate(cleanify(d), lengths.description)
+
 const sequelize = new Sequelize(env.DB_URL, {
     timezone: env.TZ,
     dialectOptions: {
@@ -64,8 +69,7 @@ sequelize
 
         app.get('/', (req, res) => {
             const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
-            const n = req.query.name || req.query.n
-            const name = slugify(truncate(cleanify(n), lengths.name))
+            const name = cleanNameStr(req.query.name || req.query.n)
             const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
             const max = 500
             if (name) {
@@ -96,10 +100,10 @@ sequelize
 
         app.get('/add', (req, res) => {
             const n = req.query.name || req.query.n
-            const name = slugify(truncate(cleanify(n), lengths.name))
-            const url = truncate(req.query.url || req.query.u, lengths.url)
-            const title = truncate(cleanify(req.query.title || req.query.t), lengths.title)
-            const description = truncate(cleanify(req.query.description || req.query.d), lengths.description)
+            const name = cleanNameStr(n)
+            const url = cleanUrlStr(req.query.url || req.query.u)
+            const title = cleanTitleStr(req.query.title || req.query.t)
+            const description = cleanDescriptionStr(req.query.description || req.query.d)
 
             if (!name || !url) {
                 return res.status(404).end('404 : Missing name or url')
@@ -153,9 +157,8 @@ sequelize
         })
 
         app.get('/del', (req, res) => {
-            const n = req.query.name || req.query.n
-            const name = slugify(truncate(cleanify(n), lengths.name))
-            const url = truncate(req.query.url || req.query.u, lengths.url)
+            const name = cleanNameStr(req.query.name || req.query.n)
+            const url = cleanUrlStr(req.query.url || req.query.u)
             if (!name || !url) {
                 return res.status(404).end('404 : Missing name or url')
             }
