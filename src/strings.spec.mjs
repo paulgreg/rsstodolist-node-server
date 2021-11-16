@@ -17,11 +17,13 @@ describe('strings', () => {
         test('should lower case', () => expect(slugify('AbC')).toBe('abc'))
         test('should remove space', () => expect(slugify(' a b c ')).toBe('abc'))
         test('should remove accents', () => expect(slugify('-áéó-')).toBe('--'))
+        test('should remove unicode char', () => expect(slugify('--™-')).toBe('---'))
         test('should handle other type than string', () => expect(slugify(5)).toBe('5'))
         test('should handle undefined', () => expect(slugify(undefined)).toBe(''))
     })
     describe('cleanify', () => {
         test('should remove emoji', () =>
             expect(cleanify('Firefox OS 🦊🚀 - LinuxFr.org')).toBe('Firefox OS  - LinuxFr.org'))
+        test('should remove unicode char', () => expect(cleanify('--™-')).toBe('---'))
     })
 })
