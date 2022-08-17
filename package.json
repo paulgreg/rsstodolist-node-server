@@ -2,7 +2,7 @@
     "name": "rsstodolist-node-server",
     "version": "1.0.0",
     "description": "rsstodolist server in node",
-    "main": "src/index.js",
+    "main": "src/index.mjs",
     "type": "module",
     "scripts": {
         "start": "NODE_ENV=production node --experimental-json-modules src/index.mjs",
