@@ -1,0 +1,11 @@
+CREATE DATABASE rsstodolist; -- rsstodolist_docker for fly.io
+
+CREATE TABLE feeds_feedentry (
+  "id"            SERIAL PRIMARY KEY,
+  "name"          VARCHAR(20)       NOT NULL,
+  "url"           VARCHAR(512)      NOT NULL,
+  "title"         VARCHAR(255)      NOT NULL,
+  "description"   TEXT              NULL,
+  "createdAt"     TIMESTAMP         NOT NULL,
+  "updatedAt"     TIMESTAMP         NULL
+);
