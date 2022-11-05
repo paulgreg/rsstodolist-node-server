@@ -1,9 +1,8 @@
 # rsstodolist-node-server
 
+rsstodolist is an URL oriented to-read-list based on an RSS XML feed. Typical use case is to save web pages to read later on a RSS reader, or to send links to friends.
+
 That application is hosted on fly.io at https://rsstodolist.eu/.
-
-That project is a node port of the initial Google App Engine rsstodolist application.
-
 For more reliability and privacy, I _strongly_ suggest you to self-host that application.
 
 Thanks to [Loïc Fürhoff](https://github.com/imagoiq), it can be hosted in a convenient way via docker.
@@ -12,7 +11,7 @@ Thanks to [Loïc Fürhoff](https://github.com/imagoiq), it can be hosted in a co
 ## Requirements
 
 - Node >= 10
-- MariaDB
+- MariaDB or Postgres
 
 or
 
@@ -39,7 +38,7 @@ docker-compose -f ./docker/docker-compose.yml up
 
 ### Run the migration file
 
-Currently, you need to apply `rsstodolist.sql` manually on your database server.
+You need to apply `sql/rsstodolist.mysql` or `sql/rsstodolist.postgres` manually on your database server.
 
 ### Build the image
 
@@ -47,7 +46,7 @@ As there is no currently public image, build the image for example like this:
 
 ```shell
 npm run docker-build
-# or 
+# or
 docker build -t rsstodolist -f ./Dockerfile .
 ```
 
@@ -72,7 +71,7 @@ rsstodolist
 
 ### Run the migration file
 
-Run the migration file `./rssdolist.sql` to create the rsstodolist database.
+Run the migration file to create the rsstodolist database.
 
 ### Install packages and start the application
 
