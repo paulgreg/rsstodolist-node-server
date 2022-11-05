@@ -1,0 +1,11 @@
+# flyctl launch added from .gitignore
+**/node_modules
+**/parameters.json
+
+**/.env
+**/.env.*
+!**/.env.sample.*
+
+**/.docker/.env
+**/.docker/.env.*
+!**/.docker/.env.sample.*

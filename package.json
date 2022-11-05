@@ -41,7 +41,8 @@
         "mariadb": "^2.4.0",
         "morgan": "^1.10.0",
         "mysql2": "^2.2.5",
-        "sequelize": "^5.21.11"
+        "pg": "^8.8.0",
+        "sequelize": "^5.22.5"
     },
     "devDependencies": {
         "@babel/core": "^7.10.2",

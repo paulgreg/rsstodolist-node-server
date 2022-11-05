@@ -22,7 +22,7 @@ const cleanUrlStr = (u) => truncate(trim(u), lengths.url)
 const cleanTitleStr = (t) => truncate(cleanify(trim(t)), lengths.title)
 const cleanDescriptionStr = (d) => truncate(cleanify(trim(d)), lengths.description)
 
-const sequelize = new Sequelize(env.DB_URL, {
+const sequelize = new Sequelize(env.DATABASE_URL, {
     timezone: env.TZ,
     dialectOptions: {
         timezone: env.TZ, // Duplicate because of a bug: https://github.com/sequelize/sequelize/issues/10921
@@ -42,7 +42,7 @@ axios.interceptors.response.use((response) => {
 sequelize
     .authenticate()
     .then(() => {
-        console.log(`Connection to database has been established successfully`)
+        console.log(`Connection to database « ${sequelize.getDatabaseName()} » has been established successfully`)
     })
     .catch((err) => {
         console.error(`Unable to connect to database`, err)

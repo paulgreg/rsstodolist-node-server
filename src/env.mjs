@@ -13,6 +13,6 @@ export const CONTAINER_EXT_PORT = process.env.CONTAINER_EXT_PORT
 export const PUBLIC = process.env.PUBLIC
 export const ROOT_URL = process.env.ROOT_URL
 
-export const DB_URL =
-    process.env.DB_URL ||
+export const DATABASE_URL =
+    process.env.DATABASE_URL ||
     `${DATABASE_DIALECT}://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`

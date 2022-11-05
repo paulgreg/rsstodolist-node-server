@@ -1,6 +1,6 @@
 # rsstodolist-node-server
 
-That application is hosted on Heroku at https://rsstodolist.eu/.
+That application is hosted on fly.io at https://rsstodolist.eu/.
 
 That project is a node port of the initial Google App Engine rsstodolist application.
 
