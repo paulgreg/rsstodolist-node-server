@@ -6,6 +6,7 @@ kill_timeout = 5
 processes = []
 
 [env]
+ROOT_URL = "https://rsstodolist.eu"
 
 [experimental]
   allowed_public_ports = []
