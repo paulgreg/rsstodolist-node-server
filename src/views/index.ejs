@@ -30,13 +30,17 @@
     </head>
     <body>
         <div id="content">
-            <h1>rsstodolist</h1>
+            <h1>📃 rsstodolist</h1>
 
             <p>rsstodolist is an URL oriented to-read-list based on an RSS XML feed. Typical use case is to save web pages to read later on a RSS feed.</p>
 
             <% if (public) { %>
 
-            <h2>Self-hosting for more privacy &amp; reliability</h2>
+            <h2>⚠️ Service migration</h2>
+            <p>Service has been migrated from heroku to fly.io. Data hasn't been migrated so your feeds have been truncated. 
+                Contact me if you need to restore some of them.</p>
+
+            <h2>💻 Self-hosting for more privacy &amp; reliability</h2>
             <p>That service is public and « open », meaning anyone knowing your feed name may see your items, add or remove them.</p>
             <p>Also, that service is hosted via hobby plan on fly.io with some limitations.</p>
             <p>So, for more reliability and privacy, I <strong>strongly</strong> suggest you to self-host that application (see <a href="#related">related projects below</a>).</p>
@@ -48,7 +52,7 @@
 
             <% } %>
 
-            <h2>Add an URL to your feed</h2>
+            <h2>➕ Add an URL to your feed</h2>
 
             <h3>1. By using that form :</h3>
             <form method="get" action="add">
@@ -76,21 +80,20 @@
             <h3>4. By using an extension :</h3>
             <p>A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and <a href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd">Chrome extension</a> are available. It will use public instance by default but you can configure your self-host instance in options.</p>
 
-            <h2>Get your feed :</h2>
+            <h2>📃 Get your feed :</h2>
             <p><a href="?name=somename" rel="nofollow"><%= rootUrl %>/?name=somename</a> or <a href="?n=somename" rel="nofollow"><%= rootUrl %>/?n=somename</a></p>
 
-            <h2>Remove an URL from your feed</h2>
+            <h2>➖ Remove an URL from your feed</h2>
             <h3>By calling an URL :</h3>
             <p><a href="del?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow"><%= rootUrl %>/del?name=somename&amp;url=https://fr.wikipedia.org/</a></p>
 
-            <h2>Feedback</h2>
+            <h2>❓ Feedback</h2>
             <p>Please contact me via <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
 
-            <h2 id="related">Related projects and source code</h2>
+            <h2 id="related">ℹ️ Related projects and source code</h2>
             <ul>
                 <li><a href="https://github.com/paulgreg/rsstodolist-node-server">rsstodolist-node-server</a> : source code for that
-                    nodejs version
-                    that you can self-host (can be run via docker)</li>
+                    nodejs version that you can self-host (can be run via docker)</li>
                 <li><a href="https://github.com/paulgreg/rsstodolist-django-server">rsstodolist-django-server</a> : a python/django
                     version that you can self-host (not maintained anymore)</li>
                 <li><a href="https://github.com/paulgreg/rsstodolist-addon">rsstodolist-addon</a> : extension source code for Chrome
