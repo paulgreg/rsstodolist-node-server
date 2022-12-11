@@ -17,4 +17,4 @@ COPY ./docker/wait-for-it.sh /usr/app/
 
 EXPOSE 6070
 
-CMD [ "sh", "-c", "./wait-for-it.sh ${DATABASE_HOST:-localhost}:${DATABASE_PORT:-3306} -t 90 -- npm start" ]
+CMD [ "sh", "-c", "./wait-for-it.sh ${DATABASE_HOST:-127.0.0.1}:${DATABASE_PORT:-3306} -t 90 -- npm start" ]

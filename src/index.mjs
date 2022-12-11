@@ -172,6 +172,6 @@ sequelize
         })
 
         app.listen(env.PORT, () => {
-            console.log(`rsstodolist-node-server listening at http://localhost:${env.CONTAINER_EXT_PORT || env.PORT}`)
+            console.log(`rsstodolist-node-server listening at http://127.0.0.1:${env.CONTAINER_EXT_PORT || env.PORT}`)
         })
     })

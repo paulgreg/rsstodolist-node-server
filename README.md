@@ -62,7 +62,7 @@ or define needed environment variables within the command:
 
 ```shell
 docker run -p 8080:6070 \
--e DATABASE_HOST=localhost \
+-e DATABASE_HOST=127.0.0.1 \
 -e DATABASE_PORT=3306 \
 rsstodolist
 ```
