@@ -4,7 +4,7 @@ import FeedModelBuilder, { lengths } from './FeedModel.mjs'
 import axios from 'axios'
 import cheerio from 'cheerio'
 import morgan from 'morgan'
-import { trim, truncate, slugify, cleanify } from './strings.mjs'
+import { trim, truncate, slugify, cleanify, sanitize } from './strings.mjs'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import cors from 'cors'
@@ -15,12 +15,13 @@ import * as env from './env.mjs'
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
-const HALF_DAY = HOUR * 12
+const DAY = HOUR * 24
 
-const cleanNameStr = (n) => slugify(truncate(cleanify(trim(n)), lengths.name))
+const cleanNameStr = (n) => slugify(truncate(cleanify(sanitize(trim(n))), lengths.name))
 const cleanUrlStr = (u) => truncate(trim(u), lengths.url)
 const cleanTitleStr = (t) => truncate(cleanify(trim(t)), lengths.title)
 const cleanDescriptionStr = (d) => truncate(cleanify(trim(d)), lengths.description)
+const cleanSearchStr = (d) => cleanify(sanitize(trim(d)))
 
 const sequelize = new Sequelize(env.DATABASE_URL, {
     timezone: env.TZ,
@@ -49,7 +50,7 @@ sequelize
         throw err
     })
     .then(() => {
-        const { findByName, list, insert, remove } = FeedModelBuilder(sequelize)
+        const { findByName, list, insert, remove, count, search } = FeedModelBuilder(sequelize)
 
         const app = express()
         app.set('view engine', 'ejs')
@@ -63,30 +64,31 @@ sequelize
             '/static',
             express.static(__dirname + '/static', {
                 index: false,
-                maxAge: HALF_DAY * 1000,
+                maxAge: DAY * 90,
             })
         )
 
         app.get('/', (req, res) => {
             const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
+
             const name = cleanNameStr(n)
             const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
-            const max = 500
             if (name) {
                 if (n !== name) return res.redirect(302, `./?n=${name}`)
 
-                return findByName({ name, limit: limit > max ? max : limit }).then((entries) => {
+                return findByName({ name, limit }).then((entries) => {
                     res.type('text/xml')
                     return res.render('rss', {
                         rootUrl,
                         public: env.PUBLIC,
-                        name,
+                        title: name,
+                        url: `/?n=${name}`,
                         entries,
                     })
                 })
             }
-            res.set('Cache-control', `public, max-age=${HALF_DAY}`)
+            res.set('Cache-control', `public, max-age=${DAY}`)
             return res.render('index', { rootUrl, public: env.PUBLIC })
         })
 
@@ -94,9 +96,30 @@ sequelize
             console.log('enable /list')
             app.get('/list', (req, res) =>
                 list().then((feeds) => {
+                    res.set('Cache-control', `public, max-age=${MINUTE}`)
                     res.render('list', { feeds })
                 })
             )
+
+            console.log('enable /search')
+            app.get('/search', (req, res) => {
+                const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
+                const query = cleanSearchStr(req.query.query || req.query.q)
+                if (!query) return res.status(404).end('404 : Missing query parameter')
+                if (query.length < 3)
+                    return res.status(400).end('400 : query parameter should be at least 3 characters')
+                const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 100
+                return search({ query, limit }).then((entries) => {
+                    res.type('text/xml')
+                    return res.render('rss', {
+                        rootUrl,
+                        public: env.PUBLIC,
+                        title: `search « ${query} »`,
+                        url: `/search?q=${query}`,
+                        entries,
+                    })
+                })
+            })
         }
 
         app.get('/add', (req, res) => {
@@ -105,9 +128,7 @@ sequelize
             const title = cleanTitleStr(req.query.title || req.query.t)
             const description = cleanDescriptionStr(req.query.description || req.query.d)
 
-            if (!name || !url) {
-                return res.status(404).end('404 : Missing name or url')
-            }
+            if (!name || !url) return res.status(404).end('404 : Missing name or url parameter')
             return (
                 title
                     ? Promise.resolve({ title, description })
@@ -120,7 +141,7 @@ sequelize
                                           'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
                                   },
                               })
-                              .then(function (response = {}) {
+                              .then((response = {}) => {
                                   const { status, data } = response
                                   if (status === 200) {
                                       const $ = cheerio.load(data, {
@@ -139,7 +160,7 @@ sequelize
                                       }
                                   }
                               })
-                              .catch(function (error) {
+                              .catch((error) => {
                                   console.log(error)
                               })
                       )
@@ -159,9 +180,7 @@ sequelize
         app.get('/del', (req, res) => {
             const name = cleanNameStr(req.query.name || req.query.n)
             const url = cleanUrlStr(req.query.url || req.query.u)
-            if (!name || !url) {
-                return res.status(404).end('404 : Missing name or url')
-            }
+            if (!name || !url) return res.status(404).end('404 : Missing name or url parameter')
             return remove({ name, url })
                 .then(() => res.redirect(302, `./?n=${name}`))
                 .catch((err) => {
@@ -169,6 +188,15 @@ sequelize
                     console.error(msg, err)
                     res.sendStatus(500).end(msg)
                 })
+        })
+
+        app.get('/count', (req, res) => {
+            const name = cleanNameStr(req.query.name || req.query.n)
+            if (!name) return res.status(404).end('404 : Missing name parameter')
+            return count({ name }).then(([count]) => {
+                res.set('Cache-control', `public, max-age=${5 * MINUTE}`)
+                return res.json(count)
+            })
         })
 
         app.listen(env.PORT, () => {

@@ -1,4 +1,4 @@
-import { trim, truncate, slugify, cleanify } from './strings.mjs'
+import { trim, truncate, slugify, cleanify, sanitize } from './strings.mjs'
 
 describe('strings', () => {
     describe('trim', () => {
@@ -25,5 +25,13 @@ describe('strings', () => {
         test('should remove emoji', () =>
             expect(cleanify('Firefox OS 🦊🚀 - LinuxFr.org')).toBe('Firefox OS  - LinuxFr.org'))
         test('should remove unicode char', () => expect(cleanify('--™-')).toBe('---'))
+    })
+
+    describe('sanitize', () => {
+        test('should remove %', () => expect(sanitize('test%')).toBe('test'))
+        test('should remove multiple %', () => expect(sanitize('%test%')).toBe('test'))
+        test('should remove \\%', () => expect(sanitize('\\%test')).toBe('test'))
+        test('should remove "\' or 1=1', () => expect(sanitize('"\'or 1=1')).toBe('or 1=1'))
+        test('should remove "\'', () => expect(sanitize('"')).toBe(''))
     })
 })

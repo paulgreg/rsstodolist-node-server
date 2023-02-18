@@ -2,8 +2,8 @@
 <?xml-stylesheet type="text/xsl" href="./static/rss.xslt"?>
 <rss version="2.0">
   <channel>
-    <title>RSS Todo List - <%= name %></title>
-    <link><%= rootUrl %>/?n=<%= name %></link>
+    <title>RSS Todo List - <%= title %></title>
+    <link><%= rootUrl %><%= url %></link>
     <description>RSS 2.0 feed containing your todolist items</description>
     <language>en-us</language>
     <webMaster>me@paulgreg.me (Grégory PAUL)</webMaster>
@@ -11,7 +11,7 @@
 	 	<item>
 			<title>Please consider self-hosting rsstodolist service</title>
 	 		<link><%= rootUrl %>/</link>
-			<guid isPermaLink="false">0000000002</guid>
+			<guid isPermaLink="false">rsstodolist-notice@0000000002</guid>
 	 		<description>If you’re relying on that service, consider self-host the service for more reliability and privacy.</description>
 	 	</item>
 	 <% } %>
@@ -21,14 +21,14 @@
 	 		<link><%= entry.url %></link>
 	 		<description><%= entry.description || "" %></description>
 			<pubDate><%= (entry.updatedAt || entry.createdAt).toUTCString() %></pubDate>
-			<guid isPermaLink="false">paulgreg@<%= entry.id %></guid>
+			<guid isPermaLink="false">rsstodolist@<%= entry.id %></guid>
 	 	</item>
 	 <% }) %>
 	 <% if (entries.length === 0) { %>
 	 	<item>
 			<title>Default item in your feed</title>
 	 		<link><%= rootUrl %></link>
-			<guid isPermaLink="false">paulgreg@0000000001</guid>
+			<guid isPermaLink="false">rsstodolist-notice@0000000001</guid>
 	 		<description>Default sample item</description>
 	 	</item>
 	 <% } %>

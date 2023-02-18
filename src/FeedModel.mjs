@@ -1,5 +1,7 @@
 import Sequelize from 'sequelize'
 
+const Op = Sequelize.Op
+
 export const id = 'id'
 export const name = 'name'
 export const url = 'url'
@@ -44,9 +46,9 @@ const FeedModelBuilder = (sequelize) => {
         }
     )
 
-    const findByName = ({ name, limit = 25 }) =>
+    const findByName = ({ name, limit }) =>
         FeedModel.findAll({
-            limit: Math.min(parseInt(limit, 10), 500),
+            limit: limit || 25,
             where: {
                 name,
             },
@@ -78,9 +80,44 @@ const FeedModelBuilder = (sequelize) => {
         FeedModel.findAll({
             group: ['name'],
             attributes: ['name', [sequelize.fn('COUNT', 'name'), 'count']],
+            order: [['name', 'ASC']],
         })
 
-    return { FeedModel, findByName, insert, remove, list }
+    const count = ({ name }) =>
+        FeedModel.findAll({
+            where: { name },
+            attributes: [[sequelize.fn('COUNT', 'name'), 'count']],
+        })
+
+    const search = ({ query, limit }) =>
+        FeedModel.findAll({
+            limit: limit || 100,
+            where: {
+                [Op.or]: [
+                    {
+                        title: {
+                            [Op.like]: `%${query}%`,
+                        },
+                    },
+                    {
+                        title: {
+                            [Op.like]: `%${query}%`,
+                        },
+                    },
+                    {
+                        description: {
+                            [Op.like]: `%${query}%`,
+                        },
+                    },
+                ],
+            },
+            order: [
+                ['updatedAt', 'DESC'],
+                ['createdAt', 'DESC'],
+            ],
+        })
+
+    return { FeedModel, findByName, insert, remove, list, count, search }
 }
 
 export default FeedModelBuilder
