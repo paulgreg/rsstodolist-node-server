@@ -115,7 +115,7 @@ sequelize
                     return res.render('rss', {
                         rootUrl,
                         public: env.PUBLIC,
-                        title: `search « ${query} »`,
+                        title: `${entries.length} result${entries.length > 1 ? 's' : ''} for search « ${query} »`,
                         titleWithFeedName: true,
                         url: `/search?q=${query}`,
                         entries,
