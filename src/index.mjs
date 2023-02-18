@@ -83,6 +83,7 @@ sequelize
                         rootUrl,
                         public: env.PUBLIC,
                         title: name,
+                        titleWithFeedName: false,
                         url: `/?n=${name}`,
                         entries,
                     })
@@ -106,8 +107,8 @@ sequelize
                 const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
                 const query = cleanSearchStr(req.query.query || req.query.q)
                 if (!query) return res.status(404).end('404 : Missing query parameter')
-                if (query.length < 3)
-                    return res.status(400).end('400 : query parameter should be at least 3 characters')
+                if (query.length < 2)
+                    return res.status(400).end('400 : query parameter should be at least 2 characters')
                 const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 100
                 return search({ query, limit }).then((entries) => {
                     res.type('text/xml')
@@ -115,6 +116,7 @@ sequelize
                         rootUrl,
                         public: env.PUBLIC,
                         title: `search « ${query} »`,
+                        titleWithFeedName: true,
                         url: `/search?q=${query}`,
                         entries,
                     })

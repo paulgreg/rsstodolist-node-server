@@ -17,7 +17,7 @@
 	 <% } %>
 	 <% entries.forEach(entry => { %>
 	 	<item>
-			<title><%= entry.title %></title>
+			<title><%= entry.title %><% if (titleWithFeedName) { %> from ?n=<%= entry.name %><% } %></title>
 	 		<link><%= entry.url %></link>
 	 		<description><%= entry.description || "" %></description>
 			<pubDate><%= (entry.updatedAt || entry.createdAt).toUTCString() %></pubDate>
