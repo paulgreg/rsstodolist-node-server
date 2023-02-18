@@ -48,7 +48,7 @@ const FeedModelBuilder = (sequelize) => {
 
     const findByName = ({ name, limit }) =>
         FeedModel.findAll({
-            limit: limit || 25,
+            limit: Math.min(limit || 25, 500),
             where: {
                 name,
             },
@@ -91,7 +91,7 @@ const FeedModelBuilder = (sequelize) => {
 
     const search = ({ query, limit }) =>
         FeedModel.findAll({
-            limit: limit || 100,
+            limit: Math.min(limit || 100, 500),
             where: {
                 [Op.or]: [
                     {
