@@ -1,6 +1,6 @@
 {
     "name": "rsstodolist-node-server",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "rsstodolist server in node",
     "main": "src/index.mjs",
     "type": "module",
