@@ -95,7 +95,7 @@ const FeedModelBuilder = (sequelize) => {
             where: {
                 [Op.or]: [
                     {
-                        title: {
+                        url: {
                             [Op.like]: `%${query}%`,
                         },
                     },
