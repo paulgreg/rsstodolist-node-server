@@ -196,7 +196,7 @@ sequelize
             const name = cleanNameStr(req.query.name || req.query.n)
             if (!name) return res.status(404).end('404 : Missing name parameter')
             return count({ name }).then(([count]) => {
-                res.set('Cache-control', `public, max-age=${5 * MINUTE}`)
+                res.set('Cache-control', `public, max-age=${MINUTE}`)
                 return res.json(count)
             })
         })
