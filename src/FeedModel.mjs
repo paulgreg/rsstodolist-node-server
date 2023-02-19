@@ -117,7 +117,20 @@ const FeedModelBuilder = (sequelize) => {
             ],
         })
 
-    return { FeedModel, findByName, insert, remove, list, count, search }
+    const suggest = ({ query }) =>
+        FeedModel.findAll({
+            limit: 10,
+            group: ['name'],
+            attributes: ['name'],
+            where: {
+                name: {
+                    [Op.like]: `%${query}%`,
+                },
+            },
+            order: [['name', 'ASC']],
+        })
+
+    return { FeedModel, findByName, insert, remove, list, count, search, suggest }
 }
 
 export default FeedModelBuilder

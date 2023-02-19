@@ -50,7 +50,7 @@ sequelize
         throw err
     })
     .then(() => {
-        const { findByName, list, insert, remove, count, search } = FeedModelBuilder(sequelize)
+        const { findByName, list, insert, remove, count, search, suggest } = FeedModelBuilder(sequelize)
 
         const app = express()
         app.set('view engine', 'ejs')
@@ -121,6 +121,15 @@ sequelize
                         entries,
                     })
                 })
+            })
+
+            console.log('enable /suggest')
+            app.get('/suggest', (req, res) => {
+                const query = cleanSearchStr(req.query.query || req.query.q)
+                if (!query) return res.status(404).end('404 : Missing query parameter')
+                if (query.length < 2)
+                    return res.status(400).end('400 : query parameter should be at least 2 characters')
+                return suggest({ query }).then((results) => res.json(results))
             })
         }
 
