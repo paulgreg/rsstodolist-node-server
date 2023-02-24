@@ -121,7 +121,7 @@ const FeedModelBuilder = (sequelize) => {
         FeedModel.findAll({
             limit: 10,
             group: ['name'],
-            attributes: ['name'],
+            attributes: ['name', [sequelize.fn('COUNT', 'name'), 'count']],
             where: {
                 name: {
                     [Op.like]: `%${query}%`,
