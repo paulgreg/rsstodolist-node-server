@@ -204,10 +204,7 @@ sequelize
         app.get('/count', (req, res) => {
             const name = cleanNameStr(req.query.name || req.query.n)
             if (!name) return res.status(404).end('404 : Missing name parameter')
-            return count({ name }).then(([count]) => {
-                res.set('Cache-control', `public, max-age=${MINUTE}`)
-                return res.json(count)
-            })
+            return count({ name }).then(([count]) => res.json(count))
         })
 
         app.listen(env.PORT, () => {
