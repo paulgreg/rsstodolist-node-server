@@ -4,7 +4,7 @@ import FeedModelBuilder, { lengths } from './FeedModel.mjs'
 import axios from 'axios'
 import * as cheerio from 'cheerio'
 import morgan from 'morgan'
-import { trim, truncate, slugify, cleanify, sanitize } from './strings.mjs'
+import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.mjs'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import cors from 'cors'
@@ -140,6 +140,7 @@ sequelize
             const description = cleanDescriptionStr(req.query.description || req.query.d)
 
             if (!name || !url) return res.status(404).end('404 : Missing name or url parameter')
+            if (!isValidUrl(url)) res.status(400).end('400 : not an URL')
             return (
                 title
                     ? Promise.resolve({ title, description })
@@ -192,6 +193,7 @@ sequelize
             const name = cleanNameStr(req.query.name || req.query.n)
             const url = cleanUrlStr(req.query.url || req.query.u)
             if (!name || !url) return res.status(404).end('404 : Missing name or url parameter')
+            if (!isValidUrl(url)) res.status(400).end('400 : not an URL')
             return remove({ name, url })
                 .then(() => res.redirect(302, `./?n=${name}`))
                 .catch((err) => {

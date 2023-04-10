@@ -17,3 +17,5 @@ export const sanitize = (s = '') =>
     cleanify(String(s))
         .replace(/%/g, '')
         .replace(/['"\/\\]/g, '')
+
+export const isValidUrl = (s = '') => s.startsWith('http://') || s.startsWith('https://')

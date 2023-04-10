@@ -1,4 +1,4 @@
-import { trim, truncate, slugify, cleanify, sanitize } from './strings.mjs'
+import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.mjs'
 
 describe('strings', () => {
     describe('trim', () => {
@@ -33,5 +33,10 @@ describe('strings', () => {
         test('should remove \\%', () => expect(sanitize('\\%test')).toBe('test'))
         test('should remove "\' or 1=1', () => expect(sanitize('"\'or 1=1')).toBe('or 1=1'))
         test('should remove "\'', () => expect(sanitize('"')).toBe(''))
+    })
+    describe('isValidUrl', () => {
+        test('should return true for valid http url', () => expect(isValidUrl('http://something.com')).toBe(true))
+        test('should return true for valid https url', () => expect(isValidUrl('https://something.com')).toBe(true))
+        test('should return false for not an url', () => expect(isValidUrl('something.com')).toBe(false))
     })
 })
