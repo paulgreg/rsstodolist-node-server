@@ -24,6 +24,11 @@ describe('strings', () => {
     describe('cleanify', () => {
         test('should remove emoji', () =>
             expect(cleanify('Firefox OS 🦊🚀 - LinuxFr.org')).toBe('Firefox OS  - LinuxFr.org'))
+
+        test('should remove more emoji', () =>
+            expect(cleanify('Git files hidden in plain sight 🫥 - Tyler Cipriani')).toBe(
+                'Git files hidden in plain sight  - Tyler Cipriani'
+            ))
         test('should remove unicode char', () => expect(cleanify('--™-')).toBe('---'))
     })
 
