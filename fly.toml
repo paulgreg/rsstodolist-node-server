@@ -1,15 +1,17 @@
-# fly.toml app configuration file generated for rsstodolist-docker on 2023-07-11T07:40:21+02:00
+# fly.toml app configuration file generated for rsstodolist on 2023-08-17T13:36:03+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "rsstodolist-docker"
+app = "rsstodolist"
 primary_region = "cdg"
 kill_signal = "SIGINT"
 kill_timeout = "5s"
 
 [experimental]
   auto_rollback = true
+
+[build]
 
 [env]
   ROOT_URL = "https://rsstodolist.eu"
@@ -36,4 +38,3 @@ kill_timeout = "5s"
     interval = "15s"
     timeout = "2s"
     grace_period = "1s"
-    restart_limit = 0
