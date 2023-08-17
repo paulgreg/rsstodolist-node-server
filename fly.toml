@@ -14,6 +14,7 @@ kill_timeout = "5s"
 [build]
 
 [env]
+  PUBLIC = "true"
   ROOT_URL = "https://rsstodolist.eu"
 
 [[services]]
