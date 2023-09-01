@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Add pkg to use wait-for-it script.
 RUN apk add --no-cache bash coreutils
