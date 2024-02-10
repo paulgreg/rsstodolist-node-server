@@ -97,94 +97,89 @@
             <p>So, for more reliability and privacy, I <strong>strongly</strong> suggest you to self-host that
                 application (see <a href="#related">related projects below</a>).</p>
 
-            <% } else { %>
 
-                <h2>Feeds list</h2>
-                <p>You can see all feeds on <a href="./list">feeds list</a>.</p>
+        <% } %>
 
-                <% } %>
+        <h2>➕ Add an URL to your feed</h2>
 
-                    <h2>➕ Add an URL to your feed</h2>
+        <h3>1. By using that form :</h3>
+        <form method="get" action="add">
+            <p>
+                <label for="url">URL</label>&nbsp;:&nbsp;<input type="url" id="url" name="url"
+                    placeholder="https://fr.wikipedia.org/" /><br />
+                <label for="name">Feed name</label>&nbsp;:&nbsp;<input type="text" id="name" name="name"
+                    placeholder="somename" /><br />
+                <input type="submit" />
+            </p>
+            <% if (public) { %>
+                <p style="font-weight:bold;">⚠️ On public instance, « somename » feed is limited to
+                    wikipedia
+                    pages to limit spam.
+                </p>
+            <% } %>
+        </form>
+        <h3>2. By calling an URL :</h3>
+        <p><a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
+                <%= rootUrl %>/add?name=somename&amp;url=https://fr.wikipedia.org/
+            </a></p>
+        <ul>
+            <li>By default, the feed title will be fetched from the web page title. You may force it by
+                using the &quot;&amp;title&quot; parameter.</li>
+            <li>Also, by default, your feed will contain 25 items. You can change that by setting
+                &quot;&amp;limit&quot; parameter from 1 to 500.</li>
+            <li>A description for the link may be added by using the &quot;description&quot; parameter</li>
+            <li>You may also use short parameters like &quot;n&quot; for &quot;name&quot;, &quot;u&quot; for
+                &quot;url&quot;, &quot;t&quot; for &quot;title&quot;, &quot;l&quot; for &quot;limit&quot; or
+                &quot;d&quot; for &quot;description&quot; like that : <a
+                    href="add?n=somename&amp;u=https://fr.wikipedia.org/" rel="nofollow">
+                    <%= rootUrl %>/add?n=somename&amp;u=https://fr.wikipedia.org/
+                </a></li>
+        </ul>
 
-                    <h3>1. By using that form :</h3>
-                    <form method="get" action="add">
-                        <p>
-                            <label for="url">URL</label>&nbsp;:&nbsp;<input type="url" id="url" name="url"
-                                placeholder="https://fr.wikipedia.org/" /><br />
-                            <label for="name">Feed name</label>&nbsp;:&nbsp;<input type="text" id="name" name="name"
-                                placeholder="somename" /><br />
-                            <input type="submit" />
-                        </p>
-                        <% if (public) { %>
-                            <p style="font-weight:bold;">⚠️ On public instance, « somename » feed is limited to
-                                wikipedia
-                                pages to limit spam.
-                            </p>
-                            <% } %>
-                    </form>
-                    <h3>2. By calling an URL :</h3>
-                    <p><a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
-                            <%= rootUrl %>/add?name=somename&amp;url=https://fr.wikipedia.org/
-                        </a></p>
-                    <ul>
-                        <li>By default, the feed title will be fetched from the web page title. You may force it by
-                            using the &quot;&amp;title&quot; parameter.</li>
-                        <li>Also, by default, your feed will contain 25 items. You can change that by setting
-                            &quot;&amp;limit&quot; parameter from 1 to 500.</li>
-                        <li>A description for the link may be added by using the &quot;description&quot; parameter</li>
-                        <li>You may also use short parameters like &quot;n&quot; for &quot;name&quot;, &quot;u&quot; for
-                            &quot;url&quot;, &quot;t&quot; for &quot;title&quot;, &quot;l&quot; for &quot;limit&quot; or
-                            &quot;d&quot; for &quot;description&quot; like that : <a
-                                href="add?n=somename&amp;u=https://fr.wikipedia.org/" rel="nofollow">
-                                <%= rootUrl %>/add?n=somename&amp;u=https://fr.wikipedia.org/
-                            </a></li>
-                    </ul>
+        <h3>3. By using that <a href="http://en.wikipedia.org/wiki/Bookmarklet"
+                title="Learn more about bookmarklet on Wikipedia">bookmarklet</a> :</h3>
+        <p>Create a new bookmarklet and paste the following code in the URL field :
+            <code>javascript:var rss=prompt('RSS feed name ?');var r=new XMLHttpRequest();r.open('GET','<%= rootUrl %>/add?n='+rss+'&amp;url='+encodeURIComponent(window.location),true);r.setRequestHeader('Content-Type','text/plain;charset=UTF-8');r.onreadystatechange=function(){if(r.readyState==4){alert("Request sent : "+(r.status===200)+" ("+r.status+")");}};r.send(null);</code>
+            Then, clicking on that bookmark will add current page to the RSS feed.
+        </p>
 
-                    <h3>3. By using that <a href="http://en.wikipedia.org/wiki/Bookmarklet"
-                            title="Learn more about bookmarklet on Wikipedia">bookmarklet</a> :</h3>
-                    <p>Create a new bookmarklet and paste the following code in the URL field :
-                        <code>javascript:var rss=prompt('RSS feed name ?');var r=new XMLHttpRequest();r.open('GET','<%= rootUrl %>/add?n='+rss+'&amp;url='+encodeURIComponent(window.location),true);r.setRequestHeader('Content-Type','text/plain;charset=UTF-8');r.onreadystatechange=function(){if(r.readyState==4){alert("Request sent : "+(r.status===200)+" ("+r.status+")");}};r.send(null);</code>
-                        Then, clicking on that bookmark will add current page to the RSS feed.
-                    </p>
+        <h3>4. By using an extension :</h3>
+        <p>A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and <a
+                href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd">Chrome
+                extension</a> are available. It will use public instance by default but you can configure
+            your self-host instance in options.</p>
 
-                    <h3>4. By using an extension :</h3>
-                    <p>A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and <a
-                            href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd">Chrome
-                            extension</a> are available. It will use public instance by default but you can configure
-                        your self-host instance in options.</p>
+        <h2>📃 Get your feed :</h2>
+        <p><a href="?name=somename" rel="nofollow">
+                <%= rootUrl %>/?name=somename
+            </a> or <a href="?n=somename" rel="nofollow">
+                <%= rootUrl %>/?n=somename
+            </a></p>
 
-                    <h2>📃 Get your feed :</h2>
-                    <p><a href="?name=somename" rel="nofollow">
-                            <%= rootUrl %>/?name=somename
-                        </a> or <a href="?n=somename" rel="nofollow">
-                            <%= rootUrl %>/?n=somename
-                        </a></p>
+        <h2>➖ Remove an URL from your feed</h2>
+        <h3>By calling an URL :</h3>
+        <p><a href="del?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
+                <%= rootUrl %>/del?name=somename&amp;url=https://fr.wikipedia.org/
+            </a></p>
 
-                    <h2>➖ Remove an URL from your feed</h2>
-                    <h3>By calling an URL :</h3>
-                    <p><a href="del?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
-                            <%= rootUrl %>/del?name=somename&amp;url=https://fr.wikipedia.org/
-                        </a></p>
+        <h2>❓ Feedback</h2>
+        <p>Please contact me via <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
 
-                    <h2>❓ Feedback</h2>
-                    <p>Please contact me via <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
-
-                    <h2 id="related">ℹ️ Related projects and source code</h2>
-                    <ul>
-                        <li><a href="https://github.com/paulgreg/rsstodolist-node-server">rsstodolist-node-server</a> :
-                            source code for that
-                            nodejs version that you can self-host (can be run via docker)</li>
-                        <li><a
-                                href="https://github.com/paulgreg/rsstodolist-django-server">rsstodolist-django-server</a>
-                            : a python/django
-                            version that you can self-host (not maintained anymore)</li>
-                        <li><a href="https://github.com/paulgreg/rsstodolist-addon">rsstodolist-addon</a> : extension
-                            source code for Chrome
-                            extension and Firefox addon</li>
-                        <li><a href="https://github.com/paulgreg/rsstodolist-react-native">rsstodolist-react-native</a>
-                            : a react-native
-                            application for Android</li>
-                    </ul>
+        <h2 id="related">ℹ️ Related projects and source code</h2>
+        <ul>
+            <li><a href="https://github.com/paulgreg/rsstodolist-node-server">rsstodolist-node-server</a> :
+                source code for that
+                nodejs version that you can self-host (can be run via docker)</li>
+            <li><a href="https://github.com/paulgreg/rsstodolist-django-server">rsstodolist-django-server</a>
+                : a python/django
+                version that you can self-host (not maintained anymore)</li>
+            <li><a href="https://github.com/paulgreg/rsstodolist-addon">rsstodolist-addon</a> : extension
+                source code for Chrome
+                extension and Firefox addon</li>
+            <li><a href="https://github.com/paulgreg/rsstodolist-react-native">rsstodolist-react-native</a>
+                : a react-native
+                application for Android</li>
+        </ul>
     </div>
 </body>
 
