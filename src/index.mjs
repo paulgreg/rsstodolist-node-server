@@ -142,7 +142,7 @@ sequelize
             if (!name || !url) return res.status(404).end('404 : Missing name or url parameter')
 
             const shouldLimitToWikipedia = env.PUBLIC && name === 'somename'
-            if (!isValidUrl(url, shouldLimitToWikipedia)) res.status(400).end('403 : Forbidden')
+            if (!isValidUrl(url, shouldLimitToWikipedia)) return res.status(400).end('403 : Forbidden')
             return (
                 title
                     ? Promise.resolve({ title, description })
