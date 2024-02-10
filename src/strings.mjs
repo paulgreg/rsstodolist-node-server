@@ -28,4 +28,8 @@ export const sanitize = (s = '') =>
         .replace(/%/g, '')
         .replace(/['"\/\\]/g, '')
 
-export const isValidUrl = (s = '') => s.startsWith('http://') || s.startsWith('https://')
+export const RE_WIKIPEDIA_VALID_URL = new RegExp('^https?://[a-z]{2}.wikipedia.org/')
+const RE_VALID_URL = new RegExp('^https?://')
+
+export const isValidUrl = (s = '', wikipediaOnly = false) =>
+    (wikipediaOnly ? RE_WIKIPEDIA_VALID_URL : RE_VALID_URL).test(s)

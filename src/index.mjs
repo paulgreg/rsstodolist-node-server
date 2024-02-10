@@ -140,7 +140,9 @@ sequelize
             const description = cleanDescriptionStr(req.query.description || req.query.d)
 
             if (!name || !url) return res.status(404).end('404 : Missing name or url parameter')
-            if (!isValidUrl(url)) res.status(400).end('400 : not an URL')
+
+            const shouldLimitToWikipedia = env.PUBLIC && name === 'somename'
+            if (!isValidUrl(url, shouldLimitToWikipedia)) res.status(400).end('403 : Forbidden')
             return (
                 title
                     ? Promise.resolve({ title, description })

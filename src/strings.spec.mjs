@@ -40,8 +40,16 @@ describe('strings', () => {
         test('should remove "\'', () => expect(sanitize('"')).toBe(''))
     })
     describe('isValidUrl', () => {
-        test('should return true for valid http url', () => expect(isValidUrl('http://something.com')).toBe(true))
-        test('should return true for valid https url', () => expect(isValidUrl('https://something.com')).toBe(true))
-        test('should return false for not an url', () => expect(isValidUrl('something.com')).toBe(false))
+        describe('all URL', () => {
+            test('should return true for valid http url', () => expect(isValidUrl('http://something.com')).toBe(true))
+            test('should return true for valid https url', () => expect(isValidUrl('https://something.com')).toBe(true))
+            test('should return false for not an url', () => expect(isValidUrl('something.com')).toBe(false))
+        })
+        describe('only wikipedia', () => {
+            test('should return true for wikipedia FR url', () =>
+                expect(isValidUrl('https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal', true)).toBe(true))
+            test('should return false for standard url', () =>
+                expect(isValidUrl('http://something.com', true)).toBe(false))
+        })
     })
 })
