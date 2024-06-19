@@ -16,6 +16,7 @@ kill_timeout = "5s"
 [env]
   PUBLIC = "true"
   ROOT_URL = "https://rsstodolist.eu"
+  NODE_OPTIONS='--max-old-space-size=128'
 
 [[services]]
   protocol = "tcp"
