@@ -29,7 +29,10 @@ describe('strings', () => {
             expect(cleanify('Git files hidden in plain sight 🫥 - Tyler Cipriani')).toBe(
                 'Git files hidden in plain sight  - Tyler Cipriani'
             ))
+
         test('should remove unicode char', () => expect(cleanify('--™-')).toBe('---'))
+
+        test('should remove « lead surrogate »', () => expect(cleanify('|𝚟𝚎𝚛𝚖𝚊𝚍𝚎𝚗|')).toBe('||'))
     })
 
     describe('sanitize', () => {
