@@ -130,7 +130,17 @@ const FeedModelBuilder = (sequelize) => {
             order: [['name', 'ASC']],
         })
 
-    return { FeedModel, findByName, insert, remove, list, count, search, suggest }
+    const dump = () =>
+        FeedModel.findAll({
+            attributes: ['name', 'url', 'title', 'description', 'createdAt', 'updatedAt'],
+            order: [
+                ['name', 'ASC'],
+                ['updatedAt', 'DESC'],
+                ['createdAt', 'DESC'],
+            ],
+        })
+
+    return { FeedModel, findByName, insert, remove, list, count, search, suggest, dump }
 }
 
 export default FeedModelBuilder

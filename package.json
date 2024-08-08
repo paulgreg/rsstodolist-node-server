@@ -6,6 +6,7 @@
     "type": "module",
     "scripts": {
         "start": "NODE_ENV=production node --experimental-json-modules src/index.mjs",
+        "dump": "NODE_ENV=production node --experimental-json-modules src/dump.mjs",
         "dev": "nodemon --experimental-json-modules src/index.mjs",
         "tdd": "jest --watch",
         "test": "jest",
