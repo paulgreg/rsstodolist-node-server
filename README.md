@@ -10,7 +10,7 @@ Thanks to [Loïc Fürhoff](https://github.com/imagoiq), it can be hosted in a co
 
 ## Requirements
 
-- Node >= 10
+- Node >= 20
 - MariaDB or Postgres
 
 or
@@ -79,3 +79,7 @@ Run the migration file to create the rsstodolist database.
 npm install
 npm start
 ```
+
+## Commands
+
+You can use `npm run dump` to extract all databases rows into a CSV file format.
