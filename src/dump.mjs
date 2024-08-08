@@ -10,7 +10,7 @@ const sequelize = new Sequelize(env.DATABASE_URL, {
     logging: false,
 })
 
-const cleanStr = (str) => str.replace(/"/g, '\\"').replace(/[\r\n]/g, '')
+const cleanStr = (str) => str ? str.replace(/"/g, '\\"').replace(/[\r\n]/g, '') : ''
 
 sequelize
     .authenticate()
