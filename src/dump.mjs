@@ -10,7 +10,10 @@ const sequelize = new Sequelize(env.DATABASE_URL, {
     logging: false,
 })
 
-const cleanStr = (str) => str ? str.replace(/"/g, '\\"').replace(/[\r\n]/g, '') : ''
+const cleanStr = (str) => {
+    if (!str) return 'null'
+    return str.replace(/;/g, '-').replace(/[\r\n]/g, '')
+}
 
 sequelize
     .authenticate()
@@ -21,9 +24,9 @@ sequelize
             .map(({ dataValues }) => dataValues)
             .forEach(({ name, url, title, description, createdAt, updatedAt }) => {
                 console.log(
-                    `"${cleanStr(name)}";"${cleanStr(url)}";"${cleanStr(title)}";"${cleanStr(
+                    `${cleanStr(name)};${cleanStr(url)};${cleanStr(title)};${cleanStr(
                         description
-                    )}";${createdAt};${updatedAt}`
+                    )};${createdAt};${updatedAt}`
                 )
             })
         process.exit(0)
