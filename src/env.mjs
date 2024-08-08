@@ -2,8 +2,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const TZ = process.env.TZ || 'Etc/GMT0'
-export const DATABASE_PORT = process.env.DATABASE_PORT || 3306
-export const DATABASE_DIALECT = process.env.DATABASE_DIALECT || 'mariadb'
+export const DATABASE_PORT = process.env.DATABASE_PORT || 5432 // || 3306
+export const DATABASE_DIALECT = process.env.DATABASE_DIALECT || 'postgres' //'mariadb'
 export const DATABASE_HOST = process.env.DATABASE_HOST || '127.0.0.1'
 export const DATABASE_NAME = process.env.DATABASE_NAME || 'rsstodolist'
 export const DATABASE_USER = process.env.DATABASE_USER
