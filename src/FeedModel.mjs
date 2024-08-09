@@ -53,7 +53,7 @@ const FeedModelBuilder = (sequelize) => {
                 name,
             },
             order: [
-                ['updatedAt', 'DESC'],
+                ['updatedAt', 'DESC NULLS LAST'],
                 ['createdAt', 'DESC'],
             ],
         })
