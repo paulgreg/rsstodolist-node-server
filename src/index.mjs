@@ -33,7 +33,7 @@ const sequelize = new Sequelize(env.DATABASE_URL, {
 
 axios.interceptors.response.use((response) => {
     const chardetResult = jschardet.detect(response.data)
-    const encoding = (chardetResult && chardetResult.encoding) || charset(response.headers, response.data)
+    const encoding = chardetResult?.encoding || charset(response.headers, response.data)
 
     response.data = iconv.decode(response.data, encoding)
 
@@ -154,6 +154,7 @@ sequelize
                                       'User-Agent':
                                           'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
                                   },
+                                  timeout: 5_000,
                               })
                               .then((response = {}) => {
                                   const { status, data } = response
