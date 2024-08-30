@@ -65,7 +65,7 @@ const FeedModelBuilder = (sequelize) => {
             where: { name, url },
         }).then((result) =>
             FeedModel.upsert({
-                id: (result && result.id) || undefined,
+                id: result?.id || undefined,
                 name,
                 url,
                 title,
@@ -76,7 +76,7 @@ const FeedModelBuilder = (sequelize) => {
     const remove = ({ name, url }) =>
         FeedModel.findOne({
             where: { name, url },
-        }).then((m) => m && m.destroy())
+        }).then((m) => m?.destroy())
 
     const list = () =>
         FeedModel.findAll({
