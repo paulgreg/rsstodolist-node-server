@@ -16,6 +16,8 @@ export const lengths = {
 }
 
 const FeedModelBuilder = (sequelize) => {
+    const isPostgres = sequelize.dialect.sequelize.options.dialect === 'postgres'
+
     const FeedModel = sequelize.define(
         'feeds_feedentry',
         {
@@ -53,7 +55,7 @@ const FeedModelBuilder = (sequelize) => {
                 name,
             },
             order: [
-                ['updatedAt', sequelize.dialect === 'postgres' ? 'DESC NULLS LAST' : 'DESC'],
+                ['updatedAt', isPostgres ? 'DESC NULLS LAST' : 'DESC'],
                 ['createdAt', 'DESC'],
             ],
         })
