@@ -46,7 +46,7 @@ details {
     border: 1px solid #159efe;
     border-left: 0;
     border-right: 0;
-    background: #ebf5ff;
+    background: #fafdff;
 }
 summary {
     padding: 0.5em;
@@ -59,7 +59,7 @@ summary {
     border: 2px solid #159efe;
     border-left: 0;
     border-right: 0;
-    background: #ebf5ff;
+    background: #fafdff;
 }
 
 .feeds {
