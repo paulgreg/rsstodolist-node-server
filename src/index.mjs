@@ -90,7 +90,7 @@ sequelize
                 })
             }
             res.set('Cache-control', `public, max-age=${DAY}`)
-            return res.render('index', { rootUrl, public: env.PUBLIC })
+            return res.render('index', { rootUrl, public: env.PUBLIC, lengths })
         })
 
         if (!env.PUBLIC) {
