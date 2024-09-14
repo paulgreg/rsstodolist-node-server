@@ -27,6 +27,18 @@ ul {
     margin: 0.5em 0 0.5em 0em;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0.5em;
+}
+
+.label {
+    width: 3.25em;
+    display: inline-block;
+}
+
 input {
     margin: 0.25em;
 }

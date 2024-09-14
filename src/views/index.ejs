@@ -34,64 +34,77 @@
 
         <div>
             <details open>
-                <summary>Add an item by form</summary>
-                <div class="tab-content">
-                    <form method="get" action="add">
-                        <p>
-                            <label for="url">URL</label>&nbsp;:&nbsp;<input type="url" id="url" name="url"
-                                placeholder="https://fr.wikipedia.org/" required><br>
-                            <label for="name">name</label>&nbsp;:&nbsp;<input type="text" id="name" name="name"
-                                placeholder="somename" required><br>
-                            <input type="submit">
-                        </p>
-                        <% if (public) { %>
-                            <p style="font-weight:bold;">⚠️ On public instance, « somename » feed is limited to
-                                wikipedia
-                                pages to limit spam.
-                            </p>
-                            <% } %>
-                    </form>
-                </div>
-            </details>
-            <details open>
-                <summary>Add an item by URL</summary>
-                <p>
-                    <a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
-                        <%= rootUrl %>/add?name=somename&amp;url=https://fr.wikipedia.org/
-                    </a>
-                </p>
-                <p>The title will be set from web page title but you can force it by
-                    using a <code>title</code> parameter.
-                    You can also set a description by using a <code>description</code>
-                    parameter.
-                </p>
-                <p>All parameters can be minified : <code>n</code> for name, <code>u</code> for url,
-                    <code>t</code> for title and <code>d</code> for description.
-                </p>
-            </details>
-            <details open>
-                <summary>Get a feed</summary>
+                <summary>Access a feed</summary>
                 <p>
                     <a href="?name=somename" rel="nofollow">
-                        <%= rootUrl %>/?name=somename
+                        <%= rootUrl %>/<strong>?name</strong>=somename
                     </a>
                 <p>You can add <code>limit</code> (or <code>l</code>) parameter to fetch from 1 to 500 items (default is
                     25 items).
                 </p>
             </details>
             <details open>
-                <summary>Remove an item</summary>
-                <p>
-                    <a href="del?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
-                        <%= rootUrl %>/del?name=somename&amp;url=https://fr.wikipedia.org/
-                    </a>
-                </p>
+                <summary>add or delete an item by form</summary>
+                <div class="tab-content">
+                    <form method="get" id="submitForm" action="add">
+                        <div>
+                            <span class="label">action</span><label><input type="radio" name="action" value="add"
+                                    checked>add</label>
+                            <label><input type="radio" name="action" value="del">delete</label>
+                        </div>
+                        <div>
+                            <label class="label" for="url">URL</label><input type="url" id="url" name="url"
+                                placeholder="https://fr.wikipedia.org/" required> (required)
+                        </div>
+                        <div>
+                            <label class="label" for="name">name</label><input type="text" id="name" name="name"
+                                placeholder="somename"> (required)
+                        </div>
+                        <div>
+                            <label class="label" for="title">title</label><input type="text" id="title" name="title"
+                                placeholder="optional title">
+                        </div>
+                        <div>
+                            <label class="label" for="description">descr.</label><input type="text" id="description"
+                                name="description" placeholder="optional description">
+                        </div>
+                        <input type="submit">
+                        <% if (public) { %>
+                            <p style="font-weight:bold;">⚠️ On public instance, « somename » feed is limited to
+                                wikipedia pages to limit spam.
+                            </p>
+                            <% } %>
+                    </form>
+                </div>
             </details>
             <details open>
                 <summary>Use Firefox addon and Chrome extension</summary>
                 <p>A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and <a
                         href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd">Chrome
-                        extension</a> are available.</p>
+                        extension</a> are available to add or remove an item in a feed.</p>
+            </details>
+            <details open>
+                <summary>Add or delete an item by URL</summary>
+                <p>
+                    <a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
+                        <%= rootUrl %>
+                            /<strong>add?name</strong>=somename<strong>&amp;url</strong>=https://fr.wikipedia.org/
+                    </a><br>
+                    <a href="del?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
+                        <%= rootUrl %>
+                            /<strong>del?name</strong>=somename<strong>&amp;url</strong>=https://fr.wikipedia.org/
+                    </a>
+                </p>
+                <p>
+                    <code>title</code> and <code>description</code> parameters are required.
+                    Title will be set from web page title but you can define one by
+                    using <code>title</code> parameter.
+                    You can also set a description with <code>description</code>
+                    parameter.
+                </p>
+                <p>All parameters can be minified : <code>n</code> for name, <code>u</code> for url,
+                    <code>t</code> for title and <code>d</code> for description.
+                </p>
             </details>
             <details open>
                 <summary>Use a bookmarklet</summary>
@@ -105,10 +118,10 @@
                 </p>
             </details>
             <details open>
-                <summary>Related</summary>
+                <summary id="related">Related</summary>
                 <ul>
                     <li><a href="https://github.com/paulgreg/rsstodolist-node-server">rsstodolist-node-server</a> :
-                        this application source code that you can self-host (via nodejs or docker)</li>
+                        this web site source code that you can self-host (via nodejs or docker)</li>
                     <li><a href="https://github.com/paulgreg/rsstodolist-addon">rsstodolist-addon</a> :
                         source code for Chrome extension and Firefox addon</li>
                     <li><a href="https://github.com/paulgreg/rsstodolist-react-native">rsstodolist-react-native</a>
@@ -123,6 +136,13 @@
             </details>
         </div>
     </div>
+    <script>
+        const form = document.querySelector('#submitForm');
+        const radios = form.querySelectorAll('input[name="action"]')
+        radios.forEach(radio => radio.addEventListener('click', (e) => {
+            form.setAttribute('action', e.target.value)
+        }))
+    </script>
 </body>
 
 </html>
