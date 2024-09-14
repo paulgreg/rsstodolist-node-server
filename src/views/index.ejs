@@ -42,6 +42,11 @@
                 <p>You can add <code>limit</code> (or <code>l</code>) parameter to fetch from 1 to 500 items (default is
                     25 items).
                 </p>
+                <% if (!public) { %>
+                    <p>You can see all existing feeds on <a href="<%= rootUrl %>/list" rel="nofollow">
+                            <%= rootUrl %><strong>/list</strong>
+                        </a></p>
+                    <% } %>
             </details>
             <details open>
                 <summary>add or delete an item by form</summary>
