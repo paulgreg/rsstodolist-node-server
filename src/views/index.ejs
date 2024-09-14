@@ -24,8 +24,8 @@
                 RSS feeds by sending URL to a feed.</p>
 
             <% if (public) { %>
-                <p>That service is public and « open », meaning anyone knowing your feed name may see your items, add or
-                    remove them.</p>
+                <p>That service is public and « open », meaning anyone knowing your feed name may see, add or remove
+                    your items.</p>
                 <p>Also, that service is hosted via hobby plan on fly.io with some limitations.</p>
                 <p>So, for more reliability and privacy, I <strong>strongly</strong> suggest you to self-host that
                     application (see <a href="#related">related projects below</a>).</p>
@@ -33,7 +33,7 @@
         </div>
 
         <div>
-            <details open>
+            <details>
                 <summary>Access a feed</summary>
                 <p>
                     <a href="?name=somename" rel="nofollow">
@@ -48,7 +48,7 @@
                         </a></p>
                     <% } %>
             </details>
-            <details open>
+            <details>
                 <summary>add or delete an item by form</summary>
                 <div class="tab-content">
                     <form method="get" id="submitForm" action="add">
@@ -84,13 +84,13 @@
                     </form>
                 </div>
             </details>
-            <details open>
+            <details>
                 <summary>Use Firefox addon and Chrome extension</summary>
                 <p>A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and <a
                         href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd">Chrome
                         extension</a> are available to add or remove an item in a feed.</p>
             </details>
-            <details open>
+            <details>
                 <summary>Add or delete an item by URL</summary>
                 <p>
                     <a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
@@ -113,7 +113,7 @@
                     <code>t</code> for title and <code>d</code> for description.
                 </p>
             </details>
-            <details open>
+            <details>
                 <summary>Use a bookmarklet</summary>
                 <p>
                     You can use a <a href="http://en.wikipedia.org/wiki/Bookmarklet"
@@ -124,8 +124,8 @@
                     Clicking on that bookmark will add current page to the RSS feed.
                 </p>
             </details>
-            <details open>
-                <summary id="related">Related</summary>
+            <details id="related">
+                <summary>Related projects</summary>
                 <ul>
                     <li><a href="https://github.com/paulgreg/rsstodolist-node-server">rsstodolist-node-server</a> :
                         this web site source code that you can self-host (via nodejs or docker)</li>
@@ -137,7 +137,7 @@
                         : original python / django version (not maintained anymore)</li>
                 </ul>
             </details>
-            <details open>
+            <details>
                 <summary>Contact</summary>
                 <p>Contact me via <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
             </details>
