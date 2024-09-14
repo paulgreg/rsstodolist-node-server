@@ -54,19 +54,19 @@
                         </div>
                         <div>
                             <label class="label" for="url">URL</label><input type="url" id="url" name="url"
-                                placeholder="https://fr.wikipedia.org/" required> (required)
+                                placeholder="https://fr.wikipedia.org/" required maxlength="20"> (required)
                         </div>
                         <div>
                             <label class="label" for="name">name</label><input type="text" id="name" name="name"
-                                placeholder="somename"> (required)
+                                placeholder="somename" max="512"> (required)
                         </div>
                         <div>
                             <label class="label" for="title">title</label><input type="text" id="title" name="title"
-                                placeholder="optional title">
+                                placeholder="optional title" maxlength="255">
                         </div>
                         <div>
                             <label class="label" for="description">descr.</label><input type="text" id="description"
-                                name="description" placeholder="optional description">
+                                name="description" placeholder="optional description" maxlength="1024">
                         </div>
                         <input type="submit">
                         <% if (public) { %>
