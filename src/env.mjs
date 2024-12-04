@@ -10,7 +10,7 @@ export const DATABASE_USER = process.env.DATABASE_USER
 export const DATABASE_PASS = process.env.DATABASE_PASS
 export const PORT = process.env.PORT || 6070
 export const CONTAINER_EXT_PORT = process.env.CONTAINER_EXT_PORT
-export const PUBLIC = process.env.PUBLIC
+export const PUBLIC = process.env.PUBLIC === 'true'
 export const ROOT_URL = process.env.ROOT_URL
 
 export const DATABASE_URL =
