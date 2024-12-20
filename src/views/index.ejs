@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div id="content">
+    <main>
         <h1>rsstodolist</h1>
 
         <div class="intro">
@@ -33,8 +33,17 @@
         </div>
 
         <div>
-            <details>
+            <details id="goDetails">
                 <summary>Access a feed</summary>
+                <form method="get" id="goForm" action="/">
+                    <div>
+                        <label class="label" for="name">name</label><input type="text" name="name"
+                            placeholder="somename" maxlength="<%= lengths.name %>" required autofocus> (required)
+                    </div>
+                    <div>
+                        <input type="submit">
+                    </div>
+                </form>
                 <p>
                     <a href="?name=somename" rel="nofollow">
                         <%= rootUrl %><strong>/?name</strong>=somename
@@ -48,41 +57,40 @@
                         </a></p>
                     <% } %>
             </details>
-            <details>
+            <details id="submitDetails">
                 <summary>add or delete an item by form</summary>
-                <div class="tab-content">
-                    <form method="get" id="submitForm" action="add">
-                        <div>
-                            <span class="label">action</span><label><input type="radio" name="action" value="add"
-                                    checked>add</label>
-                            <label><input type="radio" name="action" value="del">delete</label>
-                        </div>
-                        <div>
-                            <label class="label" for="url">URL</label><input type="url" id="url" name="url"
-                                placeholder="https://fr.wikipedia.org/" required maxlength="<%= lengths.url %>">
-                            (required)
-                        </div>
-                        <div>
-                            <label class="label" for="name">name</label><input type="text" id="name" name="name"
-                                placeholder="somename" maxlength="<%= lengths.name %>"> (required)
-                        </div>
-                        <div>
-                            <label class="label" for="title">title</label><input type="text" id="title" name="title"
-                                placeholder="optional title" maxlength="<%= lengths.title %>">
-                        </div>
-                        <div>
-                            <label class="label" for="description">descr.</label><input type="text" id="description"
-                                name="description" placeholder="optional description"
-                                maxlength="<%= lengths.description%>">
-                        </div>
+                <form method="get" id="submitForm" action="add">
+                    <div>
+                        <span class="label">action</span><label><input type="radio" name="action" value="add"
+                                checked>add</label>
+                        <label><input type="radio" name="action" value="del">delete</label>
+                    </div>
+                    <div>
+                        <label class="label" for="url">URL</label><input type="url" name="url"
+                            placeholder="https://fr.wikipedia.org/" required maxlength="<%= lengths.url %>">
+                        (required)
+                    </div>
+                    <div>
+                        <label class="label" for="name">name</label><input type="text" name="name"
+                            placeholder="somename" maxlength="<%= lengths.name %>"> (required)
+                    </div>
+                    <div>
+                        <label class="label" for="title">title</label><input type="text" name="title"
+                            placeholder="optional title" maxlength="<%= lengths.title %>">
+                    </div>
+                    <div>
+                        <label class="label" for="description">descr.</label><input type="text" name="description"
+                            placeholder="optional description" maxlength="<%= lengths.description%>">
+                    </div>
+                    <div>
                         <input type="submit">
-                        <% if (public) { %>
-                            <p style="font-weight:bold;">⚠️ On public instance, « somename » feed is limited to
-                                wikipedia pages to limit spam.
-                            </p>
-                            <% } %>
-                    </form>
-                </div>
+                    </div>
+                    <% if (public) { %>
+                        <p style="font-weight:bold;">⚠️ On public instance, « somename » feed is limited to
+                            wikipedia pages to limit spam.
+                        </p>
+                        <% } %>
+                </form>
             </details>
             <details>
                 <summary>Use Firefox addon and Chrome extension</summary>
@@ -142,13 +150,42 @@
                 <p>Contact me via <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
             </details>
         </div>
-    </div>
+    </main>
     <script>
-        const form = document.querySelector('#submitForm');
-        const radios = form.querySelectorAll('input[name="action"]')
+        const goDetails = document.querySelector('#goDetails');
+        const goForm = document.querySelector('#goForm');
+        const submitDetails = document.querySelector('#submitDetails');
+        const submitForm = document.querySelector('#submitForm');
+        const radios = submitForm.querySelectorAll('input[name="action"]')
+
+        // Update form action on radio click
         radios.forEach(radio => radio.addEventListener('click', (e) => {
-            form.setAttribute('action', e.target.value)
+            submitForm.setAttribute('action', e.target.value)
         }))
+
+        // Handle hash parameters 
+        // like #?name=test to preselect name in go form
+        // or #?name=test&action=add|del&url=url&title&description=desc to preselect field in submit form
+        const hashParams = new URLSearchParams((location.hash ?? '').substr(1));
+        const n = hashParams.get('name')
+        document.querySelectorAll('input[name=name]').forEach(item => {
+            item.value = n
+        })
+        const action = hashParams.get('action')
+        if (action) {
+            submitDetails.setAttribute('open', 'true')
+            document.querySelector('input[name=url]').value = hashParams.get('url')
+            document.querySelector('input[name=title]').value = hashParams.get('title')
+            document.querySelector('input[name=description]').value = hashParams.get('description')
+            if (action === 'del') {
+                document.querySelector('input[value=del]').checked = true
+                submitForm.setAttribute('action', 'del')
+            }
+
+        } else {
+            goDetails.setAttribute('open', 'true')
+        }
+
     </script>
 </body>
 

@@ -34,6 +34,11 @@ docker-compose -f ./docker/docker-compose.yml build
 docker-compose -f ./docker/docker-compose.yml up
 ```
 
+### Development
+
+To allow fast code update, you can simply start database using docker-compose like 
+`docker-compose -f ./docker/docker-compose.yml up db` and run `npm run dev` with nodemon in another shell.
+
 ## 2. Setup with the DockerFile
 
 ### Run the migration file

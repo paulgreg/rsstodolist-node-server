@@ -4,7 +4,7 @@ body {
     font-family: sans-serif;
 }
 
-#content {
+main {
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -38,13 +38,23 @@ form {
     margin: 0.5em;
 }
 
+form div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .label {
     width: 3.25em;
     display: inline-block;
 }
 
 input {
+    flex-grow: 1;
     margin: 0.25em;
+}
+input[type='submit'] {
+    max-width: 200px;
 }
 
 p {
