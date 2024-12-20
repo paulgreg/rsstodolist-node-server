@@ -13,6 +13,8 @@ import charset from 'charset'
 import iconv from 'iconv-lite'
 import * as env from './env.mjs'
 
+const PORT = env.CONTAINER_EXT_PORT || env.PORT
+
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
@@ -212,7 +214,7 @@ sequelize
             return count({ name }).then(([count]) => res.json(count))
         })
 
-        app.listen(env.PORT, () => {
-            console.log(`rsstodolist-node-server listening at http://127.0.0.1:${env.CONTAINER_EXT_PORT || env.PORT}`)
+        app.listen(PORT, () => {
+            console.log(`rsstodolist-node-server listening at http://127.0.0.1:${PORT}`)
         })
     })
