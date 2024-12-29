@@ -69,6 +69,7 @@ sequelize
                 maxAge: DAY * 90,
             })
         )
+        app.use('/manifest.json', express.static(__dirname + '/static/manifest.json'))
 
         app.get('/', (req, res) => {
             const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
