@@ -73,9 +73,10 @@ sequelize
 
         app.get('/', (req, res) => {
             const name = cleanNameStr(req.query.name || req.query.n)
-            const url = cleanUrlStr(req.query.url || req.query.u)
             const title = cleanTitleStr(req.query.title || req.query.t)
             const description = cleanDescriptionStr(req.query.description || req.query.d)
+            const url = cleanUrlStr(req.query.url || req.query.u)
+
             const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
 
@@ -96,7 +97,19 @@ sequelize
                 })
             }
             res.set('Cache-control', `public, max-age=${DAY}`)
-            return res.render('index', { rootUrl, public: env.PUBLIC, lengths, name, url, title, description })
+            // Using share target API in Chrome sends URL in description :/ so use description field in that case and empty it
+            const descriptionIsUrl = !url && description.startsWith('http')
+            const hackUrl = descriptionIsUrl ? description : url
+            const hackDescription = descriptionIsUrl ? '' : description
+            return res.render('index', {
+                rootUrl,
+                public: env.PUBLIC,
+                lengths,
+                name,
+                url: hackUrl,
+                description: hackDescription,
+                title,
+            })
         })
 
         if (!env.PUBLIC) {
