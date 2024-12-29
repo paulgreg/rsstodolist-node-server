@@ -23,7 +23,7 @@
     "theme_color": "#000000",
     "background_color": "#ffffff",
     "share_target": {
-        "action": "./#",
+        "action": "./",
         "enctype": "application/x-www-form-urlencoded",
         "method": "GET",
         "params": {

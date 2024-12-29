@@ -72,12 +72,15 @@ sequelize
         app.use('/manifest.json', express.static(__dirname + '/static/manifest.json'))
 
         app.get('/', (req, res) => {
+            const name = cleanNameStr(req.query.name || req.query.n)
+            const url = cleanUrlStr(req.query.url || req.query.u)
+            const title = cleanTitleStr(req.query.title || req.query.t)
+            const description = cleanDescriptionStr(req.query.description || req.query.d)
             const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
 
-            const name = cleanNameStr(n)
             const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
-            if (name) {
+            if (name && !url) {
                 if (n !== name) return res.redirect(302, `./?n=${name}`)
 
                 return findByName({ name, limit }).then((entries) => {
@@ -93,7 +96,7 @@ sequelize
                 })
             }
             res.set('Cache-control', `public, max-age=${DAY}`)
-            return res.render('index', { rootUrl, public: env.PUBLIC, lengths })
+            return res.render('index', { rootUrl, public: env.PUBLIC, lengths, name, url, title, description })
         })
 
         if (!env.PUBLIC) {
