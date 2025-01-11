@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>rsstodolist: feeds list</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="stylesheet" href="./static/style.css" />
+        <link rel="icon" type="image/png" href="./static/favicon.png" />
+    </head>
 
-<head>
-    <meta charset="utf-8" />
-    <title>rsstodolist: feeds list</title>
-    <meta name="robots" content="noindex, nofollow" />
-    <link rel="stylesheet" href="./static/style.css" />
-    <link rel="icon" type="image/png" href="./static/favicon.png" />
-</head>
-
-<body>
-    <div id="content">
-        <h1>rsstodolist</h1>
-        <h2>Available feeds</h2>
-        <ul class="feeds">
-            <% feeds.forEach(feed=> { %>
+    <body>
+        <main>
+            <h1>rsstodolist</h1>
+            <h2>Available feeds</h2>
+            <ul class="feeds">
+                <% feeds.forEach(feed=> { %>
                 <li>
                     <a href="./?n=<%= feed.name %>">/?n=<%= feed.name %></a>
                     (<%= feed.dataValues.count %>)
                 </li>
                 <% }) %>
-        </ul>
-    </div>
-</body>
-
+            </ul>
+        </main>
+    </body>
 </html>
