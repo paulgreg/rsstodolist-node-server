@@ -1,6 +1,5 @@
-import Sequelize from 'sequelize'
-
-const Op = Sequelize.Op
+import type { Optional } from 'sequelize'
+import { Sequelize, Model, DataTypes, Op } from 'sequelize'
 
 export const id = 'id'
 export const name = 'name'
@@ -15,31 +14,54 @@ export const lengths = {
     [description]: 1024,
 }
 
-const FeedModelBuilder = (sequelize) => {
-    const isPostgres = sequelize.dialect.sequelize.options.dialect === 'postgres'
+interface FeedAttributes {
+    [id]: number
+    [name]: string
+    [url]: string
+    [title]: string
+    [description]?: string
+    createdAt?: Date
+    updatedAt?: Date
+}
 
-    const FeedModel = sequelize.define(
+interface FeedCreationAttributes extends Optional<FeedAttributes, 'id'> {}
+
+class FeedModel extends Model<FeedAttributes, FeedCreationAttributes> implements FeedAttributes {
+    [id]!: number;
+    [name]!: string;
+    [url]!: string;
+    [title]!: string;
+    [description]?: string
+
+    readonly createdAt!: Date
+    readonly updatedAt!: Date
+}
+
+const FeedModelBuilder = (sequelize: Sequelize) => {
+    const isPostgres = sequelize.getDialect() === 'postgres'
+
+    const FeedModel = sequelize.define<FeedModel>(
         'feeds_feedentry',
         {
             [id]: {
-                type: Sequelize.INTEGER,
+                type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
             },
             [name]: {
-                type: Sequelize.STRING(lengths[name]),
+                type: DataTypes.STRING(lengths[name]),
                 allowNull: false,
             },
             [url]: {
-                type: Sequelize.STRING(lengths[url]),
+                type: DataTypes.STRING(lengths[url]),
                 allowNull: false,
             },
             [title]: {
-                type: Sequelize.STRING(lengths[title]),
+                type: DataTypes.STRING(lengths[title]),
                 allowNull: false,
             },
             [description]: {
-                type: Sequelize.TEXT,
+                type: DataTypes.TEXT,
                 allowNull: true,
             },
         },
@@ -48,9 +70,9 @@ const FeedModelBuilder = (sequelize) => {
         }
     )
 
-    const findByName = ({ name, limit }) =>
+    const findByName = async ({ name, limit }: { name: string; limit?: number }) =>
         FeedModel.findAll({
-            limit: Math.min(limit || 25, 500),
+            limit: Math.min(limit ?? 25, 500),
             where: {
                 name,
             },
@@ -60,7 +82,7 @@ const FeedModelBuilder = (sequelize) => {
             ],
         })
 
-    const insert = ({ name, url, title, description }) =>
+    const insert = async ({ name, url, title, description }: FeedCreationAttributes) =>
         FeedModel.findOne({
             where: { name, url },
         }).then((result) =>
@@ -73,25 +95,25 @@ const FeedModelBuilder = (sequelize) => {
             })
         )
 
-    const remove = ({ name, url }) =>
+    const remove = async ({ name, url }: { name: string; url: string }) =>
         FeedModel.findOne({
             where: { name, url },
         }).then((m) => m?.destroy())
 
-    const list = () =>
+    const list = async () =>
         FeedModel.findAll({
             group: ['name'],
-            attributes: ['name', [sequelize.fn('COUNT', 'name'), 'count']],
+            attributes: ['name', [sequelize.fn('COUNT', sequelize.col('name')), 'count']],
             order: [['name', 'ASC']],
         })
 
-    const count = ({ name }) =>
+    const count = async ({ name }: { name: string }) =>
         FeedModel.findAll({
             where: { name },
-            attributes: [[sequelize.fn('COUNT', 'name'), 'count']],
+            attributes: [[sequelize.fn('COUNT', sequelize.col('name')), 'count']],
         })
 
-    const search = ({ query, limit }) =>
+    const search = async ({ query, limit }: { query: string; limit?: number }) =>
         FeedModel.findAll({
             limit: Math.min(limit || 100, 500),
             where: {
@@ -119,11 +141,11 @@ const FeedModelBuilder = (sequelize) => {
             ],
         })
 
-    const suggest = ({ query }) =>
+    const suggest = async ({ query }: { query: string }) =>
         FeedModel.findAll({
             limit: 10,
             group: ['name'],
-            attributes: ['name', [sequelize.fn('COUNT', 'name'), 'count']],
+            attributes: ['name', [sequelize.fn('COUNT', sequelize.col('name')), 'count']],
             where: {
                 name: {
                     [Op.like]: `%${query}%`,
@@ -132,7 +154,7 @@ const FeedModelBuilder = (sequelize) => {
             order: [['name', 'ASC']],
         })
 
-    const dump = () =>
+    const dump = async () =>
         FeedModel.findAll({
             attributes: ['name', 'url', 'title', 'description', 'createdAt', 'updatedAt'],
             order: [

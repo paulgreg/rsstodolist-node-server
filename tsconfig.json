@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+      /* Modern JavaScript & Browser Compatibility: */
+      "target": "ESNext", // Uses the latest ECMAScript features for modern JavaScript support
+  
+      /* Module System Settings: */
+      "module": "NodeNext", // Configures Node.js to use ESM module system
+      "rootDir": "src", // Specifies the source directory for your code
+      "outDir": "dist", // Specifies the output directory for compiled files
+      "sourceMap": true, // Enables source maps for easier debugging
+  
+      /* Module Resolution Strategy: */
+      "moduleResolution": "NodeNext", // Resolves modules using Node’s ESM strategy
+      "moduleDetection": "force", // Forces TypeScript to treat files as modules
+  
+      /* Interoperability and File Consistency: */
+      "esModuleInterop": true, // Ensures compatibility between CommonJS and ESM modules
+      "forceConsistentCasingInFileNames": true, // Prevents case-sensitivity issues across platforms
+  
+      /* Strict Type-Checking: */
+      "strict": true, // Enables strict type-checking for fewer runtime errors
+      "noUncheckedIndexedAccess": true, // Enforces type safety for array/object accesses
+      "noImplicitOverride": true, // Enforces explicit use of `override` for methods overriding base class methods
+      "noImplicitAny": true, // Prevents the use of `any` type unless explicitly defined
+      "skipLibCheck": true, // Skips type-checking of declaration files for faster compilation
+      "resolveJsonModule": true, // Allows importing JSON files as modules
+      "declaration": true, // Generates `.d.ts` files for type definitions
+      "allowSyntheticDefaultImports": true, // Allows default imports for CommonJS modules
+      "verbatimModuleSyntax": true, // Keeps the `import`/`export` syntax as-is without transformation
+  
+      "lib": ["ES2022"] // Include ES2022 features 
+    },
+    "include": ["src"], // Includes the `src` directory in the project
+    "exclude": ["node_modules", "dist"] // Excludes `node_modules` and `dist` directories from the project
+  }

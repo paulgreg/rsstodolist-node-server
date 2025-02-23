@@ -1,4 +1,4 @@
-import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.mjs'
+import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.ts'
 
 describe('strings', () => {
     describe('trim', () => {

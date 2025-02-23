@@ -1,5 +1,6 @@
 node_modules
 parameters.json
+dist
 
 .env
 .env.*

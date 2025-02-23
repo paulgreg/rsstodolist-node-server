@@ -1,29 +1,31 @@
 import express from 'express'
-import Sequelize from 'sequelize'
-import FeedModelBuilder, { lengths } from './FeedModel.mjs'
+import { Sequelize } from 'sequelize'
+import FeedModelBuilder, { lengths } from './FeedModel.js'
 import axios from 'axios'
 import * as cheerio from 'cheerio'
 import morgan from 'morgan'
-import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.mjs'
+import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.js'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import cors from 'cors'
 import jschardet from 'jschardet'
 import charset from 'charset'
 import iconv from 'iconv-lite'
-import * as env from './env.mjs'
+import * as env from './env.js'
+import type { IncomingHttpHeaders } from 'http'
+import { getIntParam, getStrParam } from './utils.js'
 
-const PORT = env.CONTAINER_EXT_PORT || env.PORT
+const PORT = env.CONTAINER_EXT_PORT ?? env.PORT
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 
-const cleanNameStr = (n) => slugify(truncate(cleanify(sanitize(trim(n))), lengths.name))
-const cleanUrlStr = (u) => truncate(trim(u), lengths.url)
-const cleanTitleStr = (t) => truncate(cleanify(trim(t)), lengths.title)
-const cleanDescriptionStr = (d) => truncate(cleanify(trim(d)), lengths.description)
-const cleanSearchStr = (d) => cleanify(sanitize(trim(d)))
+const cleanNameStr = (n?: string) => slugify(truncate(cleanify(sanitize(trim(n))), lengths.name))
+const cleanUrlStr = (u?: string) => truncate(trim(u), lengths.url)
+const cleanTitleStr = (t?: string) => truncate(cleanify(trim(t)), lengths.title)
+const cleanDescriptionStr = (d?: string) => truncate(cleanify(trim(d)), lengths.description)
+const cleanSearchStr = (d?: string) => cleanify(sanitize(trim(d)))
 
 const sequelize = new Sequelize(env.DATABASE_URL, {
     timezone: env.TZ,
@@ -35,9 +37,12 @@ const sequelize = new Sequelize(env.DATABASE_URL, {
 
 axios.interceptors.response.use((response) => {
     const chardetResult = jschardet.detect(response.data)
-    const encoding = chardetResult?.encoding || charset(response.headers, response.data)
+    const headers = response.headers as IncomingHttpHeaders
+    const encoding = chardetResult?.encoding || charset(headers, response.data)
 
-    response.data = iconv.decode(response.data, encoding)
+    if (encoding) {
+        response.data = iconv.decode(response.data, encoding)
+    }
 
     return response
 })
@@ -72,21 +77,24 @@ sequelize
         app.use('/manifest.json', express.static(__dirname + '/static/manifest.json'))
 
         app.get('/', (req, res) => {
-            const name = cleanNameStr(req.query.name || req.query.n)
-            const title = cleanTitleStr(req.query.title || req.query.t)
-            const description = cleanDescriptionStr(req.query.description || req.query.d)
-            const url = cleanUrlStr(req.query.url || req.query.u)
+            const name = cleanNameStr(getStrParam(req, 'name', 'n'))
+            const title = cleanTitleStr(getStrParam(req, 'title', 't'))
+            const description = cleanDescriptionStr(getStrParam(req, 'description', 'd'))
+            const url = cleanUrlStr(getStrParam(req, 'url', 'u'))
+            const limit = getIntParam(req, 'limit', 'l') ?? 25
 
-            const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
+            const rootUrl = env.ROOT_URL ?? req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
 
-            const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 25
             if (name && !url) {
-                if (n !== name) return res.redirect(302, `./?n=${name}`)
+                if (n !== name) {
+                    res.redirect(302, `./?n=${name}`)
+                    return
+                }
 
                 return findByName({ name, limit }).then((entries) => {
                     res.type('text/xml')
-                    return res.render('rss', {
+                    res.render('rss', {
                         rootUrl,
                         public: env.PUBLIC,
                         title: name,
@@ -101,7 +109,7 @@ sequelize
             const descriptionIsUrl = !url && description.startsWith('http')
             const hackUrl = descriptionIsUrl ? description : url
             const hackDescription = descriptionIsUrl ? '' : description
-            return res.render('index', {
+            res.render('index', {
                 rootUrl,
                 public: env.PUBLIC,
                 lengths,
@@ -124,14 +132,19 @@ sequelize
             console.log('enable /search')
             app.get('/search', (req, res) => {
                 const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
-                const query = cleanSearchStr(req.query.query || req.query.q)
-                if (!query) return res.status(404).end('404 : Missing query parameter')
-                if (query.length < 2)
-                    return res.status(400).end('400 : query parameter should be at least 2 characters')
-                const limit = Math.abs(parseInt(req.query.limit || req.query.l, 10)) || 100
+                const query = cleanSearchStr(getStrParam(req, 'query', 'q'))
+                if (!query) {
+                    res.status(404).end('404 : Missing query parameter')
+                    return
+                }
+                if (query.length < 2) {
+                    res.status(400).end('400 : query parameter should be at least 2 characters')
+                    return
+                }
+                const limit = getIntParam(req, 'limit', 'l') ?? 100
                 return search({ query, limit }).then((entries) => {
                     res.type('text/xml')
-                    return res.render('rss', {
+                    res.render('rss', {
                         rootUrl,
                         public: env.PUBLIC,
                         title: `${entries.length} result${entries.length > 1 ? 's' : ''} for search « ${query} »`,
@@ -144,24 +157,35 @@ sequelize
 
             console.log('enable /suggest')
             app.get('/suggest', (req, res) => {
-                const query = cleanSearchStr(req.query.query || req.query.q)
-                if (!query) return res.status(404).end('404 : Missing query parameter')
-                if (query.length < 2)
-                    return res.status(400).end('400 : query parameter should be at least 2 characters')
-                return suggest({ query }).then((results) => res.json(results))
+                const query = cleanSearchStr(getStrParam(req, 'query', 'q'))
+                if (!query) {
+                    res.status(404).end('404 : Missing query parameter')
+                    return
+                }
+                if (query.length < 2) {
+                    res.status(400).end('400 : query parameter should be at least 2 characters')
+                    return
+                }
+                suggest({ query }).then((results) => res.json(results))
             })
         }
 
         app.get('/add', (req, res) => {
-            const name = cleanNameStr(req.query.name || req.query.n)
-            const url = cleanUrlStr(req.query.url || req.query.u)
-            const title = cleanTitleStr(req.query.title || req.query.t)
-            const description = cleanDescriptionStr(req.query.description || req.query.d)
+            const name = cleanNameStr(getStrParam(req, 'name', 'n'))
+            const title = cleanTitleStr(getStrParam(req, 'title', 't'))
+            const description = cleanDescriptionStr(getStrParam(req, 'description', 'd'))
+            const url = cleanUrlStr(getStrParam(req, 'url', 'u'))
 
-            if (!name || !url) return res.status(404).end('404 : Missing name or url parameter')
+            if (!name || !url) {
+                res.status(404).end('404 : Missing name or url parameter')
+                return
+            }
 
             const shouldLimitToWikipedia = env.PUBLIC && name === 'somename'
-            if (!isValidUrl(url, shouldLimitToWikipedia)) return res.status(400).end('403 : Forbidden')
+            if (!isValidUrl(url, shouldLimitToWikipedia)) {
+                res.status(400).end('403 : Forbidden')
+                return
+            }
             return (
                 title
                     ? Promise.resolve({ title, description })
@@ -175,14 +199,10 @@ sequelize
                                   },
                                   timeout: 5_000,
                               })
-                              .then((response = {}) => {
-                                  const { status, data } = response
+                              .then((response) => {
+                                  const { status, data } = response ?? {}
                                   if (status === 200) {
-                                      const $ = cheerio.load(data, {
-                                          normalizeWhitespace: true,
-                                          xmlMode: false,
-                                          decodeEntities: true,
-                                      })
+                                      const $ = cheerio.load(data)
 
                                       const titleFromPage = $('head title').text() || $('body title').text()
                                       return {
@@ -199,11 +219,13 @@ sequelize
                               })
                       )
             )
-                .then((metas = {}) => {
-                    const { title, description } = metas
-                    return insert({ name, url, title: title || url, description })
+                .then((metas) => {
+                    const { title, description } = metas ?? {}
+                    return insert({ name, url, title: title ?? url, description })
                 })
-                .then(() => res.redirect(302, `./?n=${name}`))
+                .then(() => {
+                    res.redirect(302, `./?n=${name}`)
+                })
                 .catch((err) => {
                     const msg = `Error while inserting '${url}' in '${name}'`
                     console.error(msg, err)
@@ -212,9 +234,13 @@ sequelize
         })
 
         app.get('/del', (req, res) => {
-            const name = cleanNameStr(req.query.name || req.query.n)
-            const url = cleanUrlStr(req.query.url || req.query.u)
-            if (!name || !url) return res.status(404).end('404 : Missing name or url parameter')
+            const name = cleanNameStr(getStrParam(req, 'name', 'n'))
+            const url = cleanUrlStr(getStrParam(req, 'url', 'u'))
+
+            if (!name || !url) {
+                res.status(404).end('404 : Missing name or url parameter')
+                return
+            }
             if (!isValidUrl(url)) res.status(400).end('400 : not an URL')
             return remove({ name, url })
                 .then(() => res.redirect(302, `./?n=${name}`))
@@ -226,9 +252,14 @@ sequelize
         })
 
         app.get('/count', (req, res) => {
-            const name = cleanNameStr(req.query.name || req.query.n)
-            if (!name) return res.status(404).end('404 : Missing name parameter')
-            return count({ name }).then(([count]) => res.json(count))
+            const name = cleanNameStr(getStrParam(req, 'name', 'n'))
+            if (!name) {
+                res.status(404).end('404 : Missing name parameter')
+                return
+            }
+            return count({ name }).then(([count]) => {
+                res.json(count)
+            })
         })
 
         app.listen(PORT, () => {

@@ -2,18 +2,19 @@
     "name": "rsstodolist-node-server",
     "version": "1.1.0",
     "description": "rsstodolist server in node",
-    "main": "src/index.mjs",
+    "main": "dist/index.js",
     "type": "module",
     "scripts": {
-        "start": "NODE_ENV=production node --experimental-json-modules src/index.mjs",
-        "dump": "NODE_ENV=production node --experimental-json-modules src/dump.mjs",
-        "dev": "nodemon --experimental-json-modules src/index.mjs",
-        "tdd": "jest --watch",
-        "test": "jest",
+        "build": "tsc && cp -r src/static dist/",
+        "dev": "tsx src/index.ts",
+        "dump": "NODE_ENV=production node dist/dump.js",
+        "start": "NODE_ENV=production node dist/index.js",
+        "tdd": "vitest",
+        "test": "vitest --run",
         "docker-build": "docker build -t rsstodolist -f ./Dockerfile ."
     },
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=20.0.0"
     },
     "repository": {
         "type": "git",
@@ -45,52 +46,18 @@
         "sequelize": "^6.37.5"
     },
     "devDependencies": {
-        "@babel/core": "^7.26.0",
-        "@babel/plugin-transform-modules-commonjs": "^7.26.3",
-        "@babel/preset-env": "^7.26.0",
-        "babel-jest": "^29.7.0",
-        "jest": "^29.7.0",
-        "nodemon": "^3.1.9"
-    },
-    "jest": {
-        "testMatch": [
-            "**/__tests__/**/*.?(m)js",
-            "**/?(*.)(spec|test).?(m)js"
-        ],
-        "moduleFileExtensions": [
-            "js",
-            "json",
-            "node",
-            "mjs"
-        ],
-        "transform": {
-            "^.+.m?js$": "babel-jest"
-        }
-    },
-    "babel": {
-        "env": {
-            "test": {
-                "presets": [
-                    [
-                        "@babel/preset-env",
-                        {
-                            "modules": false
-                        }
-                    ]
-                ],
-                "plugins": [
-                    [
-                        "@babel/plugin-transform-modules-commonjs",
-                        {
-                            "spec": true
-                        }
-                    ]
-                ]
-            }
-        }
+        "@types/charset": "^1.0.5",
+        "@types/cors": "^2.8.17",
+        "@types/express": "^4.17.21",
+        "@types/morgan": "^1.9.9",
+        "@types/node": "^22.13.5",
+        "@types/sequelize": "^4.28.20",
+        "tsx": "^4.19.3",
+        "typescript": "^5.7.3",
+        "vitest": "^3.0.6"
     },
     "optionalDependencies": {
-        "mysql2": "^3.11.5",
-        "pg": "^8.13.1"
+        "mysql2": "^3.12.0",
+        "pg": "^8.13.3"
     }
 }

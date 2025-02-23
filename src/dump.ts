@@ -1,6 +1,6 @@
-import Sequelize from 'sequelize'
-import * as env from './env.mjs'
-import FeedModelBuilder from './FeedModel.mjs'
+import { Sequelize } from 'sequelize'
+import * as env from './env.js'
+import FeedModelBuilder from './FeedModel.js'
 
 const sequelize = new Sequelize(env.DATABASE_URL, {
     timezone: env.TZ,
@@ -10,7 +10,7 @@ const sequelize = new Sequelize(env.DATABASE_URL, {
     logging: false,
 })
 
-const cleanStr = (str) => {
+const cleanStr = (str?: string) => {
     if (!str) return 'null'
     return str.replace(/;/g, '-').replace(/[\r\n]/g, '')
 }

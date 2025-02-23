@@ -1,6 +1,5 @@
 # flyctl launch added from .gitignore
 **/node_modules
-**/parameters.json
 
 **/.env
 **/.env.*

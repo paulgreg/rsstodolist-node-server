@@ -1,6 +1,6 @@
 export const trim = (s = '') => String(s).trim()
 
-export const truncate = (s = '', length) => String(s).substring(0, length)
+export const truncate = (s = '', length: number) => String(s).substring(0, length)
 
 export const slugify = (s = '') =>
     String(s)
@@ -30,7 +30,7 @@ export const sanitize = (s = '') =>
         .replace(/['"\/\\]/g, '')
 
 export const RE_WIKIPEDIA_VALID_URL = new RegExp('^https?://[a-z]{2}.wikipedia.org/')
-const RE_VALID_URL = new RegExp('^https?://')
+const RE_VALID_URL = /^https?:\/\//
 
 export const isValidUrl = (s = '', wikipediaOnly = false) =>
     (wikipediaOnly ? RE_WIKIPEDIA_VALID_URL : RE_VALID_URL).test(s)
