@@ -39,7 +39,7 @@
                 <form method="get" id="goForm" action="./">
                     <div>
                         <label class="label" for="name">name</label><input type="text" name="name"
-                            placeholder="somename" maxlength="<%= lengths.name %>" value="<%= name %>" required autofocus> (required)
+                            placeholder="somename" maxlength="<%= lengths.name %>" value="<%= name %>" autocomplete="on" required autofocus> (required)
                     </div>
                     <div>
                         <input type="submit">
@@ -68,7 +68,7 @@
                     </div>
                     <div>
                         <label class="label" for="name">name</label><input type="text" name="name"
-                            placeholder="somename" maxlength="<%= lengths.name %>" value="<%= name %>" required> (required)
+                            placeholder="somename" maxlength="<%= lengths.name %>" value="<%= name %>" autocomplete="on" required> (required)
                     </div>
                     <div>
                         <label class="label" for="url">URL</label><input type="url" name="url"
