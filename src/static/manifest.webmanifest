@@ -3,17 +3,17 @@
     "name": "rsstodolist",
     "icons": [
         {
-            "src": "./static/rss-128.png",
+            "src": "./rss-128.png",
             "sizes": "128x128",
             "type": "image/png"
         },
         {
-            "src": "./static/rss-256.png",
+            "src": "./rss-256.png",
             "sizes": "256x256",
             "type": "image/png"
         },
         {
-            "src": "./static/rss-512.png",
+            "src": "./rss-512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
