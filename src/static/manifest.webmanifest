@@ -20,7 +20,7 @@
     ],
     "start_url": "./",
     "display": "minimal-ui",
-    "theme_color": "#000000",
+    "theme_color": "#3b7cc0",
     "background_color": "#ffffff",
     "share_target": {
         "action": "./",
