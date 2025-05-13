@@ -18,12 +18,12 @@
             "type": "image/png"
         }
     ],
-    "start_url": "./",
+    "start_url": "../",
     "display": "minimal-ui",
     "theme_color": "#3b7cc0",
     "background_color": "#ffffff",
     "share_target": {
-        "action": "./",
+        "action": "../",
         "enctype": "application/x-www-form-urlencoded",
         "method": "GET",
         "params": {
