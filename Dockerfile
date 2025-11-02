@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:24-alpine
 
 # Add pkg to use wait-for-it script.
 RUN apk add --no-cache bash coreutils
@@ -10,12 +10,9 @@ WORKDIR /usr/app
 COPY ./package.json ./package-lock.json tsconfig.json /usr/app/
 RUN npm install
 
-# Build
+# Build & clean
 COPY ./src /usr/app/src
-RUN npm run build
-
-# Clean
-RUN npm ci && npm cache clean --force
+RUN npm run build && npm ci && npm cache clean --force
 
 # Bundle app source.
 COPY ./docker/wait-for-it.sh /usr/app/

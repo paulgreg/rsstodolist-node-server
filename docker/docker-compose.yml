@@ -1,5 +1,3 @@
-version: '3.8'
-
 volumes:
     rsstodolist_db_data:
 
@@ -8,22 +6,42 @@ services:
         build:
             context: ../
             dockerfile: ./Dockerfile
-        env_file: ../.env.docker_compose
+        environment:
+            - TZ="Etc/GMT+1"
+            - PORT=6070
+            - DATABASE_HOST=db
+            - DATABASE_USER=rsstodolistUser
+            - DATABASE_PASS=SomePassword
+            - DATABASE_NAME=rsstodolist
+            - CONTAINER_EXT_PORT=8080
+            - PUBLIC=true
         ports:
-            - '${CONTAINER_EXT_PORT:-8080}:${PORT:-6070}'
+            - 8080:6070
         depends_on:
             - db
 
     db:
-        #   image: 'mariadb:latest'
-        #   env_file: ../.env.docker_compose
-        #   volumes:
-        #       - 'rsstodolist_db_data:/var/lib/mysql'
-        #       - ../sql/rsstodolist.mysql:/docker-entrypoint-initdb.d/rsstodolist.sql
+        #image: 'mariadb:latest'
+        #environment:
+        #   - DATABASE_DIALECT=mariadb
+        #   - DATABASE_PORT=3306
+        #   - MYSQL_DATABASE=rsstodolist
+        #   - MYSQL_USER=rsstodolistUser
+        #   - MYSQL_PASSWORD=SomePassword
+        #   - MYSQL_RANDOM_ROOT_PASSWORD=yes
+        #volumes:
+        #    - 'rsstodolist_db_data:/var/lib/mysql'
+        #    - ../sql/rsstodolist.mysql:/docker-entrypoint-initdb.d/rsstodolist.sql
         image: 'postgres:latest'
+        shm_size: 128mb
         ports:
             - 5432:5432
-        env_file: ../.env.docker_compose
+        environment:
+            - DATABASE_DIALECT=postgres
+            - DATABASE_PORT=5432
+            - POSTGRES_USER=rsstodolistUser
+            - POSTGRES_PASSWORD=SomePassword
+            - POSTGRES_DB=rsstodolist
         volumes:
-            - 'rsstodolist_db_data/:/var/lib/postgresql/data/'
+            - 'rsstodolist_db_data:/var/lib/postgresql/'
             - ../sql/rsstodolist.postgres:/docker-entrypoint-initdb.d/rsstodolist.sql
