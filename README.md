@@ -34,9 +34,15 @@ docker-compose -f ./docker/docker-compose.yml build
 docker-compose -f ./docker/docker-compose.yml up
 ```
 
+### launch psql
+
+```shell
+docker exec -it rsstodolist-db_rsstodolist-postgres_1 psql -U rsstodolist -d rsstodolist
+```
+
 ### Development
 
-To allow fast code update, you can simply start database using docker-compose like 
+To allow fast code update, you can simply start database using docker-compose like
 `docker-compose -f ./docker/docker-compose.yml up db` and run `npm run dev` with nodemon in another shell.
 
 ## 2. Setup with the DockerFile
