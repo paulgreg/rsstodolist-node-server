@@ -7,31 +7,19 @@ services:
             context: ../
             dockerfile: ./Dockerfile
         environment:
-            - TZ="Etc/GMT+1"
-            - PORT=6070
+            - PORT=8080
             - DATABASE_HOST=db
+            - DATABASE_PORT=5432
             - DATABASE_USER=rsstodolistUser
             - DATABASE_PASS=SomePassword
             - DATABASE_NAME=rsstodolist
-            - CONTAINER_EXT_PORT=8080
             - PUBLIC=true
         ports:
-            - 8080:6070
+            - 8080:8080
         depends_on:
             - db
 
     db:
-        #image: 'mariadb:latest'
-        #environment:
-        #   - DATABASE_DIALECT=mariadb
-        #   - DATABASE_PORT=3306
-        #   - MYSQL_DATABASE=rsstodolist
-        #   - MYSQL_USER=rsstodolistUser
-        #   - MYSQL_PASSWORD=SomePassword
-        #   - MYSQL_RANDOM_ROOT_PASSWORD=yes
-        #volumes:
-        #    - 'rsstodolist_db_data:/var/lib/mysql'
-        #    - ../sql/rsstodolist.mysql:/docker-entrypoint-initdb.d/rsstodolist.sql
         image: 'postgres:latest'
         shm_size: 128mb
         ports:
@@ -45,3 +33,14 @@ services:
         volumes:
             - 'rsstodolist_db_data:/var/lib/postgresql/'
             - ../sql/rsstodolist.postgres:/docker-entrypoint-initdb.d/rsstodolist.sql
+        # image: 'mariadb:latest'
+        # environment:
+        #    - DATABASE_DIALECT=mariadb
+        #    - DATABASE_PORT=3306
+        #    - MYSQL_DATABASE=rsstodolist
+        #    - MYSQL_USER=rsstodolistUser
+        #    - MYSQL_PASSWORD=SomePassword
+        #    - MYSQL_RANDOM_ROOT_PASSWORD=yes
+        # volumes:
+        #     - 'rsstodolist_db_data:/var/lib/mysql'
+        #     - ../sql/rsstodolist.mysql:/docker-entrypoint-initdb.d/rsstodolist.sql

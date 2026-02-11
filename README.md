@@ -72,7 +72,7 @@ docker run --env-file ./.env rsstodolist
 or define needed environment variables within the command:
 
 ```shell
-docker run -p 8080:6070 \
+docker run -p 8080:8080 \
 -e DATABASE_HOST=127.0.0.1 \
 -e DATABASE_PORT=3306 \
 rsstodolist

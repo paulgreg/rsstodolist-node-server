@@ -5,17 +5,17 @@ import axios from 'axios'
 import * as cheerio from 'cheerio'
 import morgan from 'morgan'
 import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.js'
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import cors from 'cors'
 import jschardet from 'jschardet'
 import charset from 'charset'
 import iconv from 'iconv-lite'
 import * as env from './env.js'
-import type { IncomingHttpHeaders } from 'http'
+import type { IncomingHttpHeaders } from 'node:http'
 import { getIntParam, getStrParam } from './utils.js'
 
-const PORT = env.CONTAINER_EXT_PORT ?? env.PORT
+const PORT = env.PORT
 
 const MINUTE = 60
 const HOUR = MINUTE * 60

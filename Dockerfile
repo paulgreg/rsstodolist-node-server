@@ -8,15 +8,15 @@ WORKDIR /usr/app
 
 # Install dependencies.
 COPY ./package.json ./package-lock.json tsconfig.json /usr/app/
-RUN npm install
+RUN npm ci
 
 # Build & clean
 COPY ./src /usr/app/src
-RUN npm run build && npm ci && npm cache clean --force
+RUN npm run build 
 
 # Bundle app source.
 COPY ./docker/wait-for-it.sh /usr/app/
 
-EXPOSE 6070
+EXPOSE 8080
 
 CMD [ "sh", "-c", "./wait-for-it.sh ${DATABASE_HOST:-127.0.0.1}:${DATABASE_PORT:-3306} -t 90 -- npm start" ]

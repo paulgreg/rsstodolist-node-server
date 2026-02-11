@@ -1,6 +1,7 @@
 node_modules
 parameters.json
 dist
+src/static/xslt-polyfill.min.js
 
 .env
 .env.*
