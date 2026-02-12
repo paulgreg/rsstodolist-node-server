@@ -1,166 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>rsstodolist: an RSS based todo-list</title>
+        <meta name="robots" content="<%= public ? 'index,follow' : 'noindex,nofollow' %>" />
+        <meta name="keywords" content="rss todolist, todolist" />
+        <meta name="author" content="Gr&eacute;gory Paul" />
+        <meta name="description" content="An RSS based todo-list" />
+        <link rel="stylesheet" href="./static/style.css" />
+        <link rel="icon" type="image/png" href="./static/favicon.png" />
+        <link rel="manifest" href="./static/manifest.webmanifest" />
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0" />
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title>rsstodolist: an RSS based todo-list</title>
-    <meta name="robots" content="<%= public ? 'index,follow' : 'noindex,nofollow' %>">
-    <meta name="keywords" content="rss todolist, todolist">
-    <meta name="author" content="Gr&eacute;gory Paul">
-    <meta name="description" content="An RSS based todo-list">
-    <link rel="stylesheet" href="./static/style.css">
-    <link rel="icon" type="image/png" href="./static/favicon.png">
-    <link rel="manifest" href="./static/manifest.webmanifest"/>
-    <meta name="viewport"
-        content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
-</head>
+    <body>
+        <main>
+            <header class="page-header">
+                <h1>rsstodolist</h1>
+                <p class="lead">Capture any public URL into a RSS feed that you can read from your favorite reader.</p>
+            </header>
 
-<body>
-    <main>
-        <h1>rsstodolist</h1>
-
-        <div class="intro">
-
-            <p>rsstodolist is a service that provides a simple way to create
-                RSS feeds by sending URL to a feed.</p>
+            <section class="card card--intro">
+                <h2>How rsstodolist works</h2>
+                <p>
+                    Send us a URL and a feed name. We turn it into an RSS item so you can triage articles, docs, and
+                    inspiration directly where you already read news.
+                </p>
+                <ul class="feature-list">
+                    <li>Minimal setup — no registration, just pick a feed name.</li>
+                    <li>Bring your own client — every feed is compatible with RSS/Atom readers.</li>
+                    <li>Privacy friendly — self-host that Open Source service.</li>
+                </ul>
+            </section>
 
             <% if (public) { %>
-                <p>That service is public and « open », meaning anyone knowing your feed name may see, add or remove
-                    your items.</p>
-                <p>Also, that service is hosted via hobby plan on fly.io with some limitations.</p>
-                <p>So, for more reliability and privacy, I <strong>strongly</strong> suggest you to self-host that
-                    application (see <a href="#related">related projects below</a>).</p>
-                <% } %>
-        </div>
-
-        <div>
-            <details id="goDetails" <%= !url ? 'open' : '' %>>
-                <summary>Access a feed</summary>
-                <form method="get" id="goForm" action="./">
-                    <div>
-                        <label class="label" for="name">name</label><input type="text" name="name"
-                            placeholder="somename" maxlength="<%= lengths.name %>" value="<%= name %>" autocomplete="on" required autofocus> (required)
-                    </div>
-                    <div>
-                        <input type="submit">
-                    </div>
-                </form>
+            <section class="card card--notice">
+                <h3>About this public instance</h3>
                 <p>
-                    <a href="?name=somename" rel="nofollow">
-                        <%= rootUrl %><strong>/?name</strong>=somename
-                    </a>
-                <p>You can add <code>limit</code> (or <code>l</code>) parameter to fetch from 1 to 500 items (default is
-                    25 items).
+                    This hosted version is « open » : anyone who knows your feed name can read, add, or remove entries.
+                    It also runs on a hobby Fly.io plan, so uptime and quotas are limited.
                 </p>
-                <% if (!public) { %>
-                    <p>You can see all existing feeds on <a href="<%= rootUrl %>/list" rel="nofollow">
-                            <%= rootUrl %><strong>/list</strong>
-                        </a></p>
-                    <% } %>
-            </details>
-            <details id="submitDetails" <%= url ? 'open' : '' %>>
-                <summary>add or delete an item by form</summary>
-                <form method="get" id="submitForm" action="add">
-                    <div>
-                        <span class="label">action</span><label><input type="radio" name="action" value="add"
-                                checked>add</label>
-                        <label><input type="radio" name="action" value="del">delete</label>
-                    </div>
-                    <div>
-                        <label class="label" for="name">name</label><input type="text" name="name"
-                            placeholder="somename" maxlength="<%= lengths.name %>" value="<%= name %>" autocomplete="on" required> (required)
-                    </div>
-                    <div>
-                        <label class="label" for="url">URL</label><input type="url" name="url"
-                            placeholder="https://fr.wikipedia.org/" value="<%= url %>" required maxlength="<%= lengths.url %>">
-                        (required)
-                    </div>
-                    <div>
-                        <label class="label" for="title">title</label><input type="text" name="title"
-                            placeholder="optional title" maxlength="<%= lengths.title %>" value="<%= title %>">
-                    </div>
-                    <div>
-                        <label class="label" for="description">descr.</label><input type="text" name="description"
-                            placeholder="optional description" maxlength="<%= lengths.description%>" value="<%= description %>">
-                    </div>
-                    <div>
-                        <input type="submit">
-                    </div>
-                    <% if (public) { %>
-                        <p style="font-weight:bold;">⚠️ On public instance, « somename » feed is limited to
-                            wikipedia pages to limit spam.
+                <p>
+                    For more reliability and privacy, please consider self host rsstodolist (<a
+                        href="https://github.com/paulgreg/rsstodolist-node-server"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >instructions</a
+                    >).
+                </p>
+            </section>
+            <% } %>
+
+            <section class="card-stack">
+                <details id="submitDetails" class="card card--collapsible" open>
+                    <summary>Add or delete an item</summary>
+                    <form class="stacked-form" method="get" id="submitForm" action="add">
+                        <div class="form-row form-row--options">
+                            <span class="label">action</span>
+                            <label><input type="radio" name="action" value="add" checked /> add</label>
+                            <label><input type="radio" name="action" value="del" /> delete</label>
+                        </div>
+                        <div class="form-row">
+                            <label class="label" for="name">name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="somename"
+                                maxlength="<%= lengths.name %>"
+                                value="<%= name %>"
+                                autocomplete="on"
+                                required
+                            />
+                        </div>
+                        <div class="form-row">
+                            <label class="label" for="url">URL</label>
+                            <input
+                                type="url"
+                                name="url"
+                                placeholder="https://fr.wikipedia.org/"
+                                value="<%= url %>"
+                                required
+                                maxlength="<%= lengths.url %>"
+                            />
+                        </div>
+                        <div class="form-row">
+                            <label class="label" for="title">title</label>
+                            <input
+                                type="text"
+                                name="title"
+                                placeholder="optional title"
+                                maxlength="<%= lengths.title %>"
+                                value="<%= title %>"
+                            />
+                        </div>
+                        <div class="form-row">
+                            <label class="label" for="description">descr.</label>
+                            <input
+                                type="text"
+                                name="description"
+                                placeholder="optional description"
+                                maxlength="<%= lengths.description%>"
+                                value="<%= description %>"
+                            />
+                        </div>
+                        <div class="form-row">
+                            <input type="submit" class="button" value="Send" />
+                        </div>
+                        <% if (public) { %>
+                        <p class="inline-warning">
+                            ⚠️ On the public instance, « somename » feed is limited to Wikipedia pages to limit spam.
                         </p>
                         <% } %>
-                </form>
-            </details>
-            <details>
-                <summary>Use Firefox addon and Chrome extension</summary>
-                <p>A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and <a
-                        href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd">Chrome
-                        extension</a> are available to add or remove an item in a feed.</p>
-            </details>
-            <details>
-                <summary>Add or delete an item by URL</summary>
-                <p>
-                    <a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
-                        <%= rootUrl %>
-                            <strong>/add?name</strong>=somename<strong>&amp;url</strong>=https://fr.wikipedia.org/
-                    </a><br>
-                    <a href="del?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
-                        <%= rootUrl %>
+                    </form>
+                </details>
+
+                <details id="goDetails" class="card card--collapsible" open>
+                    <summary>Access a feed</summary>
+                    <form class="stacked-form" method="get" id="goForm" action="./">
+                        <div class="form-row">
+                            <label class="label" for="name">name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="somename"
+                                maxlength="<%= lengths.name %>"
+                                value="<%= name %>"
+                                autocomplete="on"
+                                required
+                            />
+                        </div>
+                        <div class="form-row">
+                            <input type="submit" class="button" value="View feed" />
+                        </div>
+                    </form>
+                    <p>
+                        Or by direct URL :
+                        <a href="?name=somename" rel="nofollow"> <strong>/?name</strong>=somename </a>
+                    </p>
+                    <p>
+                        You can add a <code>limit</code> (or <code>l</code>) parameter to fetch from 1 to 500 items
+                        (default is 25 items).
+                    </p>
+                </details>
+
+                <% if (!public) { %>
+                <details class="card card--collapsible" open>
+                    <summary>List feeds</summary>
+                    <p>
+                        You can see all existing feeds on
+                        <a href="<%= rootUrl %>/list" rel="nofollow">
+                            <strong>/list</strong>
+                        </a>
+                    </p>
+                </details>
+                <details class="card card--collapsible" open>
+                    <summary>Search across feeds</summary>
+                    <form class="stacked-form" method="get" action="<%= rootUrl %>/search">
+                        <div class="form-row">
+                            <label class="label" for="q">keyword</label>
+                            <input type="text" name="q" placeholder="search keyword" required />
+                        </div>
+                        <div class="form-row">
+                            <input type="submit" class="button" value="Search feeds" />
+                        </div>
+                    </form>
+                </details>
+                <% } %>
+
+                <details class="card card--collapsible">
+                    <summary>Use Firefox addon and Chrome extension</summary>
+                    <p>
+                        A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and
+                        <a href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd"
+                            >Chrome extension</a
+                        >
+                        are available to add or remove an item in a feed from the browser toolbar.
+                    </p>
+                </details>
+
+                <details class="card card--collapsible">
+                    <summary>Add or delete an item by URL</summary>
+                    <p>
+                        <a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
+                            <strong>/add?name</strong>=somename<strong>&amp;url</strong>=https://fr.wikipedia.org/ </a
+                        ><br />
+                        <a href="del?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
                             <strong>/del?name</strong>=somename<strong>&amp;url</strong>=https://fr.wikipedia.org/
-                    </a>
-                </p>
-                <p>
-                    <code>title</code> and <code>description</code> parameters are required.
-                    Title will be set from web page title but you can define one by
-                    using <code>title</code> parameter.
-                    You can also set a description with <code>description</code>
-                    parameter.
-                </p>
-                <p>All parameters can be minified : <code>n</code> for name, <code>u</code> for url,
-                    <code>t</code> for title and <code>d</code> for description.
-                </p>
-            </details>
-            <details>
-                <summary>Use a bookmarklet</summary>
-                <p>
-                    You can use a <a href="http://en.wikipedia.org/wiki/Bookmarklet"
-                        title="Learn more about bookmarklet on Wikipedia">bookmarklet</a>.
-                    Create a new bookmarkl and paste the following code in the URL field :
-                    <code
-                        class="block">javascript:var rss=prompt('RSS feed name ?');var r=new XMLHttpRequest();r.open('GET','<%= rootUrl %>/add?n='+rss+'&amp;url='+encodeURIComponent(window.location),true);r.setRequestHeader('Content-Type','text/plain;charset=UTF-8');r.onreadystatechange=function(){if(r.readyState==4){alert("Request sent : "+(r.status===200)+" ("+r.status+")");}};r.send(null);</code>
-                    Clicking on that bookmark will add current page to the RSS feed.
-                </p>
-            </details>
-            <details id="related">
-                <summary>Related projects</summary>
-                <ul>
-                    <li><a href="https://github.com/paulgreg/rsstodolist-node-server">rsstodolist-node-server</a> :
-                        this web site source code that you can self-host (via nodejs or docker)</li>
-                    <li><a href="https://github.com/paulgreg/rsstodolist-addon">rsstodolist-addon</a> :
-                        source code for Chrome extension and Firefox addon</li>
-                    <li><a href="https://github.com/paulgreg/rsstodolist-react-native">rsstodolist-react-native</a>
-                        : react-native application for Android</li>
-                    <li><a href="https://github.com/paulgreg/rsstodolist-django-server">rsstodolist-django-server</a>
-                        : original python / django version (not maintained anymore)</li>
-                </ul>
-            </details>
-            <details>
-                <summary>Contact</summary>
-                <p>Contact me via <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
-            </details>
-        </div>
-    </main>
-    <script>
-        const submitForm = document.querySelector('#submitForm');
-        const radios = submitForm.querySelectorAll('input[name="action"]')
+                        </a>
+                    </p>
+                    <p>
+                        <code>title</code> and <code>description</code> parameters are required. Title will be set from
+                        web page title but you can define one by using <code>title</code>. You can also set a
+                        description with the <code>description</code>
+                        parameter.
+                    </p>
+                    <p>
+                        All parameters can be minified: <code>n</code> for name, <code>u</code> for url,
+                        <code>t</code> for title and <code>d</code> for description.
+                    </p>
+                </details>
 
-        // Update form action on radio click
-        radios.forEach(radio => radio.addEventListener('click', (e) => {
-            submitForm.setAttribute('action', e.target.value)
-        }))
-    </script>
-</body>
+                <details class="card card--collapsible">
+                    <summary>Use a bookmarklet</summary>
+                    <p>
+                        You can use a
+                        <a
+                            href="http://en.wikipedia.org/wiki/Bookmarklet"
+                            title="Learn more about bookmarklet on Wikipedia"
+                            >bookmarklet</a
+                        >. Create a new bookmark and paste the following code in the URL field:
+                        <code class="block"
+                            >javascript:var rss=prompt('RSS feed name ?');var r=new XMLHttpRequest();r.open('GET','<%=
+                            rootUrl
+                            %>/add?n='+rss+'&amp;url='+encodeURIComponent(window.location),true);r.setRequestHeader('Content-Type','text/plain;charset=UTF-8');r.onreadystatechange=function(){if(r.readyState==4){alert("Request
+                            sent : "+(r.status===200)+" ("+r.status+")");}};r.send(null);</code
+                        >
+                        Clicking on that bookmark will add the current page to the RSS feed.
+                    </p>
+                </details>
 
+                <details id="related" class="card card--collapsible">
+                    <summary>Related projects</summary>
+                    <ul>
+                        <li>
+                            <a href="https://github.com/paulgreg/rsstodolist-node-server">rsstodolist-node-server</a> —
+                            this project source code that you can self-host (nodejs or docker)
+                        </li>
+                        <li>
+                            <a href="https://github.com/paulgreg/rsstodolist-addon">rsstodolist-addon</a> — source code
+                            for Chrome extension and Firefox addon
+                        </li>
+                        <li>
+                            <a href="https://github.com/paulgreg/rsstodolist-react-native">rsstodolist-react-native</a>
+                            — react-native application for Android
+                        </li>
+                        <li>
+                            <a href="https://github.com/paulgreg/rsstodolist-django-server"
+                                >rsstodolist-django-server</a
+                            >
+                            — original python / django version (not maintained anymore)
+                        </li>
+                    </ul>
+                </details>
+
+                <details class="card card--collapsible">
+                    <summary>Contact</summary>
+                    <p>Contact me via <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
+                </details>
+            </section>
+        </main>
+        <script>
+            const submitForm = document.querySelector('#submitForm')
+            const radios = submitForm.querySelectorAll('input[name="action"]')
+
+            // Update form action on radio click
+            radios.forEach((radio) =>
+                radio.addEventListener('click', (e) => {
+                    submitForm.setAttribute('action', e.target.value)
+                })
+            )
+        </script>
+    </body>
 </html>

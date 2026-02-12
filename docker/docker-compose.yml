@@ -2,7 +2,7 @@ volumes:
     rsstodolist_db_data:
 
 services:
-    rsstodolist:
+    app:
         build:
             context: ../
             dockerfile: ./Dockerfile

@@ -9,6 +9,7 @@ export const DATABASE_NAME = process.env.DATABASE_NAME ?? 'rsstodolist'
 export const DATABASE_USER = process.env.DATABASE_USER
 export const DATABASE_PASS = process.env.DATABASE_PASS
 export const PORT = process.env.PORT ?? 8080
+export const LIST_KEY = process.env.LIST_KEY
 export const PUBLIC = process.env.PUBLIC === 'true'
 export const ROOT_URL = process.env.ROOT_URL
 

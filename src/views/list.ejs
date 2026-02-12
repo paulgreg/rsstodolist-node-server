@@ -1,25 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <title>rsstodolist: feeds list</title>
         <meta name="robots" content="noindex, nofollow" />
         <link rel="stylesheet" href="./static/style.css" />
         <link rel="icon" type="image/png" href="./static/favicon.png" />
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0" />
     </head>
 
     <body>
         <main>
-            <h1>rsstodolist</h1>
-            <h2>Available feeds</h2>
-            <ul class="feeds">
-                <% feeds.forEach(feed=> { %>
-                <li>
-                    <a href="./?n=<%= feed.name %>">/?n=<%= feed.name %></a>
-                    (<%= feed.dataValues.count %>)
-                </li>
-                <% }) %>
-            </ul>
+            <header class="page-header">
+                <h1>Available feeds</h1>
+                <p class="lead">Browse every feed known to this instance. Use the quick filters to navigate faster.</p>
+            </header>
+
+            <section class="card card--table">
+                <div class="list-toolbar">
+                    <label for="filter-input" class="label">Filter</label>
+                    <input
+                        id="filter-input"
+                        class="input"
+                        type="search"
+                        placeholder="Type to filter feeds"
+                        oninput="filterFeeds(event)"
+                    />
+                    <span class="list-count" id="listCount"><%= feeds.length %> feeds</span>
+                </div>
+
+                <ul class="feed-list" id="feedsList">
+                    <% feeds.forEach(feed => { %>
+                    <li class="feed-list__item" data-name="<%= feed.name %>">
+                        <div>
+                            <p class="feed-list__name">
+                                <a href="./?n=<%= feed.name %>">/?n=<%= feed.name %></a>
+                            </p>
+                        </div>
+                        <span class="feed-list__badge"><%= feed.dataValues.count %></span>
+                    </li>
+                    <% }) %>
+                </ul>
+            </section>
         </main>
+        <script>
+            function filterFeeds(event) {
+                const query = event.target.value.toLowerCase()
+                const items = document.querySelectorAll('#feedsList .feed-list__item')
+                let visible = 0
+                items.forEach((item) => {
+                    const name = item.dataset.name.toLowerCase()
+                    const match = name.includes(query)
+                    item.style.display = match ? '' : 'none'
+                    if (match) visible += 1
+                })
+                document.getElementById('listCount').textContent = `${visible} feed${visible === 1 ? '' : 's'}`
+            }
+        </script>
     </body>
 </html>

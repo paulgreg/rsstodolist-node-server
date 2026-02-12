@@ -77,6 +77,7 @@ sequelize
         app.use('/manifest.json', express.static(__dirname + '/static/manifest.json'))
 
         app.get('/', (req, res) => {
+            const format = getStrParam(req, 'format', 'f')
             const name = cleanNameStr(getStrParam(req, 'name', 'n'))
             const title = cleanTitleStr(getStrParam(req, 'title', 't'))
             const description = cleanDescriptionStr(getStrParam(req, 'description', 'd'))
@@ -93,12 +94,15 @@ sequelize
                 }
 
                 return findByName({ name, limit }).then((entries) => {
-                    res.type('text/xml')
-                    res.render('rss', {
+                    const htmlTitle = `${entries.length} ${entries.length > 1 ? 'entries' : 'entry'} in feed: ${name}`
+
+                    const isRss = format === 'rss'
+                    res.type(isRss ? 'text/xml' : 'text/html')
+                    res.render(isRss ? 'rss' : 'html_feed', {
                         rootUrl,
                         public: env.PUBLIC,
-                        title: name,
-                        titleWithFeedName: false,
+                        title: isRss ? name : htmlTitle,
+                        context: 'rss',
                         url: `/?n=${name}`,
                         entries,
                     })
@@ -120,41 +124,52 @@ sequelize
             })
         })
 
-        if (!env.PUBLIC) {
+        if (!env.PUBLIC || env.LIST_KEY) {
             console.log('enable /list')
-            app.get('/list', (req, res) =>
-                list().then((feeds) => {
-                    res.set('Cache-control', `public, max-age=${MINUTE}`)
-                    res.render('list', { feeds })
-                })
-            )
+            app.get('/list', (req, res) => {
+                if (env.PUBLIC && req.query.key !== env.LIST_KEY) {
+                    res.status(403).end('403: forbidden')
+                } else {
+                    list().then((feeds) => {
+                        res.set('Cache-control', `public, max-age=${MINUTE}`)
+                        res.render('list', { feeds })
+                    })
+                }
+            })
 
             console.log('enable /search')
             app.get('/search', (req, res) => {
-                const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
-                const query = cleanSearchStr(getStrParam(req, 'query', 'q'))
-                if (!query) {
-                    res.status(404).end('404 : Missing query parameter')
-                    return
-                }
-                if (query.length < 2) {
-                    res.status(400).end('400 : query parameter should be at least 2 characters')
-                    return
-                }
-                const limit = getIntParam(req, 'limit', 'l') ?? 100
-                return search({ query, limit }).then((entries) => {
-                    res.type('text/xml')
-                    res.render('rss', {
-                        rootUrl,
-                        public: env.PUBLIC,
-                        title: `${entries.length} result${entries.length > 1 ? 's' : ''} for search « ${query} »`,
-                        titleWithFeedName: true,
-                        url: `/search?q=${query}`,
-                        entries,
+                if (env.PUBLIC && req.query.key !== env.LIST_KEY) {
+                    res.status(403).end('403: forbidden')
+                } else {
+                    const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
+                    const format = getStrParam(req, 'format', 'f')
+                    const query = cleanSearchStr(getStrParam(req, 'query', 'q'))
+                    if (!query) {
+                        res.status(404).end('404 : Missing query parameter')
+                        return
+                    }
+                    if (query.length < 2) {
+                        res.status(400).end('400 : query parameter should be at least 2 characters')
+                        return
+                    }
+                    const limit = getIntParam(req, 'limit', 'l') ?? 100
+                    return search({ query, limit }).then((entries) => {
+                        const isRss = format === 'rss'
+                        res.type(isRss ? 'text/xml' : 'text/html')
+                        res.render(isRss ? 'rss' : 'html_feed', {
+                            rootUrl,
+                            public: env.PUBLIC,
+                            title: `${entries.length} result${entries.length > 1 ? 's' : ''} for search « ${query} »`,
+                            context: 'search',
+                            url: `/search?q=${query}`,
+                            entries,
+                        })
                     })
-                })
+                }
             })
-
+        }
+        if (!env.PUBLIC) {
             console.log('enable /suggest')
             app.get('/suggest', (req, res) => {
                 const query = cleanSearchStr(getStrParam(req, 'query', 'q'))
@@ -186,6 +201,7 @@ sequelize
                 res.status(400).end('403 : Forbidden')
                 return
             }
+
             return (
                 title
                     ? Promise.resolve({ title, description })
@@ -201,10 +217,12 @@ sequelize
                               })
                               .then((response) => {
                                   const { status, data } = response ?? {}
+
                                   if (status === 200) {
                                       const $ = cheerio.load(data)
 
                                       const titleFromPage = $('head title').text() || $('body title').text()
+
                                       return {
                                           title: truncate(cleanify(titleFromPage), lengths.title),
                                           description: truncate(

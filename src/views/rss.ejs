@@ -3,14 +3,14 @@
 <rss version="2.0">
   <script src="./static/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
   <channel>
-    <title>RSS Todo List - <%= title %></title>
+    <title>rsstodolist - <%= title %></title>
     <link><%= rootUrl %><%= url %></link>
     <description>RSS 2.0 feed containing your todolist items</description>
     <language>en-us</language>
     <webMaster>me@paulgreg.me (Grégory PAUL)</webMaster>
 	 <% if (public && entries.length > 5) { %>
 	 	<item>
-			<title>Please consider self-hosting rsstodolist service</title>
+			<title>Please consider self-hosting rsstodolist !</title>
 	 		<link><%= rootUrl %>/</link>
 			<guid isPermaLink="false">rsstodolist-notice@0000000002</guid>
 	 		<description>If you’re relying on that service, consider self-host the service for more reliability and privacy.</description>
@@ -18,7 +18,7 @@
 	 <% } %>
 	 <% entries.forEach(entry => { %>
 	 	<item>
-			<title><%= entry.title %><% if (titleWithFeedName) { %> from ?n=<%= entry.name %><% } %></title>
+			<title><%= entry.title %><% if (context === "search") { %> from ?n=<%= entry.name %><% } %></title>
 	 		<link><%= entry.url %></link>
 	 		<description><%= entry.description || "" %></description>
 			<pubDate><%= (entry.updatedAt || entry.createdAt).toUTCString() %></pubDate>

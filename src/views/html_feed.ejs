@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>rsstodolist - <%= title %></title>
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="stylesheet" href="./static/style.css" />
+        <link rel="icon" type="image/png" href="./static/favicon.png" />
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            href="<%= rootUrl %><%= url %>&format=rss"
+            title="<%= title %>"
+        />
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0" />
+    </head>
+    <body>
+        <main>
+            <header class="feed-header">
+                <h1>rsstodolist</h1>
+                <p class="feed-title"><span><%= title %></span></p>
+                <div class="feed-actions">
+                    <a class="button" href="<%= rootUrl %><%= url %>&amp;format=rss">Open RSS feed</a>
+                    <a class="button button--ghost" href="<%= rootUrl %>">Back to home</a>
+                </div>
+            </header>
+
+            <% if (public && entries.length > 0) { %>
+            <section class="feed-message feed-message--notice">
+                <p>
+                    Please consider self-hosting rsstodolist for more reliability and privacy (<a
+                        href="https://github.com/paulgreg/rsstodolist-node-server"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >instructions</a
+                    >).
+                </p>
+            </section>
+            <% } %> <% if (entries.length === 0) { %>
+            <section class="feed-message feed-message--empty">
+                <h2>No entries yet</h2>
+                <p>Your feed is waiting for its first item. Add one from the <a href="<%= rootUrl %>">main page</a>.</p>
+            </section>
+            <% } else { %>
+
+            <section class="feed-entries" aria-label="Feed entries">
+                <% entries.forEach((entry, index) => { const timestamp = entry.updatedAt || entry.createdAt; %>
+                <article class="feed-entry">
+                    <header class="feed-entry__header">
+                        <div class="feed-entry__meta">
+                            <span class="feed-entry__index">#<%= index + 1 %></span>
+                            <% if (context === "search") { %>
+                            <a href="<%= rootUrl %>?n=<%= entry.name %>" class="feed-entry__feed"
+                                >Feed: /?n=<%= entry.name %></a
+                            >
+                            <% } %>
+                        </div>
+                        <time class="feed-entry__time" datetime="<%= timestamp.toISOString() %>"
+                            ><%= timestamp.toUTCString() %></time
+                        >
+                    </header>
+                    <h2 class="feed-entry__title"><%= entry.title || 'No title' %></h2>
+                    <% if (entry.description) { %>
+                    <p class="feed-entry__description"><%= entry.description %></p>
+                    <% } %>
+                    <div class="feed-entry__link_area">
+                        <a class="feed-entry__link" href="<%= entry.url %>" target="_blank" rel="noopener noreferrer" a
+                            ><%= entry.url %></a
+                        >
+                        <button
+                            class="button"
+                            onClick="deleteEntry(event, '<%= encodeURI(entry.url) %>', '<%= entry.name %>')"
+                        >
+                            delete
+                        </button>
+                    </div>
+                </article>
+                <% }) %>
+            </section>
+            <% } %>
+        </main>
+        <script>
+            function deleteEntry(event, url, name) {
+                const button = event.currentTarget
+                const originalLabel = button.textContent
+
+                if (!confirm(`remove ${decodeURI(url)} from ${name} ?`)) return
+
+                button.disabled = true
+                button.textContent = 'Deleting…'
+
+                fetch(`./del?u=${url}&n=${encodeURIComponent(name)}`)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`Failed with status ${response.status}`)
+                        }
+
+                        navigation.reload()
+                    })
+                    .catch(() => {
+                        alert('failed to delete URL')
+                        button.disabled = false
+                        button.textContent = originalLabel
+                    })
+            }
+        </script>
+    </body>
+</html>
