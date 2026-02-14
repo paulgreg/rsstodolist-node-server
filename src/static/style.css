@@ -36,6 +36,7 @@ main {
 
 a {
     display: inline-flex;
+    overflow-wrap: anywhere;
     color: var(--color-primary-dark);
     font-weight: 600;
 }
@@ -55,6 +56,7 @@ h2,
 h3 {
     margin: 0.25em 0 0.5em 0;
     color: var(--color-text);
+    overflow-wrap: break-word;
 }
 
 ul {
@@ -312,6 +314,7 @@ details[open] {
     border: none;
     box-shadow: 0 10px 25px rgba(21, 158, 254, 0.35);
     text-decoration: none;
+    max-height: 40px;
 }
 
 .button:focus-visible {
@@ -429,6 +432,7 @@ details[open] {
 
 .feed-entry__link_area {
     display: flex;
+    align-items: end;
 }
 
 .feed-entry__link {
