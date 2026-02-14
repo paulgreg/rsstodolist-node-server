@@ -210,12 +210,9 @@
                             >bookmarklet</a
                         >. Create a new bookmark and paste the following code in the URL field:
                         <code class="block"
-                            >javascript:var rss=prompt('RSS feed name ?');var r=new XMLHttpRequest();r.open('GET','<%=
-                            rootUrl
-                            %>/add?n='+rss+'&amp;url='+encodeURIComponent(window.location),true);r.setRequestHeader('Content-Type','text/plain;charset=UTF-8');r.onreadystatechange=function(){if(r.readyState==4){alert("Request
-                            sent : "+(r.status===200)+" ("+r.status+")");}};r.send(null);</code
+                            >javascript:{const n=prompt('feed name ?'); if (n) window.open(`<%= rootUrl
+                            %>/add?n=${n}&amp;url=${encodeURIComponent(window.location)}`)}</code
                         >
-                        Clicking on that bookmark will add the current page to the RSS feed.
                     </p>
                 </details>
 
