@@ -93,20 +93,26 @@ sequelize
                     return
                 }
 
-                return findByName({ name, limit }).then((entries) => {
-                    const htmlTitle = `${entries.length} ${entries.length > 1 ? 'entries' : 'entry'} in feed: ${name}`
+                const isRss = format === 'rss'
 
-                    const isRss = format === 'rss'
-                    res.type(isRss ? 'text/xml' : 'text/html')
-                    res.render(isRss ? 'rss' : 'html_feed', {
-                        rootUrl,
-                        public: env.PUBLIC,
-                        title: isRss ? name : htmlTitle,
-                        context: 'rss',
-                        url: `/?n=${name}`,
-                        entries,
-                    })
-                })
+                return Promise.all([findByName({ name, limit }), isRss ? [] : count({ name })]).then(
+                    ([entries, [countResult]]) => {
+                        const totalCount = Number(countResult?.get?.('count') ?? 0)
+                        const rssTitle = name
+                        const htmlTitle = `${entries.length}/${totalCount} entries in feed: ${name}`
+
+                        res.type(isRss ? 'text/xml' : 'text/html')
+                        res.render(isRss ? 'rss' : 'html_feed', {
+                            rootUrl,
+                            public: env.PUBLIC,
+                            title: isRss ? rssTitle : htmlTitle,
+                            context: 'rss',
+                            url: `/?n=${name}`,
+                            entries,
+                            totalCount,
+                        })
+                    }
+                )
             }
             res.set('Cache-control', `public, max-age=${DAY}`)
             // Using share target API in Chrome sends URL in description :/ so use description field in that case and empty it
