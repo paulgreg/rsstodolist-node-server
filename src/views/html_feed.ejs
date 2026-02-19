@@ -21,6 +21,9 @@
                 <p class="feed-title"><span><%= title %></span></p>
                 <div class="feed-actions">
                     <a class="button" href="<%= rootUrl %><%= url %>&amp;format=rss">Open RSS feed</a>
+                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=50">Show 50</a>
+                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=100">Show 100</a>
+                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=250">Show 250</a>
                     <a class="button button--ghost" href="<%= rootUrl %>">Back to home</a>
                 </div>
             </header>
