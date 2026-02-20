@@ -7,7 +7,6 @@ import morgan from 'morgan'
 import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.js'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import cors from 'cors'
 import jschardet from 'jschardet'
 import charset from 'charset'
 import iconv from 'iconv-lite'
@@ -64,7 +63,6 @@ sequelize
         app.set('views', 'src/views')
 
         app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
-        app.use(cors())
 
         const __dirname = dirname(fileURLToPath(import.meta.url))
         app.use(
