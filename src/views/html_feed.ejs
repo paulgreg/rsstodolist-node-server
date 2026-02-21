@@ -16,17 +16,17 @@
     </head>
     <body>
         <main>
-            <header class="feed-header">
-                <h1>rsstodolist</h1>
+            <header class="page-header">
+                <h1><a href="<%= rootUrl %>" class="title">rsstodolist</a></h1>
                 <p class="feed-title">
                     <span><%= title %></span>
                 </p>
-                <div class="feed-actions">
+                <div class="header-actions">
                     <a class="button" href="<%= rootUrl %><%= url %>&amp;format=rss">Open RSS feed</a>
+                    <a class="button button--ghost" href="<%= rootUrl %>">Back to home</a>
                     <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=50">Show 50</a>
                     <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=100">Show 100</a>
                     <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=250">Show 250</a>
-                    <a class="button button--ghost" href="<%= rootUrl %>">Back to home</a>
                 </div>
             </header>
 

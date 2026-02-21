@@ -40,6 +40,9 @@ a {
     color: var(--color-primary-dark);
     font-weight: 600;
 }
+a.title {
+    text-decoration: none;
+}
 
 a:hover,
 a:focus-visible {
@@ -145,6 +148,8 @@ details[open] {
     flex-direction: column;
     gap: 0.75rem;
     text-align: left;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(21, 158, 254, 0.2);
 }
 
 .lead {
@@ -333,14 +338,6 @@ details[open] {
     box-shadow: none;
 }
 
-.feed-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(21, 158, 254, 0.2);
-}
-
 .feed-title {
     font-size: 1.25rem;
     margin: 0;
@@ -350,13 +347,6 @@ details[open] {
 .feed-title span {
     color: var(--color-primary-dark);
     font-weight: 700;
-}
-
-.feed-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
 }
 
 .feed-message {

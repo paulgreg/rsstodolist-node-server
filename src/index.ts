@@ -134,9 +134,11 @@ sequelize
                 if (env.PUBLIC && req.query.key !== env.LIST_KEY) {
                     res.status(403).end('403: forbidden')
                 } else {
+                    const rootUrl = env.ROOT_URL ?? req.protocol + '://' + req.get('host')
+
                     list().then((feeds) => {
                         res.set('Cache-control', `public, max-age=${MINUTE}`)
-                        res.render('list', { feeds })
+                        res.render('list', { rootUrl, feeds })
                     })
                 }
             })
