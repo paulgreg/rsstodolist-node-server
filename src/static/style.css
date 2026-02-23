@@ -370,6 +370,34 @@ details[open] {
     gap: 1.25rem;
 }
 
+.pagination {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(21, 158, 254, 0.15);
+    background: var(--color-surface-alt);
+}
+
+.pagination__summary {
+    color: var(--color-muted);
+    font-weight: 600;
+}
+
+.pagination__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.button--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .feed-entry {
     border: 1px solid rgba(21, 158, 254, 0.15);
     border-radius: var(--radius-lg);
@@ -498,6 +526,14 @@ details[open] {
         outline-color: rgba(255, 255, 255, 0.35);
     }
 
+    .button--disabled {
+        opacity: 1;
+        color: var(--color-muted);
+        border-color: rgba(255, 255, 255, 0.18);
+        background: transparent;
+        box-shadow: none;
+    }
+
     input,
     textarea,
     select {
@@ -525,6 +561,11 @@ details[open] {
         border-color: rgba(255, 255, 255, 0.08);
         background: var(--color-surface);
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .pagination {
+        border-color: rgba(255, 255, 255, 0.08);
+        background: var(--color-surface);
     }
 
     .feed-entry__feed {

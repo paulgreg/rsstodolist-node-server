@@ -56,7 +56,7 @@ sequelize
         throw err
     })
     .then(() => {
-        const { findByName, list, insert, remove, count, search, suggest } = FeedModelBuilder(sequelize)
+        const { findByName, list, insert, remove, count, search, countSearch, suggest } = FeedModelBuilder(sequelize)
 
         const app = express()
         app.set('view engine', 'ejs')
@@ -80,7 +80,9 @@ sequelize
             const title = cleanTitleStr(getStrParam(req, 'title', 't'))
             const description = cleanDescriptionStr(getStrParam(req, 'description', 'd'))
             const url = cleanUrlStr(getStrParam(req, 'url', 'u'))
-            const limit = getIntParam(req, 'limit', 'l') ?? 25
+            const limit = Math.max(getIntParam(req, 'limit', 'l') ?? 25, 1)
+            const page = Math.max(getIntParam(req, 'page', 'p') ?? 1, 1)
+            const offset = (page - 1) * limit
 
             const rootUrl = env.ROOT_URL ?? req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
@@ -93,7 +95,7 @@ sequelize
 
                 const isRss = format === 'rss'
 
-                return Promise.all([findByName({ name, limit }), isRss ? [] : count({ name })]).then(
+                return Promise.all([findByName({ name, limit, offset }), isRss ? [] : count({ name })]).then(
                     ([entries, [countResult]]) => {
                         const totalCount = Number(countResult?.get?.('count') ?? 0)
                         const rssTitle = name
@@ -108,6 +110,9 @@ sequelize
                             url: `/?n=${name}`,
                             entries,
                             totalCount,
+                            limit,
+                            page,
+                            offset,
                         })
                     }
                 )
@@ -159,19 +164,33 @@ sequelize
                         res.status(400).end('400 : query parameter should be at least 2 characters')
                         return
                     }
-                    const limit = getIntParam(req, 'limit', 'l') ?? 100
-                    return search({ query, limit }).then((entries) => {
-                        const isRss = format === 'rss'
-                        res.type(isRss ? 'text/xml' : 'text/html')
-                        res.render(isRss ? 'rss' : 'html_feed', {
-                            rootUrl,
-                            public: env.PUBLIC,
-                            title: `${entries.length} result${entries.length > 1 ? 's' : ''} for search « ${query} »`,
-                            context: 'search',
-                            url: `/search?q=${query}`,
-                            entries,
-                        })
-                    })
+                    const limit = Math.max(getIntParam(req, 'limit', 'l') ?? 100, 1)
+                    const page = Math.max(getIntParam(req, 'page', 'p') ?? 1, 1)
+                    const offset = (page - 1) * limit
+
+                    const isRss = format === 'rss'
+                    return Promise.all([search({ query, limit, offset }), isRss ? [] : countSearch({ query })]).then(
+                        ([entries, [countResult]]) => {
+                            const totalCount = Number(countResult?.get?.('count') ?? 0)
+                            const rssTitle = `search: ${query}`
+                            const htmlTitle = `${entries.length}/${totalCount} result${
+                                totalCount > 1 ? 's' : ''
+                            } for search « ${query} »`
+                            res.type(isRss ? 'text/xml' : 'text/html')
+                            res.render(isRss ? 'rss' : 'html_feed', {
+                                rootUrl,
+                                public: env.PUBLIC,
+                                title: isRss ? rssTitle : htmlTitle,
+                                context: 'search',
+                                url: `/search?q=${query}`,
+                                entries,
+                                totalCount,
+                                limit,
+                                page,
+                                offset,
+                            })
+                        }
+                    )
                 }
             })
         }

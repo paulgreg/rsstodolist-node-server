@@ -70,9 +70,10 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
         }
     )
 
-    const findByName = async ({ name, limit }: { name: string; limit?: number }) =>
+    const findByName = async ({ name, limit, offset }: { name: string; limit?: number; offset?: number }) =>
         FeedModel.findAll({
             limit: Math.min(limit ?? 25, 500),
+            offset: Math.max(offset ?? 0, 0),
             where: {
                 name,
             },
@@ -113,9 +114,10 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
             attributes: [[sequelize.fn('COUNT', sequelize.col('name')), 'count']],
         })
 
-    const search = async ({ query, limit }: { query: string; limit?: number }) =>
+    const search = async ({ query, limit, offset }: { query: string; limit?: number; offset?: number }) =>
         FeedModel.findAll({
             limit: Math.min(limit || 100, 500),
+            offset: Math.max(offset ?? 0, 0),
             where: {
                 [Op.or]: [
                     {
@@ -141,6 +143,30 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
             ],
         })
 
+    const countSearch = async ({ query }: { query: string }) =>
+        FeedModel.findAll({
+            where: {
+                [Op.or]: [
+                    {
+                        url: {
+                            [Op.like]: `%${query}%`,
+                        },
+                    },
+                    {
+                        title: {
+                            [Op.like]: `%${query}%`,
+                        },
+                    },
+                    {
+                        description: {
+                            [Op.like]: `%${query}%`,
+                        },
+                    },
+                ],
+            },
+            attributes: [[sequelize.fn('COUNT', sequelize.col('name')), 'count']],
+        })
+
     const suggest = async ({ query }: { query: string }) =>
         FeedModel.findAll({
             limit: 10,
@@ -164,7 +190,7 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
             ],
         })
 
-    return { FeedModel, findByName, insert, remove, list, count, search, suggest, dump }
+    return { FeedModel, findByName, insert, remove, list, count, search, countSearch, suggest, dump }
 }
 
 export default FeedModelBuilder

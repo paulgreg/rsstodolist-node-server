@@ -22,7 +22,7 @@
                     <span><%= title %></span>
                 </p>
                 <div class="header-actions">
-                    <a class="button" href="<%= rootUrl %><%= url %>&amp;format=rss">Open RSS feed</a>
+                    <a class="button" href="<%= rootUrl %><%= url %>&amp;format=rss<% if (limit) { %>&amp;limit=<%= limit %><% } %><% if (page) { %>&amp;page=<%= page %><% } %>">Open RSS feed</a>
                     <a class="button button--ghost" href="<%= rootUrl %>">Back to home</a>
                     <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=50">Show 50</a>
                     <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=100">Show 100</a>
@@ -48,12 +48,17 @@
             </section>
             <% } else { %>
 
+            <% const safeLimit = limit || entries.length || 1; %>
+            <% const safePage = page || 1; %>
+            <% const safeTotal = totalCount ?? entries.length; %>
+            <% const totalPages = Math.max(1, Math.ceil(safeTotal / safeLimit)); %>
+            <% const hasPagination = totalPages > 1; %>
             <section class="feed-entries" aria-label="Feed entries">
                 <% entries.forEach((entry, index) => { const timestamp = entry.updatedAt || entry.createdAt; %>
                 <article class="feed-entry">
                     <header class="feed-entry__header">
                         <div class="feed-entry__meta">
-                            <span class="feed-entry__index">#<%= index + 1 %></span>
+                            <span class="feed-entry__index">#<%= (offset || 0) + index + 1 %></span>
                             <% if (context === "search") { %>
                             <a href="<%= rootUrl %>?n=<%= entry.name %>" class="feed-entry__feed"
                                 >Feed: /?n=<%= entry.name %></a
@@ -82,6 +87,35 @@
                 </article>
                 <% }) %>
             </section>
+            <% if (hasPagination) { %>
+            <nav class="pagination" aria-label="Pagination">
+                <span class="pagination__summary">
+                    Page <%= safePage %> of <%= totalPages %> • Showing
+                    <%= Math.min(safeTotal, (safePage - 1) * safeLimit + 1) %>-<%= Math.min(safeTotal, safePage * safeLimit) %>
+                    of <%= safeTotal %>
+                </span>
+                <div class="pagination__actions">
+                    <% if (safePage > 1) { %>
+                    <a
+                        class="button button--ghost"
+                        href="<%= rootUrl %><%= url %>&amp;page=<%= safePage - 1 %>&amp;limit=<%= safeLimit %>"
+                        >Previous</a
+                    >
+                    <% } else { %>
+                    <span class="button button--ghost button--disabled">Previous</span>
+                    <% } %>
+                    <% if (safePage < totalPages) { %>
+                    <a
+                        class="button button--ghost"
+                        href="<%= rootUrl %><%= url %>&amp;page=<%= safePage + 1 %>&amp;limit=<%= safeLimit %>"
+                        >Next</a
+                    >
+                    <% } else { %>
+                    <span class="button button--ghost button--disabled">Next</span>
+                    <% } %>
+                </div>
+            </nav>
+            <% } %>
             <% } %>
         </main>
         <script>
