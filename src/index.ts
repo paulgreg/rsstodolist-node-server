@@ -1,18 +1,13 @@
 import express from 'express'
 import { Sequelize } from 'sequelize'
 import FeedModelBuilder, { lengths } from './FeedModel.js'
-import axios from 'axios'
 import * as cheerio from 'cheerio'
 import morgan from 'morgan'
 import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.js'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import jschardet from 'jschardet'
-import charset from 'charset'
-import iconv from 'iconv-lite'
 import * as env from './env.js'
-import type { IncomingHttpHeaders } from 'node:http'
-import { getIntParam, getStrParam } from './utils.js'
+import { getIntParam, getStrParam, fetchWithEncoding } from './utils.js'
 
 const PORT = env.PORT
 
@@ -32,18 +27,6 @@ const sequelize = new Sequelize(env.DATABASE_URL, {
         timezone: env.TZ, // Duplicate because of a bug: https://github.com/sequelize/sequelize/issues/10921
     },
     logging: false,
-})
-
-axios.interceptors.response.use((response) => {
-    const chardetResult = jschardet.detect(response.data)
-    const headers = response.headers as IncomingHttpHeaders
-    const encoding = chardetResult?.encoding || charset(headers, response.data)
-
-    if (encoding) {
-        response.data = iconv.decode(response.data, encoding)
-    }
-
-    return response
 })
 
 sequelize
@@ -231,15 +214,7 @@ sequelize
                 title
                     ? Promise.resolve({ title, description })
                     : Promise.resolve().then(() =>
-                          axios
-                              .get(encodeURI(url), {
-                                  responseType: 'arraybuffer',
-                                  headers: {
-                                      'User-Agent':
-                                          'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
-                                  },
-                                  timeout: 5_000,
-                              })
+                          fetchWithEncoding(encodeURI(url))
                               .then((response) => {
                                   const { status, data } = response ?? {}
 

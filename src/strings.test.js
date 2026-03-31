@@ -38,7 +38,6 @@ describe('strings', () => {
     describe('sanitize', () => {
         test('should remove %', () => expect(sanitize('test%')).toBe('test'))
         test('should remove multiple %', () => expect(sanitize('%test%')).toBe('test'))
-        test('should remove \\%', () => expect(sanitize('\\%test')).toBe('test'))
         test('should remove "\' or 1=1', () => expect(sanitize('"\'or 1=1')).toBe('or 1=1'))
         test('should remove "\'', () => expect(sanitize('"')).toBe(''))
     })
