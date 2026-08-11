@@ -35,9 +35,9 @@
         "cheerio": "^1.2.0",
         "debug": "^4.4.3",
         "dotenv": "^17.4.2",
-        "ejs": "^5.0.1",
+        "ejs": "^6.0.1",
         "express": "^5.2.1",
-        "iconv-lite": "^0.7.2",
+        "iconv-lite": "^0.7.3",
         "jschardet": "^3.1.4",
         "morgan": "^1.11.0",
         "pg": "^8.23.0",
@@ -50,7 +50,7 @@
         "@types/morgan": "^1.9.10",
         "@types/node": "^26.2.0",
         "tsx": "^4.23.12",
-        "typescript": "^6.0.2",
+        "typescript": "^7.0.2",
         "vitest": "^4.1.10"
     }
 }
