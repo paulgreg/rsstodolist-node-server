@@ -63,18 +63,21 @@
                         <div class="form-row">
                             <label class="label" for="name">name</label>
                             <input
+                                id="name"
                                 type="text"
                                 name="name"
                                 placeholder="somename"
                                 maxlength="<%= lengths.name %>"
                                 value="<%= name %>"
                                 autocomplete="on"
+                                autocapitalize="off"
                                 required
                             />
                         </div>
                         <div class="form-row">
                             <label class="label" for="url">URL</label>
                             <input
+                                id="url"
                                 type="url"
                                 name="url"
                                 placeholder="https://fr.wikipedia.org/"
@@ -86,6 +89,7 @@
                         <div class="form-row">
                             <label class="label" for="title">title</label>
                             <input
+                                id="title"
                                 type="text"
                                 name="title"
                                 placeholder="optional title"
@@ -96,6 +100,7 @@
                         <div class="form-row">
                             <label class="label" for="description">descr.</label>
                             <input
+                                id="description"
                                 type="text"
                                 name="description"
                                 placeholder="optional description"
@@ -118,14 +123,16 @@
                     <summary>Access a feed</summary>
                     <form class="stacked-form" method="get" id="goForm" action="./">
                         <div class="form-row">
-                            <label class="label" for="name">name</label>
+                            <label class="label" for="name-go">name</label>
                             <input
+                                id="name-go"
                                 type="text"
                                 name="name"
                                 placeholder="somename"
                                 maxlength="<%= lengths.name %>"
                                 value="<%= name %>"
                                 autocomplete="on"
+                                autocapitalize="off"
                                 required
                             />
                         </div>
@@ -158,7 +165,7 @@
                     <form class="stacked-form" method="get" action="<%= rootUrl %>/search">
                         <div class="form-row">
                             <label class="label" for="q">keyword</label>
-                            <input type="text" name="q" placeholder="search keyword" minlength="2" required />
+                            <input type="text" id="q" name="q" placeholder="search keyword" minlength="2" required />
                         </div>
                         <div class="form-row">
                             <input type="submit" class="button" value="Search feeds" />
