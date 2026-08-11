@@ -7,6 +7,7 @@
     "scripts": {
         "build": "tsc && cp node_modules/xslt-polyfill/xslt-polyfill.min.js src/static && cp -r src/static dist/",
         "dev": "tsx src/index.ts",
+        "check": "tsc --noEmit",
         "dump": "NODE_ENV=production node dist/dump.js",
         "start": "NODE_ENV=production node dist/index.js",
         "tdd": "vitest",
