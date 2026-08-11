@@ -100,20 +100,39 @@ sequelize
                     }
                 )
             }
-            res.set('Cache-control', `public, max-age=${DAY}`)
+
             // Using share target API in Chrome sends URL in description :/ so use description field in that case and empty it
             const descriptionIsUrl = !url && description.startsWith('http')
             const hackUrl = descriptionIsUrl ? description : url
             const hackDescription = descriptionIsUrl ? '' : description
-            res.render('index', {
-                rootUrl,
-                public: env.PUBLIC,
-                lengths,
-                name,
-                url: hackUrl,
-                description: hackDescription,
-                title,
-            })
+
+            if (!env.PUBLIC) {
+                res.set('Cache-control', `public, max-age=${MINUTE}`)
+                return list().then((feeds) => {
+                    const feedNames = feeds.map((feed) => feed.name)
+                    res.render('index', {
+                        rootUrl,
+                        public: env.PUBLIC,
+                        lengths,
+                        name,
+                        url: hackUrl,
+                        description: hackDescription,
+                        title,
+                        feedNames,
+                    })
+                })
+            } else {
+                res.set('Cache-control', `public, max-age=${DAY}`)
+                res.render('index', {
+                    rootUrl,
+                    public: env.PUBLIC,
+                    lengths,
+                    name,
+                    url: hackUrl,
+                    description: hackDescription,
+                    title,
+                })
+            }
         })
 
         if (!env.PUBLIC || env.LIST_KEY) {

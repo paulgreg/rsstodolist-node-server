@@ -50,6 +50,11 @@
                 </p>
             </section>
             <% } %>
+            <datalist id="feed-names">
+                <% if (!public ) { %><% feedNames.forEach(feedName => { %>
+                <option value="<%= feedName %>"></option>
+                <% }) %> <% } %>
+            </datalist>
 
             <section class="card-stack">
                 <details id="submitDetails" class="card card--collapsible" open>
@@ -72,6 +77,7 @@
                                 autocomplete="on"
                                 autocapitalize="off"
                                 required
+                                list="feed-names"
                             />
                         </div>
                         <div class="form-row">
@@ -133,6 +139,7 @@
                                 value="<%= name %>"
                                 autocomplete="on"
                                 autocapitalize="off"
+                                list="feed-names"
                                 required
                             />
                         </div>
