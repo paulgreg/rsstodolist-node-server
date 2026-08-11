@@ -34,23 +34,23 @@
         "charset": "^1.0.1",
         "cheerio": "^1.2.0",
         "debug": "^4.4.3",
-        "dotenv": "^17.3.1",
+        "dotenv": "^17.4.2",
         "ejs": "^5.0.1",
         "express": "^5.2.1",
         "iconv-lite": "^0.7.2",
         "jschardet": "^3.1.4",
-        "morgan": "^1.10.1",
-        "pg": "^8.20.0",
+        "morgan": "^1.11.0",
+        "pg": "^8.23.0",
         "sequelize": "^6.37.8",
-        "xslt-polyfill": "^1.0.19"
+        "xslt-polyfill": "^1.0.24"
     },
     "devDependencies": {
         "@types/charset": "^1.0.5",
         "@types/express": "^5.0.6",
         "@types/morgan": "^1.9.10",
-        "@types/node": "^25.5.0",
-        "tsx": "^4.21.0",
+        "@types/node": "^26.2.0",
+        "tsx": "^4.23.12",
         "typescript": "^6.0.2",
-        "vitest": "^4.1.2"
+        "vitest": "^4.1.10"
     }
 }
