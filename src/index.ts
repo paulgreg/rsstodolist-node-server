@@ -77,7 +77,7 @@ sequelize
 
         app.get('/set-lang', (req, res) => {
             const lang = getStrParam(req, 'lang', 'l') === 'fr' ? 'fr' : 'en'
-            res.cookie('lang', lang, {
+            res.cookie('rsstodolist_lang', lang, {
                 maxAge: DAY * 365 * 1000,
                 sameSite: 'lax',
             })

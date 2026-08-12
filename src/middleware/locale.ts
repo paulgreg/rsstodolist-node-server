@@ -15,8 +15,8 @@ export const detectLocale = (
     res: Response,
     next: NextFunction
 ) => {
-    // 1. first cookie `lang`
-    let locale = req.cookies?.lang as keyof Translations | undefined
+    // 1. first cookie
+    let locale = req.cookies?.rsstodolist_lang as keyof Translations | undefined
 
     // 2. Then `Accept-Language`
     if (!locale) {
