@@ -81,7 +81,7 @@ sequelize
                 maxAge: DAY * 365 * 1000,
                 sameSite: 'lax',
             })
-            res.redirect(302, req.get('referer') || '/')
+            res.redirect(302, req.get('referer') || './')
         })
 
         const __dirname = dirname(fileURLToPath(import.meta.url))
