@@ -3,16 +3,25 @@ import jschardet from 'jschardet'
 import charset from 'charset'
 import iconv from 'iconv-lite'
 
-export const getStrParam = (req: Request, paramName: string, shortParamName: string): string | undefined => {
+export const getStrParam = (
+    req: Request,
+    paramName: string,
+    shortParamName: string
+): string | undefined => {
     const paramValue = req.query[paramName]
     const shortParamValue = req.query[shortParamName]
     if (typeof paramValue === 'string') return paramValue
     if (typeof shortParamValue === 'string') return shortParamValue
 }
 
-export const getIntParam = (req: Request, paramName: string, shortParamName: string): number | undefined => {
+export const getIntParam = (
+    req: Request,
+    paramName: string,
+    shortParamName: string
+): number | undefined => {
     const strParam = getStrParam(req, paramName, shortParamName)
-    if (typeof strParam === 'string') return Math.abs(Number.parseInt(strParam, 10))
+    if (typeof strParam === 'string')
+        return Math.abs(Number.parseInt(strParam, 10))
 }
 
 export async function fetchWithEncoding(url: string): Promise<{
@@ -22,7 +31,8 @@ export async function fetchWithEncoding(url: string): Promise<{
 }> {
     const timeout = 5000
     const headers = {
-        'User-Agent': ' Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0',
+        'User-Agent':
+            ' Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0',
     }
 
     const controller = new AbortController()
@@ -45,7 +55,8 @@ export async function fetchWithEncoding(url: string): Promise<{
 
         const chardetResult = jschardet.detect(buffer)
         const responseHeaders = Object.fromEntries(response.headers.entries())
-        const encoding = chardetResult?.encoding || charset(responseHeaders, buffer)
+        const encoding =
+            chardetResult?.encoding || charset(responseHeaders, buffer)
 
         let data = buffer.toString('binary')
         if (encoding) {

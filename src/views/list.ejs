@@ -1,32 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale %>">
     <head>
         <meta charset="utf-8" />
-        <title>rsstodolist: feeds list</title>
+        <title><%= t('common.site_title') %>: <%= t('list.title') %></title>
         <meta name="robots" content="noindex, nofollow" />
         <link rel="stylesheet" href="./static/style.css" />
         <link rel="icon" type="image/png" href="./static/favicon.png" />
-        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0" />
+        <meta
+            name="viewport"
+            content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0"
+        />
     </head>
 
     <body>
         <main>
-            <header class="page-header">
-                <h1><a href="<%= rootUrl %>" class="title">rsstodolist</a></h1>
-                <p class="lead">Browse every feed known to this instance. Use the quick filters to navigate faster.</p>
-            </header>
+            <%- include('partials/header', {
+                description: t('list.description')
+            }) %>
 
             <section class="card card--table">
                 <div class="list-toolbar">
-                    <label for="filter-input" class="label">Filter</label>
+                    <label for="filter-input" class="label"
+                        ><%= t('list.filter.label') %></label
+                    >
                     <input
                         id="filter-input"
                         class="input"
                         type="search"
-                        placeholder="Type to filter feeds"
+                        placeholder="<%= t('list.filter.placeholder') %>"
                         oninput="filterFeeds(event)"
                     />
-                    <span class="list-count" id="listCount"><%= feeds.length %> feeds</span>
+                    <span class="list-count" id="listCount"
+                        ><%= feeds.length %> <%= t(feeds.length > 1 ?
+                        'common.feeds' : 'common.feed') %></span
+                    >
                 </div>
 
                 <ul class="feed-list" id="feedsList">
@@ -34,10 +41,14 @@
                     <li class="feed-list__item" data-name="<%= feed.name %>">
                         <div>
                             <p class="feed-list__name">
-                                <a href="./?n=<%= feed.name %>">/?n=<%= feed.name %></a>
+                                <a href="./?n=<%= feed.name %>"
+                                    >/?n=<%= feed.name %></a
+                                >
                             </p>
                         </div>
-                        <span class="feed-list__badge"><%= feed.dataValues.count %></span>
+                        <span class="feed-list__badge"
+                            ><%= feed.dataValues.count %></span
+                        >
                     </li>
                     <% }) %>
                 </ul>
@@ -46,15 +57,21 @@
         <script>
             function filterFeeds(event) {
                 const query = event.target.value.toLowerCase()
-                const items = document.querySelectorAll('#feedsList .feed-list__item')
-                let visible = 0
+                const items = document.querySelectorAll(
+                    '#feedsList .feed-list__item'
+                )
+                let nb = 0
                 items.forEach((item) => {
                     const name = item.dataset.name.toLowerCase()
                     const match = name.includes(query)
                     item.style.display = match ? '' : 'none'
-                    if (match) visible += 1
+                    if (match) nb += 1
                 })
-                document.getElementById('listCount').textContent = `${visible} feed${visible === 1 ? '' : 's'}`
+                document.getElementById('listCount').textContent = `${nb} ${
+                    nb > 1
+                        ? "<%= t('common.feeds') %>"
+                        : "<%= t('common.feed') %>"
+                }`
             }
         </script>
     </body>

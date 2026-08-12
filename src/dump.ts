@@ -19,16 +19,20 @@ sequelize
     .authenticate()
     .then(() => FeedModelBuilder(sequelize).dump())
     .then((results) => {
-        console.log(`"name";"url";"title";"description";"createdAt";"updatedAt"`)
+        console.log(
+            `"name";"url";"title";"description";"createdAt";"updatedAt"`
+        )
         results
             .map(({ dataValues }) => dataValues)
-            .forEach(({ name, url, title, description, createdAt, updatedAt }) => {
-                console.log(
-                    `${cleanStr(name)};${cleanStr(url)};${cleanStr(title)};${cleanStr(
-                        description
-                    )};${createdAt};${updatedAt}`
-                )
-            })
+            .forEach(
+                ({ name, url, title, description, createdAt, updatedAt }) => {
+                    console.log(
+                        `${cleanStr(name)};${cleanStr(url)};${cleanStr(title)};${cleanStr(
+                            description
+                        )};${createdAt};${updatedAt}`
+                    )
+                }
+            )
         process.exit(0)
     })
     .catch((err) => {

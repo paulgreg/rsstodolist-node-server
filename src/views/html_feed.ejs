@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale %>">
     <head>
         <meta charset="utf-8" />
-        <title>rsstodolist - <%= title %></title>
+        <title><%= t('common.site_title') %> - <% if (context === 'search') { %><%= t(totalCount > 1 ? 'html_feed.search_title_plural' : 'html_feed.search_title', { count: entries.length, total: totalCount, query: searchQuery }) %><% } else { %><%= t('html_feed.feed_title', { count: entries.length, total: totalCount, name: feedName }) %><% } %></title>
         <meta name="robots" content="noindex, nofollow" />
         <link rel="stylesheet" href="./static/style.css" />
         <link rel="icon" type="image/png" href="./static/favicon.png" />
@@ -16,35 +16,40 @@
     </head>
     <body>
         <main>
-            <header class="page-header">
-                <h1><a href="<%= rootUrl %>" class="title">rsstodolist</a></h1>
-                <p class="feed-title">
-                    <span><%= title %></span>
-                </p>
-                <div class="header-actions">
-                    <a class="button" href="<%= rootUrl %><%= url %>&amp;format=rss<% if (limit) { %>&amp;limit=<%= limit %><% } %><% if (page) { %>&amp;page=<%= page %><% } %>">Open RSS feed</a>
-                    <a class="button button--ghost" href="<%= rootUrl %>">Back to home</a>
-                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=50">Show 50</a>
-                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=100">Show 100</a>
-                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=250">Show 250</a>
+            <%- include('partials/header', {
+                description: title
+            }) %>
+            <p class="feed-title">
+                <% if (context === 'search') { %>
+                <span><%= t(totalCount > 1 ? 'html_feed.search_title_plural' : 'html_feed.search_title', { count: entries.length, total: totalCount, query: searchQuery }) %></span>
+                <% } else { %>
+                <span><%= t('html_feed.feed_title', { count: entries.length, total: totalCount, name: feedName }) %></span>
+                <% } %>
+            </p>
+            <div class="header-actions">
+                    <a class="button" href="<%= rootUrl %><%= url %>&amp;format=rss<% if (limit) { %>&amp;limit=<%= limit %><% } %><% if (page) { %>&amp;page=<%= page %><% } %>"><%= t('html_feed.actions.open_rss') %></a>
+                    <a class="button button--ghost" href="<%= rootUrl %>"><%= t('common.back_to_home') %></a>
+                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=50"><%= t('html_feed.actions.show_entries.50') %></a>
+                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=100"><%= t('html_feed.actions.show_entries.100') %></a>
+                    <a class="button button--ghost" href="<%= rootUrl %><%= url %>&amp;limit=250"><%= t('html_feed.actions.show_entries.250') %></a>
                 </div>
             </header>
 
             <% if (public && entries.length > 0) { %>
             <section class="feed-message feed-message--notice">
                 <p>
-                    Please consider self-hosting rsstodolist for more reliability and privacy (<a
+                    <%= t('html_feed.self_host_notice') %> (<a
                         href="https://github.com/paulgreg/rsstodolist-node-server"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >instructions</a
+                        ><%= t('common.instructions') %></a
                     >).
                 </p>
             </section>
             <% } %> <% if (entries.length === 0) { %>
             <section class="feed-message feed-message--empty">
-                <h2>No entries yet</h2>
-                <p>Your feed is waiting for its first item. Add one from the <a href="<%= rootUrl %>">main page</a>.</p>
+                <h2><%= t('html_feed.empty_state.title') %></h2>
+                <p><%= t('html_feed.empty_state.description') %> <a href="<%= rootUrl %>"><%= t('common.back_to_home') %></a>.</p>
             </section>
             <% } else { %>
 
@@ -61,7 +66,7 @@
                             <span class="feed-entry__index">#<%= (offset || 0) + index + 1 %></span>
                             <% if (context === "search") { %>
                             <a href="<%= rootUrl %>?n=<%= entry.name %>" class="feed-entry__feed"
-                                >Feed: /?n=<%= entry.name %></a
+                                ><%= t('html_feed.feed_info') %> /?n=<%= entry.name %></a
                             >
                             <% } %>
                         </div>
@@ -69,7 +74,7 @@
                             ><%= timestamp.toUTCString() %></time
                         >
                     </header>
-                    <h2 class="feed-entry__title"><%= entry.title || 'No title' %></h2>
+                    <h2 class="feed-entry__title"><%= entry.title || t('html_feed.no_title') %></h2>
                     <% if (entry.description) { %>
                     <p class="feed-entry__description"><%= entry.description %></p>
                     <% } %>
@@ -81,7 +86,7 @@
                             class="button"
                             onClick="deleteEntry(event, '<%= encodeURI(entry.url) %>', '<%= entry.name %>')"
                         >
-                            delete
+                            <%= t('html_feed.delete') %>
                         </button>
                     </div>
                 </article>
@@ -89,29 +94,27 @@
             </section>
             <% if (hasPagination) { %>
             <nav class="pagination" aria-label="Pagination">
-                <span class="pagination__summary">
-                    Page <%= safePage %> of <%= totalPages %> • Showing
-                    <%= Math.min(safeTotal, (safePage - 1) * safeLimit + 1) %>-<%= Math.min(safeTotal, safePage * safeLimit) %>
-                    of <%= safeTotal %>
+                 <span class="pagination__summary">
+                    <%= t('html_feed.pagination.text', { page: safePage, totalPages, start: Math.min(safeTotal, (safePage - 1) * safeLimit + 1), end: Math.min(safeTotal, safePage * safeLimit), total: safeTotal }) %>
                 </span>
                 <div class="pagination__actions">
                     <% if (safePage > 1) { %>
                     <a
                         class="button button--ghost"
                         href="<%= rootUrl %><%= url %>&amp;page=<%= safePage - 1 %>&amp;limit=<%= safeLimit %>"
-                        >Previous</a
+                        ><%= t('html_feed.pagination.previous') %></a
                     >
                     <% } else { %>
-                    <span class="button button--ghost button--disabled">Previous</span>
+                    <span class="button button--ghost button--disabled"><%= t('html_feed.pagination.previous') %></span>
                     <% } %>
                     <% if (safePage < totalPages) { %>
                     <a
                         class="button button--ghost"
                         href="<%= rootUrl %><%= url %>&amp;page=<%= safePage + 1 %>&amp;limit=<%= safeLimit %>"
-                        >Next</a
+                        ><%= t('html_feed.pagination.next') %></a
                     >
                     <% } else { %>
-                    <span class="button button--ghost button--disabled">Next</span>
+                    <span class="button button--ghost button--disabled"><%= t('html_feed.pagination.next') %></span>
                     <% } %>
                 </div>
             </nav>
@@ -123,10 +126,10 @@
                 const button = event.currentTarget
                 const originalLabel = button.textContent
 
-                if (!confirm(`remove ${decodeURI(url)} from ${name} ?`)) return
+                if (!confirm(`<%= t('html_feed.delete_action') %> ${decodeURI(url)} from ${name} ?`)) return
 
                 button.disabled = true
-                button.textContent = 'Deleting…'
+                button.textContent = "<%= t('html_feed.deleting') %>"
 
                 fetch(`./del?u=${url}&n=${encodeURIComponent(name)}`)
                     .then((response) => {
@@ -137,7 +140,7 @@
                         navigation.reload()
                     })
                     .catch(() => {
-                        alert('failed to delete URL')
+                        alert("<%= t('html_feed.delete_failed') %>")
                         button.disabled = false
                         button.textContent = originalLabel
                     })

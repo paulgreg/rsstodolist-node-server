@@ -1,0 +1,140 @@
+{
+    "common": {
+        "site_title": "rsstodolist",
+        "back_to_home": "Retour à l'accueil",
+        "instructions": "instructions",
+        "and": "et",
+        "contact": "Contactez-moi via",
+        "language": "langue",
+        "feed": "flux",
+        "feeds": "flux"
+    },
+    "index": {
+        "subtitle": "todo-list via des flux RSS",
+        "meta": {
+            "description": "Capturez n'importe quelle URL dans un flux RSS que vous pouvez lire depuis votre lecteur préféré."
+        },
+        "how_it_works": {
+            "title": "Comment fonctionne rsstodolist",
+            "description": "Envoyez une URL et un nom de flux. Nous la transformons en élément RSS pour que vous puissiez trier articles, documents et sources d'inspiration directement là où vous lisez déjà les actualités.",
+            "features": [
+                "Configuration minimale — pas d'inscription, choisissez simplement un nom de flux.",
+                "Utilisez votre propre client — tous les flux sont compatibles avec les lecteurs RSS/Atom.",
+                "Respectueux de la vie privée — auto-hébergez ce service open source."
+            ]
+        },
+        "public_instance": {
+            "title": "À propos de cette instance publique",
+            "warnings": [
+                "Cette version hébergée est « ouverte » : toute personne connaissant le nom de votre flux peut lire, ajouter ou supprimer des entrées.",
+                "Elle fonctionne sur un plan Fly.io hobby, donc la disponibilité et les quotas sont limités."
+            ],
+            "self_host": "Pour plus de fiabilité et de confidentialité, envisagez d'auto-héberger rsstodolist"
+        },
+        "add_delete_item": {
+            "title": "Ajouter ou supprimer un élément",
+            "form": {
+                "action": "action",
+                "add": "ajouter",
+                "del": "supprimer",
+                "name": "nom",
+                "url": "URL",
+                "title": "titre",
+                "description": "desc.",
+                "submit": "Envoyer",
+                "example_url": "https://fr.wikipedia.org/",
+                "example_title": "titre optionnel",
+                "example_description": "description optionnelle"
+            },
+            "warning": "⚠️ Sur l'instance publique, le flux « somename » est limité aux pages Wikipedia pour limiter le spam."
+        },
+        "access_feed": {
+            "title": "Accéder à un flux",
+            "form": {
+                "name": "nom",
+                "example_name": "somename",
+                "view_feed": "Voir le flux"
+            },
+            "direct_url": "Ou par URL directe :",
+            "limit_info": "Vous pouvez ajouter un paramètre limit (ou l) pour récupérer de 1 à 500 éléments (25 par défaut)."
+        },
+        "list_feeds": {
+            "title": "Lister les flux",
+            "description": "Vous pouvez voir tous les flux existants sur",
+            "link": "/list"
+        },
+        "search_feeds": {
+            "title": "Rechercher dans les flux",
+            "form": {
+                "keyword": "mot-clé",
+                "example_keyword": "mot à rechercher",
+                "submit": "Rechercher"
+            }
+        },
+        "browser_extensions": {
+            "title": "Extensions navigateur Firefox et Chrome",
+            "description": "sont disponibles pour ajouter ou supprimer un élément d'un flux depuis la barre d'outils du navigateur."
+        },
+        "add_by_url": {
+            "title": "Ajouter ou supprimer un élément par URL",
+            "notes": [
+                "Le titre sera récupéré depuis le titre de la page web, mais vous pouvez en définir un avec le paramètre title.",
+                "Vous pouvez aussi définir une description avec le paramètre description.",
+                "Tous les paramètres peuvent être raccourcis :",
+                "n pour name, u pour url, t pour title et d pour description."
+            ]
+        },
+        "bookmarklet": {
+            "title": "Utiliser un bookmarklet",
+            "description": "Vous pouvez utiliser un",
+            "link_text": "En savoir plus sur les bookmarklets sur Wikipedia",
+            "instructions": "Créez un nouveau marque-page et collez le code suivant dans le champ URL :"
+        },
+        "related_projects": {
+            "title": "Projets apparentés",
+            "projects": [
+                "rsstodolist-node-server — code source de ce projet que vous pouvez auto-héberger (nodejs ou docker)",
+                "rsstodolist-addon — code source de l'extension Chrome et de l'addon Firefox",
+                "rsstodolist-react-native — application React Native pour Android",
+                "rsstodolist-django-server — version originale en python/django (plus maintenue)"
+            ]
+        }
+    },
+    "list": {
+        "title": "Parcourir les flux",
+        "description": "Parcourez tous les flux connus de cette instance. Utilisez les filtres rapides pour naviguer plus vite.",
+        "filter": {
+            "label": "Filtrer",
+            "placeholder": "Tapez pour filtrer les flux"
+        }
+    },
+    "html_feed": {
+        "actions": {
+            "open_rss": "Ouvrir le flux RSS",
+            "show_entries": {
+                "50": "Afficher 50",
+                "100": "Afficher 100",
+                "250": "Afficher 250"
+            }
+        },
+        "empty_state": {
+            "title": "Aucun élément pour l'instant",
+            "description": "Votre flux attend son premier élément. Ajoutez-en un depuis la page d'accueil."
+        },
+        "self_host_notice": "Envisagez d'auto-héberger rsstodolist pour plus de fiabilité et de confidentialité",
+        "feed_title": "{count}/{total} entrées dans le flux : {name}",
+        "search_title": "{count}/{total} résultat dans la recherche « {query} »",
+        "search_title_plural": "{count}/{total} résultats dans la recherche « {query} »",
+        "feed_info": "Flux :",
+        "no_title": "Sans titre",
+        "delete": "Supprimer",
+        "delete_action": "supprimer",
+        "deleting": "Suppression...",
+        "delete_failed": "Echec de la suppression de l'URL",
+        "pagination": {
+            "text": "Page {page}/{totalPages} • Affichage {start}-{end} sur {total}",
+            "previous": "Précédent",
+            "next": "Suivant"
+        }
+    }
+}

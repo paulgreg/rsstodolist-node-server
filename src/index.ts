@@ -3,11 +3,20 @@ import { Sequelize } from 'sequelize'
 import FeedModelBuilder, { lengths } from './FeedModel.js'
 import * as cheerio from 'cheerio'
 import morgan from 'morgan'
-import { trim, truncate, slugify, cleanify, sanitize, isValidUrl } from './strings.js'
+import cookieParser from 'cookie-parser'
+import {
+    trim,
+    truncate,
+    slugify,
+    cleanify,
+    sanitize,
+    isValidUrl,
+} from './strings.js'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as env from './env.js'
 import { getIntParam, getStrParam, fetchWithEncoding } from './utils.js'
+import { detectLocale } from './middleware/locale.js'
 
 const PORT = env.PORT
 
@@ -15,10 +24,12 @@ const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 
-const cleanNameStr = (n?: string) => slugify(truncate(cleanify(sanitize(trim(n))), lengths.name))
+const cleanNameStr = (n?: string) =>
+    slugify(truncate(cleanify(sanitize(trim(n))), lengths.name))
 const cleanUrlStr = (u?: string) => truncate(trim(u), lengths.url)
 const cleanTitleStr = (t?: string) => truncate(cleanify(trim(t)), lengths.title)
-const cleanDescriptionStr = (d?: string) => truncate(cleanify(trim(d)), lengths.description)
+const cleanDescriptionStr = (d?: string) =>
+    truncate(cleanify(trim(d)), lengths.description)
 const cleanSearchStr = (d?: string) => cleanify(sanitize(trim(d)))
 
 const sequelize = new Sequelize(env.DATABASE_URL, {
@@ -32,20 +43,46 @@ const sequelize = new Sequelize(env.DATABASE_URL, {
 sequelize
     .authenticate()
     .then(() => {
-        console.log(`Connection to database « ${sequelize.getDatabaseName()} » has been established successfully`)
+        console.log(
+            `Connection to database « ${sequelize.getDatabaseName()} » has been established successfully`
+        )
     })
     .catch((err) => {
         console.error(`Unable to connect to database`, err)
         throw err
     })
     .then(() => {
-        const { findByName, list, insert, remove, count, search, countSearch, suggest } = FeedModelBuilder(sequelize)
+        const {
+            findByName,
+            list,
+            insert,
+            remove,
+            count,
+            search,
+            countSearch,
+            suggest,
+        } = FeedModelBuilder(sequelize)
 
         const app = express()
         app.set('view engine', 'ejs')
         app.set('views', 'src/views')
 
-        app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+        app.use(
+            morgan(
+                ':method :url :status :res[content-length] - :response-time ms'
+            )
+        )
+        app.use(cookieParser())
+        app.use(detectLocale)
+
+        app.get('/set-lang', (req, res) => {
+            const lang = getStrParam(req, 'lang', 'l') === 'fr' ? 'fr' : 'en'
+            res.cookie('lang', lang, {
+                maxAge: DAY * 365 * 1000,
+                sameSite: 'lax',
+            })
+            res.redirect(302, req.get('referer') || '/')
+        })
 
         const __dirname = dirname(fileURLToPath(import.meta.url))
         app.use(
@@ -55,19 +92,25 @@ sequelize
                 maxAge: DAY * 90,
             })
         )
-        app.use('/manifest.json', express.static(__dirname + '/static/manifest.json'))
+        app.use(
+            '/manifest.json',
+            express.static(__dirname + '/static/manifest.json')
+        )
 
         app.get('/', (req, res) => {
             const format = getStrParam(req, 'format', 'f')
             const name = cleanNameStr(getStrParam(req, 'name', 'n'))
             const title = cleanTitleStr(getStrParam(req, 'title', 't'))
-            const description = cleanDescriptionStr(getStrParam(req, 'description', 'd'))
+            const description = cleanDescriptionStr(
+                getStrParam(req, 'description', 'd')
+            )
             const url = cleanUrlStr(getStrParam(req, 'url', 'u'))
             const limit = Math.max(getIntParam(req, 'limit', 'l') ?? 25, 1)
             const page = Math.max(getIntParam(req, 'page', 'p') ?? 1, 1)
             const offset = (page - 1) * limit
 
-            const rootUrl = env.ROOT_URL ?? req.protocol + '://' + req.get('host')
+            const rootUrl =
+                env.ROOT_URL ?? req.protocol + '://' + req.get('host')
             const n = req.query.name || req.query.n
 
             if (name && !url) {
@@ -78,27 +121,28 @@ sequelize
 
                 const isRss = format === 'rss'
 
-                return Promise.all([findByName({ name, limit, offset }), isRss ? [] : count({ name })]).then(
-                    ([entries, [countResult]]) => {
-                        const totalCount = Number(countResult?.get?.('count') ?? 0)
-                        const rssTitle = name
-                        const htmlTitle = `${entries.length}/${totalCount} entries in feed: ${name}`
+                return Promise.all([
+                    findByName({ name, limit, offset }),
+                    isRss ? [] : count({ name }),
+                ]).then(([entries, [countResult]]) => {
+                    const totalCount = Number(countResult?.get?.('count') ?? 0)
+                    const rssTitle = name
 
-                        res.type(isRss ? 'text/xml' : 'text/html')
-                        res.render(isRss ? 'rss' : 'html_feed', {
-                            rootUrl,
-                            public: env.PUBLIC,
-                            title: isRss ? rssTitle : htmlTitle,
-                            context: 'rss',
-                            url: `/?n=${name}`,
-                            entries,
-                            totalCount,
-                            limit,
-                            page,
-                            offset,
-                        })
-                    }
-                )
+                    res.type(isRss ? 'text/xml' : 'text/html')
+                    res.render(isRss ? 'rss' : 'html_feed', {
+                        rootUrl,
+                        public: env.PUBLIC,
+                        title: rssTitle,
+                        feedName: name,
+                        context: 'rss',
+                        url: `/?n=${name}`,
+                        entries,
+                        totalCount,
+                        limit,
+                        page,
+                        offset,
+                    })
+                })
             }
 
             // Using share target API in Chrome sends URL in description :/ so use description field in that case and empty it
@@ -141,7 +185,8 @@ sequelize
                 if (env.PUBLIC && req.query.key !== env.LIST_KEY) {
                     res.status(403).end('403: forbidden')
                 } else {
-                    const rootUrl = env.ROOT_URL ?? req.protocol + '://' + req.get('host')
+                    const rootUrl =
+                        env.ROOT_URL ?? req.protocol + '://' + req.get('host')
 
                     list().then((feeds) => {
                         res.set('Cache-control', `public, max-age=${MINUTE}`)
@@ -155,7 +200,8 @@ sequelize
                 if (env.PUBLIC && req.query.key !== env.LIST_KEY) {
                     res.status(403).end('403: forbidden')
                 } else {
-                    const rootUrl = env.ROOT_URL || req.protocol + '://' + req.get('host')
+                    const rootUrl =
+                        env.ROOT_URL || req.protocol + '://' + req.get('host')
                     const format = getStrParam(req, 'format', 'f')
                     const query = cleanSearchStr(getStrParam(req, 'query', 'q'))
                     if (!query) {
@@ -163,36 +209,42 @@ sequelize
                         return
                     }
                     if (query.length < 2) {
-                        res.status(400).end('400 : query parameter should be at least 2 characters')
+                        res.status(400).end(
+                            '400 : query parameter should be at least 2 characters'
+                        )
                         return
                     }
-                    const limit = Math.max(getIntParam(req, 'limit', 'l') ?? 100, 1)
+                    const limit = Math.max(
+                        getIntParam(req, 'limit', 'l') ?? 100,
+                        1
+                    )
                     const page = Math.max(getIntParam(req, 'page', 'p') ?? 1, 1)
                     const offset = (page - 1) * limit
 
                     const isRss = format === 'rss'
-                    return Promise.all([search({ query, limit, offset }), isRss ? [] : countSearch({ query })]).then(
-                        ([entries, [countResult]]) => {
-                            const totalCount = Number(countResult?.get?.('count') ?? 0)
-                            const rssTitle = `search: ${query}`
-                            const htmlTitle = `${entries.length}/${totalCount} result${
-                                totalCount > 1 ? 's' : ''
-                            } for search « ${query} »`
-                            res.type(isRss ? 'text/xml' : 'text/html')
-                            res.render(isRss ? 'rss' : 'html_feed', {
-                                rootUrl,
-                                public: env.PUBLIC,
-                                title: isRss ? rssTitle : htmlTitle,
-                                context: 'search',
-                                url: `/search?q=${query}`,
-                                entries,
-                                totalCount,
-                                limit,
-                                page,
-                                offset,
-                            })
-                        }
-                    )
+                    return Promise.all([
+                        search({ query, limit, offset }),
+                        isRss ? [] : countSearch({ query }),
+                    ]).then(([entries, [countResult]]) => {
+                        const totalCount = Number(
+                            countResult?.get?.('count') ?? 0
+                        )
+                        const rssTitle = `search: ${query}`
+                        res.type(isRss ? 'text/xml' : 'text/html')
+                        res.render(isRss ? 'rss' : 'html_feed', {
+                            rootUrl,
+                            public: env.PUBLIC,
+                            title: rssTitle,
+                            searchQuery: query,
+                            context: 'search',
+                            url: `/search?q=${query}`,
+                            entries,
+                            totalCount,
+                            limit,
+                            page,
+                            offset,
+                        })
+                    })
                 }
             })
         }
@@ -205,7 +257,9 @@ sequelize
                     return
                 }
                 if (query.length < 2) {
-                    res.status(400).end('400 : query parameter should be at least 2 characters')
+                    res.status(400).end(
+                        '400 : query parameter should be at least 2 characters'
+                    )
                     return
                 }
                 suggest({ query }).then((results) => res.json(results))
@@ -215,7 +269,9 @@ sequelize
         app.get('/add', (req, res) => {
             const name = cleanNameStr(getStrParam(req, 'name', 'n'))
             const title = cleanTitleStr(getStrParam(req, 'title', 't'))
-            const description = cleanDescriptionStr(getStrParam(req, 'description', 'd'))
+            const description = cleanDescriptionStr(
+                getStrParam(req, 'description', 'd')
+            )
             const url = cleanUrlStr(getStrParam(req, 'url', 'u'))
 
             if (!name || !url) {
@@ -240,12 +296,21 @@ sequelize
                                   if (status === 200) {
                                       const $ = cheerio.load(data)
 
-                                      const titleFromPage = $('head title').text() || $('body title').text()
+                                      const titleFromPage =
+                                          $('head title').text() ||
+                                          $('body title').text()
 
                                       return {
-                                          title: truncate(cleanify(titleFromPage), lengths.title),
+                                          title: truncate(
+                                              cleanify(titleFromPage),
+                                              lengths.title
+                                          ),
                                           description: truncate(
-                                              cleanify($('head meta[name=description]').attr('content')),
+                                              cleanify(
+                                                  $(
+                                                      'head meta[name=description]'
+                                                  ).attr('content')
+                                              ),
                                               lengths.description
                                           ),
                                       }
@@ -258,7 +323,12 @@ sequelize
             )
                 .then((metas) => {
                     const { title, description } = metas ?? {}
-                    return insert({ name, url, title: title ?? url, description })
+                    return insert({
+                        name,
+                        url,
+                        title: title ?? url,
+                        description,
+                    })
                 })
                 .then(() => {
                     res.redirect(302, `./?n=${name}`)
@@ -300,6 +370,8 @@ sequelize
         })
 
         app.listen(PORT, () => {
-            console.log(`rsstodolist-node-server listening at http://127.0.0.1:${PORT}`)
+            console.log(
+                `rsstodolist-node-server listening at http://127.0.0.1:${PORT}`
+            )
         })
     })

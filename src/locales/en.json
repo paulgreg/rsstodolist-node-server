@@ -1,0 +1,140 @@
+{
+    "common": {
+        "site_title": "rsstodolist",
+        "back_to_home": "Back to home",
+        "instructions": "instructions",
+        "and": "and",
+        "contact": "Contact me via",
+        "language": "language",
+        "feed": "feed",
+        "feeds": "feeds"
+    },
+    "index": {
+        "subtitle": "an RSS based todo-list",
+        "meta": {
+            "description": "Capture any public URL into a RSS feed that you can read from your favorite reader."
+        },
+        "how_it_works": {
+            "title": "How rsstodolist works",
+            "description": "Send us a URL and a feed name. We turn it into an RSS item so you can triage articles, docs, and inspiration directly where you already read news.",
+            "features": [
+                "Minimal setup — no registration, just pick a feed name.",
+                "Bring your own client — every feed is compatible with RSS/Atom readers.",
+                "Privacy friendly — self-host that Open Source service."
+            ]
+        },
+        "public_instance": {
+            "title": "About this public instance",
+            "warnings": [
+                "This hosted version is « open » : anyone who knows your feed name can read, add, or remove entries.",
+                "It also runs on a hobby Fly.io plan, so uptime and quotas are limited."
+            ],
+            "self_host": "For more reliability and privacy, please consider self host rsstodolist"
+        },
+        "add_delete_item": {
+            "title": "Add or delete an item",
+            "form": {
+                "action": "action",
+                "add": "add",
+                "del": "delete",
+                "name": "name",
+                "url": "URL",
+                "title": "title",
+                "description": "descr.",
+                "submit": "Send",
+                "example_url": "https://en.wikipedia.org/",
+                "example_title": "optional title",
+                "example_description": "optional description"
+            },
+            "warning": "⚠️ On the public instance, « somename » feed is limited to Wikipedia pages to limit spam."
+        },
+        "access_feed": {
+            "title": "Access a feed",
+            "form": {
+                "name": "name",
+                "example_name": "somename",
+                "view_feed": "View feed"
+            },
+            "direct_url": "Or by direct URL :",
+            "limit_info": "You can add a limit (or l) parameter to fetch from 1 to 500 items (default is 25 items)."
+        },
+        "list_feeds": {
+            "title": "List feeds",
+            "description": "You can see all existing feeds on",
+            "link": "/list"
+        },
+        "search_feeds": {
+            "title": "Search across feeds",
+            "form": {
+                "keyword": "keyword",
+                "example_keyword": "search keyword",
+                "submit": "Search feeds"
+            }
+        },
+        "browser_extensions": {
+            "title": "Use Firefox addon and Chrome extension",
+            "description": "are available to add or remove an item in a feed from the browser toolbar."
+        },
+        "add_by_url": {
+            "title": "Add or delete an item by URL",
+            "notes": [
+                "Title will be set from web page title but you can define one by using title.",
+                "You can also set a description with the description parameter.",
+                "All parameters can be minified:",
+                "n for name, u for url, t for title and d for description."
+            ]
+        },
+        "bookmarklet": {
+            "title": "Use a bookmarklet",
+            "description": "You can use a",
+            "link_text": "Learn more about bookmarklet on Wikipedia",
+            "instructions": "Create a new bookmark and paste the following code in the URL field:"
+        },
+        "related_projects": {
+            "title": "Related projects",
+            "projects": [
+                "rsstodolist-node-server — this project source code that you can self-host (nodejs or docker)",
+                "rsstodolist-addon — source code for Chrome extension and Firefox addon",
+                "rsstodolist-react-native — react-native application for Android",
+                "rsstodolist-django-server — original python / django version (not maintained anymore)"
+            ]
+        }
+    },
+    "list": {
+        "title": "Browse feeds",
+        "description": "Browse every feed known to this instance. Use the quick filters to navigate faster.",
+        "filter": {
+            "label": "Filter",
+            "placeholder": "Type to filter feeds"
+        }
+    },
+    "html_feed": {
+        "actions": {
+            "open_rss": "Open RSS feed",
+            "show_entries": {
+                "50": "Show 50",
+                "100": "Show 100",
+                "250": "Show 250"
+            }
+        },
+        "empty_state": {
+            "title": "No entries yet",
+            "description": "Your feed is waiting for its first item. Add one from the main page."
+        },
+        "self_host_notice": "Please consider self-hosting rsstodolist for more reliability and privacy",
+        "feed_title": "{count}/{total} entries in feed: {name}",
+        "search_title": "{count}/{total} result in search « {query} »",
+        "search_title_plural": "{count}/{total} results in search « {query} »",
+        "feed_info": "Feed:",
+        "no_title": "Untitled",
+        "delete": "Delete",
+        "delete_action": "delete",
+        "deleting": "Deleting...",
+        "delete_failed": "Failed to delete URL",
+        "pagination": {
+            "text": "Page {page}/{totalPages} • Showing {start}-{end} of {total}",
+            "previous": "Previous",
+            "next": "Next"
+        }
+    }
+}

@@ -15,7 +15,13 @@
 
 body {
     margin: 0;
-    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family:
+        'Inter',
+        'Segoe UI',
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
     background: #aed4ff;
     color: var(--color-text);
     line-height: 1.6;
@@ -175,7 +181,11 @@ details[open] {
 }
 
 .card--intro {
-    background: linear-gradient(120deg, rgba(21, 158, 254, 0.08), rgba(255, 255, 255, 0.95));
+    background: linear-gradient(
+        120deg,
+        rgba(21, 158, 254, 0.08),
+        rgba(255, 255, 255, 0.95)
+    );
 }
 
 .card--notice {
@@ -357,7 +367,11 @@ details[open] {
 }
 
 .feed-message--notice {
-    background: linear-gradient(135deg, rgba(21, 158, 254, 0.07), rgba(255, 255, 255, 0.85));
+    background: linear-gradient(
+        135deg,
+        rgba(21, 158, 254, 0.07),
+        rgba(255, 255, 255, 0.85)
+    );
 }
 
 .feed-message--empty {
@@ -502,7 +516,11 @@ details[open] {
     }
 
     .card--intro {
-        background: linear-gradient(120deg, rgba(79, 180, 255, 0.25), rgba(15, 24, 41, 0.95));
+        background: linear-gradient(
+            120deg,
+            rgba(79, 180, 255, 0.25),
+            rgba(15, 24, 41, 0.95)
+        );
     }
 
     .card--notice {
@@ -580,6 +598,28 @@ details[open] {
     .feed-list__badge {
         background: rgba(79, 180, 255, 0.12);
         color: var(--color-text);
+    }
+}
+
+@media (min-width: 512px) {
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.language-selector {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+}
+
+@media (max-width: 768px) {
+    .language-selector {
+        font-size: 0.8rem;
+        padding: 0.3rem;
     }
 }
 

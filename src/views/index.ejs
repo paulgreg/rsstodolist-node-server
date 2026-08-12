@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale %>">
     <head>
         <meta charset="utf-8" />
-        <title>rsstodolist: an RSS based todo-list</title>
+        <title><%= t('common.site_title') %>:  <%= t('index.subtitle') %></title>
         <meta name="robots" content="<%= public ? 'index,follow' : 'noindex,nofollow' %>" />
         <meta name="keywords" content="rss todolist, todolist" />
         <meta name="author" content="Gr&eacute;gory Paul" />
-        <meta name="description" content="An RSS based todo-list" />
+        <meta name="description" content="<%= t('index.meta.description') %>" />
         <link rel="stylesheet" href="./static/style.css" />
         <link rel="icon" type="image/png" href="./static/favicon.png" />
         <link rel="manifest" href="./static/manifest.webmanifest" />
@@ -15,37 +15,35 @@
 
     <body>
         <main>
-            <header class="page-header">
-                <h1><a href="<%= rootUrl %>" class="title">rsstodolist</a></h1>
-                <p class="lead">Capture any public URL into a RSS feed that you can read from your favorite reader.</p>
-            </header>
+            <%- include('partials/header', {
+                description: t('index.meta.description')
+            }) %>
 
             <section class="card card--intro">
-                <h2>How rsstodolist works</h2>
+                <h2><%= t('index.how_it_works.title') %></h2>
                 <p>
-                    Send us a URL and a feed name. We turn it into an RSS item so you can triage articles, docs, and
-                    inspiration directly where you already read news.
+                    <%= t('index.how_it_works.description') %>
                 </p>
                 <ul class="feature-list">
-                    <li>Minimal setup — no registration, just pick a feed name.</li>
-                    <li>Bring your own client — every feed is compatible with RSS/Atom readers.</li>
-                    <li>Privacy friendly — self-host that Open Source service.</li>
+                    <li><%= t('index.how_it_works.features.0') %></li>
+                    <li><%= t('index.how_it_works.features.1') %></li>
+                    <li><%= t('index.how_it_works.features.2') %></li>
                 </ul>
             </section>
 
             <% if (public) { %>
             <section class="card card--notice">
-                <h3>About this public instance</h3>
+                <h3><%= t('index.public_instance.title') %></h3>
                 <p>
-                    This hosted version is « open » : anyone who knows your feed name can read, add, or remove entries.
-                    It also runs on a hobby Fly.io plan, so uptime and quotas are limited.
+                    <%= t('index.public_instance.warnings.0') %>
+                    <%= t('index.public_instance.warnings.1') %>
                 </p>
                 <p>
-                    For more reliability and privacy, please consider self host rsstodolist (<a
+                    <%= t('index.public_instance.self_host') %> (<a
                         href="https://github.com/paulgreg/rsstodolist-node-server"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >instructions</a
+                        ><%= t('common.instructions') %></a
                     >).
                 </p>
             </section>
@@ -58,15 +56,15 @@
 
             <div class="card-stack">
                 <details id="submitDetails" class="card card--collapsible" open>
-                    <summary>Add or delete an item</summary>
+                    <summary><%= t('index.add_delete_item.title') %></summary>
                     <form class="stacked-form" method="get" id="submitForm" action="add">
                         <div class="form-row form-row--options">
-                            <span class="label">action</span>
-                            <label><input type="radio" name="action" value="add" checked /> add</label>
-                            <label><input type="radio" name="action" value="del" /> delete</label>
+                            <span class="label"><%= t('index.add_delete_item.form.action') %></span>
+                            <label><input type="radio" name="action" value="add" checked /> <%= t('index.add_delete_item.form.add') %></label>
+                            <label><input type="radio" name="action" value="del" /> <%= t('index.add_delete_item.form.del') %></label>
                         </div>
                         <div class="form-row">
-                            <label class="label" for="name">name</label>
+                            <label class="label" for="name"><%= t('index.add_delete_item.form.name') %></label>
                             <input
                                 id="name"
                                 type="text"
@@ -81,60 +79,60 @@
                             />
                         </div>
                         <div class="form-row">
-                            <label class="label" for="url">URL</label>
+                            <label class="label" for="url"><%= t('index.add_delete_item.form.url') %></label>
                             <input
                                 id="url"
                                 type="url"
                                 name="url"
-                                placeholder="https://fr.wikipedia.org/"
+                                placeholder="<%= t('index.add_delete_item.form.example_url') %>"
                                 value="<%= url %>"
                                 required
                                 maxlength="<%= lengths.url %>"
                             />
                         </div>
                         <div class="form-row">
-                            <label class="label" for="title">title</label>
+                            <label class="label" for="title"><%= t('index.add_delete_item.form.title') %></label>
                             <input
                                 id="title"
                                 type="text"
                                 name="title"
-                                placeholder="optional title"
+                                placeholder="<%= t('index.add_delete_item.form.example_title') %>"
                                 maxlength="<%= lengths.title %>"
                                 value="<%= title %>"
                             />
                         </div>
                         <div class="form-row">
-                            <label class="label" for="description">descr.</label>
+                            <label class="label" for="description"><%= t('index.add_delete_item.form.description') %></label>
                             <input
                                 id="description"
                                 type="text"
                                 name="description"
-                                placeholder="optional description"
+                                placeholder="<%= t('index.add_delete_item.form.example_description') %>"
                                 maxlength="<%= lengths.description%>"
                                 value="<%= description %>"
                             />
                         </div>
                         <div class="form-row">
-                            <input type="submit" class="button" value="Send" />
+                            <input type="submit" class="button" value="<%= t('index.add_delete_item.form.submit') %>" />
                         </div>
                         <% if (public) { %>
                         <p class="inline-warning">
-                            ⚠️ On the public instance, « somename » feed is limited to Wikipedia pages to limit spam.
+                            <%= t('index.add_delete_item.warning') %>
                         </p>
                         <% } %>
                     </form>
                 </details>
 
                 <details id="goDetails" class="card card--collapsible" open>
-                    <summary>Access a feed</summary>
+                    <summary><%= t('index.access_feed.title') %></summary>
                     <form class="stacked-form" method="get" id="goForm" action="./">
                         <div class="form-row">
-                            <label class="label" for="name-go">name</label>
+                            <label class="label" for="name-go"><%= t('index.access_feed.form.name') %></label>
                             <input
                                 id="name-go"
                                 type="text"
                                 name="name"
-                                placeholder="somename"
+                                placeholder="<%= t('index.access_feed.form.example_name') %>"
                                 maxlength="<%= lengths.name %>"
                                 value="<%= name %>"
                                 autocomplete="<%= public ? 'on' : 'off' %>"
@@ -144,56 +142,55 @@
                             />
                         </div>
                         <div class="form-row">
-                            <input type="submit" class="button" value="View feed" />
+                            <input type="submit" class="button" value="<%= t('index.access_feed.form.view_feed') %>" />
                         </div>
                     </form>
                     <p>
-                        Or by direct URL :
+                        <%= t('index.access_feed.direct_url') %>
                         <a href="?name=somename" rel="nofollow"> <strong>/?name</strong>=somename </a>
                     </p>
                     <p>
-                        You can add a <code>limit</code> (or <code>l</code>) parameter to fetch from 1 to 500 items
-                        (default is 25 items).
+                        <%= t('index.access_feed.limit_info') %>
                     </p>
                 </details>
 
                 <% if (!public) { %>
                 <details class="card card--collapsible" open>
-                    <summary>List feeds</summary>
+                    <summary><%= t('index.list_feeds.title') %></summary>
                     <p>
-                        You can see all existing feeds on
+                        <%= t('index.list_feeds.description') %>
                         <a href="<%= rootUrl %>/list" rel="nofollow">
-                            <strong>/list</strong>
+                            <strong><%= t('index.list_feeds.link') %></strong>
                         </a>
                     </p>
                 </details>
                 <details class="card card--collapsible" open>
-                    <summary>Search across feeds</summary>
+                    <summary><%= t('index.search_feeds.title') %></summary>
                     <form class="stacked-form" method="get" action="<%= rootUrl %>/search">
                         <div class="form-row">
-                            <label class="label" for="q">keyword</label>
-                            <input type="text" id="q" name="q" placeholder="search keyword" minlength="2" required />
+                            <label class="label" for="q"><%= t('index.search_feeds.form.keyword') %></label>
+                            <input type="text" id="q" name="q" placeholder="<%= t('index.search_feeds.form.example_keyword') %>" minlength="2" required />
                         </div>
                         <div class="form-row">
-                            <input type="submit" class="button" value="Search feeds" />
+                            <input type="submit" class="button" value="<%= t('index.search_feeds.form.submit') %>" />
                         </div>
                     </form>
                 </details>
                 <% } %>
 
                 <details class="card card--collapsible">
-                    <summary>Use Firefox addon and Chrome extension</summary>
+                    <summary><%= t('index.browser_extensions.title') %></summary>
                     <p>
-                        A <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> and
+                        <%= t('index.browser_extensions.description') %>
+                        <a href="https://addons.mozilla.org/fr/firefox/addon/rsstodolist/">Firefox addon</a> <%= t('common.and') %>
                         <a href="https://chrome.google.com/webstore/detail/rsstodolist/gjnfedompndjcoeannmcppbckbkjhpkd"
                             >Chrome extension</a
-                        >
-                        are available to add or remove an item in a feed from the browser toolbar.
+                        >.
                     </p>
                 </details>
 
                 <details class="card card--collapsible">
-                    <summary>Add or delete an item by URL</summary>
+                    <summary><%= t('index.add_by_url.title') %></summary>
                     <p>
                         <a href="add?name=somename&amp;url=https://fr.wikipedia.org/" rel="nofollow">
                             <strong>/add?name</strong>=somename<strong>&amp;url</strong>=https://fr.wikipedia.org/ </a
@@ -203,26 +200,24 @@
                         </a>
                     </p>
                     <p>
-                        <code>title</code> and <code>description</code> parameters are required. Title will be set from
-                        web page title but you can define one by using <code>title</code>. You can also set a
-                        description with the <code>description</code>
-                        parameter.
+                        <%= t('index.add_by_url.notes.0') %>
+                        <%= t('index.add_by_url.notes.1') %>
                     </p>
                     <p>
-                        All parameters can be minified: <code>n</code> for name, <code>u</code> for url,
-                        <code>t</code> for title and <code>d</code> for description.
+                        <%= t('index.add_by_url.notes.2') %>
+                        <%= t('index.add_by_url.notes.3') %>
                     </p>
                 </details>
 
                 <details class="card card--collapsible">
-                    <summary>Use a bookmarklet</summary>
+                    <summary><%= t('index.bookmarklet.title') %></summary>
                     <p>
-                        You can use a
+                        <%= t('index.bookmarklet.description') %>
                         <a
                             href="http://en.wikipedia.org/wiki/Bookmarklet"
-                            title="Learn more about bookmarklet on Wikipedia"
+                            title="<%= t('index.bookmarklet.link_text') %>"
                             >bookmarklet</a
-                        >. Create a new bookmark and paste the following code in the URL field:
+                        >. <%= t('index.bookmarklet.instructions') %>
                         <code class="block"
                             >javascript:{const n=prompt('feed name ?'); if (n) window.open(`<%= rootUrl
                             %>/add?n=${n}&amp;url=${encodeURIComponent(window.location)}`)}</code
@@ -231,32 +226,32 @@
                 </details>
 
                 <details id="related" class="card card--collapsible">
-                    <summary>Related projects</summary>
+                    <summary><%= t('index.related_projects.title') %></summary>
                     <ul>
                         <li>
                             <a href="https://github.com/paulgreg/rsstodolist-node-server">rsstodolist-node-server</a> —
-                            this project source code that you can self-host (nodejs or docker)
+                            <%= t('index.related_projects.projects.0') %>
                         </li>
                         <li>
-                            <a href="https://github.com/paulgreg/rsstodolist-addon">rsstodolist-addon</a> — source code
-                            for Chrome extension and Firefox addon
+                            <a href="https://github.com/paulgreg/rsstodolist-addon">rsstodolist-addon</a> —
+                            <%= t('index.related_projects.projects.1') %>
                         </li>
                         <li>
                             <a href="https://github.com/paulgreg/rsstodolist-react-native">rsstodolist-react-native</a>
-                            — react-native application for Android
+                            — <%= t('index.related_projects.projects.2') %>
                         </li>
                         <li>
                             <a href="https://github.com/paulgreg/rsstodolist-django-server"
                                 >rsstodolist-django-server</a
                             >
-                            — original python / django version (not maintained anymore)
+                            — <%= t('index.related_projects.projects.3') %>
                         </li>
                     </ul>
                 </details>
 
                 <details class="card card--collapsible">
-                    <summary>Contact</summary>
-                    <p>Contact me via <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
+                    <summary><%= t('common.contact') %></summary>
+                    <p><%= t('common.contact') %> <a href="https://paulgreg.me/">paulgreg.me</a>.</p>
                 </details>
             </div>
         </main>

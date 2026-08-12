@@ -1,6 +1,7 @@
 export const trim = (s = '') => String(s).trim()
 
-export const truncate = (s = '', length: number) => String(s).substring(0, length)
+export const truncate = (s = '', length: number) =>
+    String(s).substring(0, length)
 
 export const slugify = (s = '') =>
     String(s)
@@ -22,14 +23,17 @@ const UNICODE_FILTER_REGEX =
     `|\u000b` +
     `)`
 
-export const cleanify = (s = '') => String(s).replace(new RegExp(UNICODE_FILTER_REGEX, 'g'), '')
+export const cleanify = (s = '') =>
+    String(s).replace(new RegExp(UNICODE_FILTER_REGEX, 'g'), '')
 
 export const sanitize = (s = '') =>
     cleanify(String(s))
         .replace(/%/g, '')
         .replace(/['"\/\\]/g, '')
 
-export const RE_WIKIPEDIA_VALID_URL = new RegExp('^https?://[a-z]{2}.wikipedia.org/')
+export const RE_WIKIPEDIA_VALID_URL = new RegExp(
+    '^https?://[a-z]{2}.wikipedia.org/'
+)
 const RE_VALID_URL = /^https?:\/\//
 
 export const isValidUrl = (s = '', wikipediaOnly = false) =>

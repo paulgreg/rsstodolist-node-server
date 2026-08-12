@@ -1,0 +1,7 @@
+<label class="language-menu">
+<%= t('common.language') %>: 
+<select id="locale"  onchange="window.location.href='/set-lang?lang='+this.value" class="language-selector">
+  <option value="en" <%= locale === 'en' ? 'selected' : '' %>>🇬🇧 English</option>
+  <option value="fr" <%= locale === 'fr' ? 'selected' : '' %>>🇫🇷 Français</option>
+</select>
+</label>

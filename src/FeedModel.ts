@@ -26,7 +26,10 @@ interface FeedAttributes {
 
 interface FeedCreationAttributes extends Optional<FeedAttributes, 'id'> {}
 
-class FeedModel extends Model<FeedAttributes, FeedCreationAttributes> implements FeedAttributes {
+class FeedModel
+    extends Model<FeedAttributes, FeedCreationAttributes>
+    implements FeedAttributes
+{
     [id]!: number;
     [name]!: string;
     [url]!: string;
@@ -70,7 +73,15 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
         }
     )
 
-    const findByName = async ({ name, limit, offset }: { name: string; limit?: number; offset?: number }) =>
+    const findByName = async ({
+        name,
+        limit,
+        offset,
+    }: {
+        name: string
+        limit?: number
+        offset?: number
+    }) =>
         FeedModel.findAll({
             limit: Math.min(limit ?? 25, 500),
             offset: Math.max(offset ?? 0, 0),
@@ -83,7 +94,12 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
             ],
         })
 
-    const insert = async ({ name, url, title, description }: FeedCreationAttributes) =>
+    const insert = async ({
+        name,
+        url,
+        title,
+        description,
+    }: FeedCreationAttributes) =>
         FeedModel.findOne({
             where: { name, url },
         }).then((result) =>
@@ -104,17 +120,30 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
     const list = async () =>
         FeedModel.findAll({
             group: ['name'],
-            attributes: ['name', [sequelize.fn('COUNT', sequelize.col('name')), 'count']],
+            attributes: [
+                'name',
+                [sequelize.fn('COUNT', sequelize.col('name')), 'count'],
+            ],
             order: [['name', 'ASC']],
         })
 
     const count = async ({ name }: { name: string }) =>
         FeedModel.findAll({
             where: { name },
-            attributes: [[sequelize.fn('COUNT', sequelize.col('name')), 'count']],
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('name')), 'count'],
+            ],
         })
 
-    const search = async ({ query, limit, offset }: { query: string; limit?: number; offset?: number }) =>
+    const search = async ({
+        query,
+        limit,
+        offset,
+    }: {
+        query: string
+        limit?: number
+        offset?: number
+    }) =>
         FeedModel.findAll({
             limit: Math.min(limit || 100, 500),
             offset: Math.max(offset ?? 0, 0),
@@ -164,14 +193,19 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
                     },
                 ],
             },
-            attributes: [[sequelize.fn('COUNT', sequelize.col('name')), 'count']],
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('name')), 'count'],
+            ],
         })
 
     const suggest = async ({ query }: { query: string }) =>
         FeedModel.findAll({
             limit: 10,
             group: ['name'],
-            attributes: ['name', [sequelize.fn('COUNT', sequelize.col('name')), 'count']],
+            attributes: [
+                'name',
+                [sequelize.fn('COUNT', sequelize.col('name')), 'count'],
+            ],
             where: {
                 name: {
                     [Op.like]: `%${query}%`,
@@ -182,7 +216,14 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
 
     const dump = async () =>
         FeedModel.findAll({
-            attributes: ['name', 'url', 'title', 'description', 'createdAt', 'updatedAt'],
+            attributes: [
+                'name',
+                'url',
+                'title',
+                'description',
+                'createdAt',
+                'updatedAt',
+            ],
             order: [
                 ['name', 'ASC'],
                 ['updatedAt', 'DESC'],
@@ -190,7 +231,18 @@ const FeedModelBuilder = (sequelize: Sequelize) => {
             ],
         })
 
-    return { FeedModel, findByName, insert, remove, list, count, search, countSearch, suggest, dump }
+    return {
+        FeedModel,
+        findByName,
+        insert,
+        remove,
+        list,
+        count,
+        search,
+        countSearch,
+        suggest,
+        dump,
+    }
 }
 
 export default FeedModelBuilder
