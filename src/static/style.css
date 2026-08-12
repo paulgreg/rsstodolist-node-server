@@ -599,6 +599,11 @@ details[open] {
         background: rgba(79, 180, 255, 0.12);
         color: var(--color-text);
     }
+
+    .language-selector {
+        color: white;
+        background: black;
+    }
 }
 
 @media (min-width: 512px) {
@@ -613,7 +618,6 @@ details[open] {
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background: white;
 }
 
 @media (max-width: 768px) {
