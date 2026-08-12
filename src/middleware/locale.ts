@@ -58,5 +58,8 @@ export const detectLocale = (
         )
     }) satisfies TranslateFunction
 
+    res.set('Referrer-Policy', 'same-origin')
+    res.set('Vary', `accept-language, accept-encoding, cookie`)
+
     next()
 }
